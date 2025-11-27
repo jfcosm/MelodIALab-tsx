@@ -11,6 +11,7 @@ import {
   Moon, 
   Sun, 
   ArrowRight, 
+  ArrowLeft,
   CheckCircle2, 
   Code2, 
   Terminal,
@@ -23,8 +24,37 @@ import {
   ExternalLink,
   BookOpen,
   Music4,
-  Sparkles
+  Sparkles,
+  Globe
 } from 'lucide-react';
+import { translations, LANGUAGES, Language } from './translations';
+
+// --- Context / Hooks ---
+
+const useLanguage = () => {
+  const [lang, setLang] = useState<Language>('es');
+
+  useEffect(() => {
+    // Attempt to auto-detect language from browser without requiring permissions
+    const browserLang = navigator.language.split('-')[0] as Language;
+    const supportedCodes = LANGUAGES.map(l => l.code);
+    
+    if (supportedCodes.includes(browserLang)) {
+      setLang(browserLang);
+    } else {
+      setLang('es'); // Fallback default
+    }
+  }, []);
+
+  // Effect to handle RTL direction
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }, [lang]);
+
+  const t = translations[lang];
+  return { lang, setLang, t };
+};
 
 // --- Components ---
 
@@ -34,9 +64,10 @@ const Logo = () => (
   </span>
 );
 
-const Navbar = ({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () => void }) => {
+const Navbar = ({ isDark, toggleTheme, lang, setLang, t }: { isDark: boolean; toggleTheme: () => void; lang: Language; setLang: (l: Language) => void; t: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -45,10 +76,10 @@ const Navbar = ({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () => v
   }, []);
 
   const navLinks = [
-    { name: 'Servicios', href: '#services' },
-    { name: 'Proyectos', href: '#portfolio' },
-    { name: 'Filosofía', href: '#philosophy' },
-    { name: 'Contacto', href: '#contact' },
+    { name: t.nav.services, href: '#services' },
+    { name: t.nav.projects, href: '#portfolio' },
+    { name: t.nav.philosophy, href: '#philosophy' },
+    { name: t.nav.contact, href: '#contact' },
   ];
 
   return (
@@ -65,7 +96,7 @@ const Navbar = ({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () => v
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
@@ -78,26 +109,67 @@ const Navbar = ({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () => v
               </a>
             ))}
             
-            <button 
-              onClick={toggleTheme}
-              className={`p-2 rounded-full transition-colors ${
-                isDark ? 'bg-white/10 hover:bg-white/20 text-yellow-400' : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-              }`}
-            >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+            <div className="flex items-center gap-2 border-s ps-6 border-gray-500/20">
+              {/* Theme Toggle */}
+              <button 
+                onClick={toggleTheme}
+                className={`p-2 rounded-full transition-colors ${
+                  isDark ? 'bg-white/10 hover:bg-white/20 text-yellow-400' : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                }`}
+                title="Toggle Theme"
+              >
+                {isDark ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+
+              {/* Language Selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setLangMenuOpen(!langMenuOpen)}
+                  className={`flex items-center gap-1.5 p-2 rounded-full transition-colors text-sm font-medium ${
+                    isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                  }`}
+                >
+                  <Globe size={18} />
+                  <span className="uppercase">{lang}</span>
+                </button>
+
+                {langMenuOpen && (
+                  <div className={`absolute end-0 mt-2 w-48 py-2 rounded-xl shadow-xl border overflow-hidden max-h-80 overflow-y-auto ${
+                    isDark ? 'bg-brand-surface border-white/10' : 'bg-white border-gray-200'
+                  }`}>
+                    {LANGUAGES.map((l) => (
+                      <button
+                        key={l.code}
+                        onClick={() => {
+                          setLang(l.code);
+                          setLangMenuOpen(false);
+                        }}
+                        className={`w-full text-start px-4 py-2 text-sm flex items-center gap-3 hover:bg-brand-blue/10 ${
+                          lang === l.code 
+                            ? (isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-50 text-blue-600')
+                            : (isDark ? 'text-gray-300' : 'text-gray-700')
+                        }`}
+                      >
+                        <span className="text-lg">{l.flag}</span>
+                        <span>{l.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
             <a 
               href="#contact"
               className="bg-brand-blue hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition-transform hover:scale-105 shadow-lg shadow-blue-500/30"
             >
-              Iniciar Proyecto
+              {t.nav.start}
             </a>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4">
-             <button 
+            <button 
               onClick={toggleTheme}
               className={`p-2 rounded-full ${isDark ? 'text-yellow-400' : 'text-gray-600'}`}
             >
@@ -129,12 +201,34 @@ const Navbar = ({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () => v
                 {link.name}
               </a>
             ))}
+             
+             {/* Mobile Language Selector */}
+            <div className="grid grid-cols-2 gap-2 p-2">
+              {LANGUAGES.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => {
+                    setLang(l.code);
+                    setIsOpen(false);
+                  }}
+                   className={`text-start px-3 py-2 text-sm rounded-lg flex items-center gap-2 ${
+                    lang === l.code 
+                      ? 'bg-brand-blue text-white' 
+                      : (isDark ? 'bg-white/5' : 'bg-gray-100')
+                  }`}
+                >
+                  <span>{l.flag}</span>
+                  <span>{l.name}</span>
+                </button>
+              ))}
+            </div>
+
              <a 
               href="#contact"
               onClick={() => setIsOpen(false)}
               className="bg-brand-blue text-white text-center py-3 rounded-lg font-bold mt-2"
             >
-              Iniciar Proyecto
+              {t.nav.start}
             </a>
           </div>
         </div>
@@ -143,11 +237,11 @@ const Navbar = ({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () => v
   );
 };
 
-const DashboardMockup = ({ isDark }: { isDark: boolean }) => {
+const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) => {
   return (
     <div className={`w-full rounded-xl overflow-hidden border shadow-2xl backdrop-blur-xl ${
       isDark ? 'bg-brand-surface/80 border-white/10' : 'bg-white/90 border-gray-200'
-    }`}>
+    }`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       {/* Fake Window Header */}
       <div className={`h-10 border-b flex items-center px-4 gap-2 ${
         isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'
@@ -157,7 +251,7 @@ const DashboardMockup = ({ isDark }: { isDark: boolean }) => {
           <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
           <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
         </div>
-        <div className={`ml-4 text-[10px] font-mono opacity-50 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+        <div className={`ms-4 text-[10px] font-mono opacity-50 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
           melodia-client-portal.app
         </div>
       </div>
@@ -165,15 +259,15 @@ const DashboardMockup = ({ isDark }: { isDark: boolean }) => {
       {/* Dashboard Body */}
       <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Sidebar Mock */}
-        <div className="hidden md:flex flex-col gap-3 border-r pr-6 border-dashed border-gray-500/20">
+        <div className="hidden md:flex flex-col gap-3 border-e pe-6 border-dashed border-gray-500/20">
           <div className={`flex items-center gap-2 font-medium text-sm p-2 rounded-lg ${isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-50 text-blue-600'}`}>
             <LayoutDashboard size={14} /> Dashboard
           </div>
           <div className={`flex items-center gap-2 text-sm p-2 rounded-lg opacity-60 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            <Clock size={14} /> Sprints
+            <Clock size={14} /> {t.dashboard.sprints}
           </div>
           <div className={`flex items-center gap-2 text-sm p-2 rounded-lg opacity-60 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            <DollarSign size={14} /> Presupuesto
+            <DollarSign size={14} /> {t.dashboard.budget}
           </div>
         </div>
 
@@ -181,11 +275,11 @@ const DashboardMockup = ({ isDark }: { isDark: boolean }) => {
         <div className="md:col-span-2 space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Proyecto Beta</h3>
-              <p className="text-xs text-gray-500">Actualizado hace 2 min</p>
+              <h3 className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{t.dashboard.title}</h3>
+              <p className="text-xs text-gray-500">{t.dashboard.updated}</p>
             </div>
             <span className="px-2 py-1 bg-green-500/20 text-green-500 text-xs rounded-full font-bold border border-green-500/20">
-              En Curso
+              {t.dashboard.status}
             </span>
           </div>
 
@@ -193,32 +287,32 @@ const DashboardMockup = ({ isDark }: { isDark: boolean }) => {
           <div className="grid grid-cols-2 gap-4">
             <div className={`p-4 rounded-xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
               <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                <Clock size={12} /> Progreso Sprint
+                <Clock size={12} /> {t.dashboard.progress}
               </div>
               <div className={`text-xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>75%</div>
               <div className="w-full h-1 bg-gray-700/50 rounded-full mt-2 overflow-hidden">
-                <div className="h-full bg-brand-blue w-3/4 rounded-full"></div>
+                <div className={`h-full bg-brand-blue w-3/4 rounded-full ${lang === 'ar' ? 'origin-right' : 'origin-left'}`}></div>
               </div>
             </div>
             <div className={`p-4 rounded-xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
               <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                <DollarSign size={12} /> Presupuesto
+                <DollarSign size={12} /> {t.dashboard.budget}
               </div>
               <div className={`text-xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>OK</div>
-              <div className="text-[10px] text-green-500 mt-1">Sin desviaciones</div>
+              <div className="text-[10px] text-green-500 mt-1">{t.dashboard.no_deviation}</div>
             </div>
           </div>
 
           {/* Activity Feed */}
           <div className="space-y-3">
-            <h4 className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Actividad Reciente</h4>
+            <h4 className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{t.dashboard.activity}</h4>
             <div className="flex gap-3 items-center">
               <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500">
                 <Cpu size={14} />
               </div>
               <div>
-                <div className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Modelo IA Optimizado</div>
-                <div className="text-xs text-gray-500">Reducción de latencia en 20%</div>
+                <div className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{t.dashboard.model_opt}</div>
+                <div className="text-xs text-gray-500">{t.dashboard.latency}</div>
               </div>
             </div>
              <div className="flex gap-3 items-center">
@@ -226,8 +320,8 @@ const DashboardMockup = ({ isDark }: { isDark: boolean }) => {
                 <GitCommit size={14} />
               </div>
               <div>
-                <div className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Frontend Deploy</div>
-                <div className="text-xs text-gray-500">v2.4.0 Live</div>
+                <div className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{t.dashboard.deploy}</div>
+                <div className="text-xs text-gray-500">{t.dashboard.live}</div>
               </div>
             </div>
           </div>
@@ -237,7 +331,7 @@ const DashboardMockup = ({ isDark }: { isDark: boolean }) => {
   );
 };
 
-const Hero = ({ isDark }: { isDark: boolean }) => (
+const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) => (
   <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
     {/* Background Image Container */}
     <div className="absolute inset-0 z-0">
@@ -268,22 +362,22 @@ const Hero = ({ isDark }: { isDark: boolean }) => (
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
         </span>
-        <span className="text-sm font-semibold tracking-wide">Desarrollo Web & IA</span>
+        <span className="text-sm font-semibold tracking-wide">{t.hero.badge}</span>
       </div>
 
       <h1 className={`text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight ${
         isDark ? 'text-white' : 'text-gray-900'
       }`}>
-        Componiendo Software <br className="hidden md:block" />
+        {t.hero.title_start} <br className="hidden md:block" />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-purple-500">
-          Inteligente
+          {t.hero.title_end}
         </span>
       </h1>
 
       <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed ${
         isDark ? 'text-gray-300' : 'text-gray-700'
       }`}>
-        Donde la agilidad encuentra su ritmo. Creamos experiencias digitales afinadas con Inteligencia Artificial.
+        {t.hero.subtitle}
       </p>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -291,7 +385,7 @@ const Hero = ({ isDark }: { isDark: boolean }) => (
           href="#contact"
           className="w-full sm:w-auto px-8 py-4 bg-brand-blue hover:bg-blue-600 text-white rounded-xl font-bold text-lg transition-all hover:-translate-y-1 shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
         >
-          Agendar Consultoría <ArrowRight size={20} />
+          {t.hero.cta_primary} {lang === 'ar' ? <ArrowLeft size={20} /> : <ArrowRight size={20} />}
         </a>
         <a 
           href="#services"
@@ -301,7 +395,7 @@ const Hero = ({ isDark }: { isDark: boolean }) => (
               : 'border-gray-300 hover:bg-white/50 text-gray-800'
           }`}
         >
-          Ver Servicios
+          {t.hero.cta_secondary}
         </a>
       </div>
 
@@ -310,12 +404,12 @@ const Hero = ({ isDark }: { isDark: boolean }) => (
         <div className="relative">
            {/* Glow effect behind dashboard */}
            <div className="absolute -inset-1 bg-gradient-to-r from-brand-blue to-purple-600 rounded-2xl blur opacity-20"></div>
-           <DashboardMockup isDark={isDark} />
+           <DashboardMockup isDark={isDark} t={t} lang={lang} />
         </div>
         
         {/* Caption for the dashboard */}
         <p className={`mt-4 text-sm font-medium opacity-60 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          *Así gestionamos tu proyecto: claridad total, cero ruido.
+          {t.hero.dashboard_caption}
         </p>
       </div>
     </div>
@@ -328,7 +422,7 @@ const BentoItem = ({ title, desc, icon: Icon, cols = "col-span-1", isDark }: any
       ? 'bg-brand-surface border border-white/10 hover:border-brand-blue/50' 
       : 'bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-blue/50'
   }`}>
-    <div className={`absolute top-0 right-0 p-32 bg-brand-blue/5 rounded-full blur-3xl transition-opacity opacity-0 group-hover:opacity-100`}></div>
+    <div className={`absolute top-0 end-0 p-32 bg-brand-blue/5 rounded-full blur-3xl transition-opacity opacity-0 group-hover:opacity-100`}></div>
     
     <div className="relative z-10">
       <div className={`inline-flex p-3 rounded-lg mb-4 ${
@@ -342,15 +436,15 @@ const BentoItem = ({ title, desc, icon: Icon, cols = "col-span-1", isDark }: any
   </div>
 );
 
-const Services = ({ isDark }: { isDark: boolean }) => (
+const Services = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <section id="services" className={`py-24 ${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'}`}>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center max-w-3xl mx-auto mb-16">
         <h2 className={`text-3xl md:text-5xl font-display font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-          Nuestra Suite de Servicios
+          {t.services.title}
         </h2>
         <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          Soluciones modulares diseñadas para escalar con tu negocio.
+          {t.services.subtitle}
         </p>
       </div>
 
@@ -358,27 +452,27 @@ const Services = ({ isDark }: { isDark: boolean }) => (
         <BentoItem 
           isDark={isDark}
           cols="md:col-span-2"
-          title="Desarrollo Web & Apps"
-          desc="Creamos experiencias digitales nativas y progresivas. Desde landing pages de alto impacto hasta aplicaciones móviles complejas, utilizamos React, Node.js y las últimas tecnologías para garantizar velocidad y escalabilidad."
+          title={t.services.web.title}
+          desc={t.services.web.desc}
           icon={Monitor}
         />
         <BentoItem 
           isDark={isDark}
-          title="Soluciones IA"
-          desc="Integramos modelos de lenguaje y automatización inteligente para optimizar tus procesos de negocio. No es magia, es ingeniería."
+          title={t.services.ai.title}
+          desc={t.services.ai.desc}
           icon={Cpu}
         />
         <BentoItem 
           isDark={isDark}
-          title="Consultoría Ágil"
-          desc="Auditoría tecnológica y optimización de flujos de trabajo con metodologías Scrum adaptadas a equipos pequeños."
+          title={t.services.agile.title}
+          desc={t.services.agile.desc}
           icon={Zap}
         />
         <BentoItem 
           isDark={isDark}
           cols="md:col-span-2"
-          title="Diseño UI/UX"
-          desc="Interfaces que no solo se ven bien, sino que funcionan. Nos centramos en la usabilidad y la accesibilidad para convertir visitantes en clientes leales."
+          title={t.services.ui.title}
+          desc={t.services.ui.desc}
           icon={Smartphone}
         />
       </div>
@@ -386,7 +480,7 @@ const Services = ({ isDark }: { isDark: boolean }) => (
   </section>
 );
 
-const Portfolio = ({ isDark }: { isDark: boolean }) => (
+const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <section id="portfolio" className={`py-24 ${isDark ? 'bg-brand-surface' : 'bg-white'}`}>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center max-w-3xl mx-auto mb-16">
@@ -394,13 +488,13 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
           isDark ? 'bg-white/5 border-white/10 text-brand-orange' : 'bg-orange-50 border-orange-200 text-brand-orange'
         }`}>
           <Sparkles size={14} />
-          <span className="text-xs font-bold uppercase tracking-wider">Desarrollos Actuales</span>
+          <span className="text-xs font-bold uppercase tracking-wider">{t.portfolio.badge}</span>
         </div>
         <h2 className={`text-3xl md:text-5xl font-display font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-          Donde las ideas <br/> cobran vida
+          {t.portfolio.title}
         </h2>
         <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          No solo hablamos de código, lo demostramos. Conoce algunos de los productos que estamos construyendo.
+          {t.portfolio.subtitle}
         </p>
       </div>
 
@@ -436,7 +530,7 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
               </div>
               
               <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Una suite musical interactiva para compositores y estudiantes. Armonix combina visualización de teoría musical en tiempo real con herramientas como un <strong>Groovebox</strong> y un afinador de alta precisión.
+                {t.portfolio.armonix.desc}
               </p>
 
               <div className="flex flex-wrap gap-2">
@@ -460,7 +554,7 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
                       : 'bg-gray-900 text-white hover:bg-gray-800'
                   }`}
                 >
-                  Probar Armonix <ExternalLink size={18} />
+                  {t.portfolio.armonix.cta} <ExternalLink size={18} />
                 </a>
               </div>
             </div>
@@ -481,7 +575,7 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
               </div>
               
               <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Plataforma dedicada a la lectura y reflexión. Diseñada con un enfoque en la <strong>accesibilidad</strong> y la tipografía, ofrece lecturas católicas diarias, biografías de santos y reflexiones en una interfaz limpia y libre de distracciones.
+                {t.portfolio.palabra.desc}
               </p>
 
               <div className="flex flex-wrap gap-2">
@@ -505,7 +599,7 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
                       : 'bg-gray-900 text-white hover:bg-gray-800'
                   }`}
                 >
-                  Visitar Web <ExternalLink size={18} />
+                  {t.portfolio.palabra.cta} <ExternalLink size={18} />
                 </a>
               </div>
             </div>
@@ -533,28 +627,24 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
   </section>
 );
 
-const Philosophy = ({ isDark }: { isDark: boolean }) => (
+const Philosophy = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <section id="philosophy" className="py-24 relative overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
            <div className="flex items-center gap-2 mb-4 text-brand-orange font-bold tracking-wider text-sm uppercase">
-             <Music size={16} /> Filosofía del Estudio
+             <Music size={16} /> {t.philosophy.badge}
            </div>
            <h2 className={`text-4xl md:text-5xl font-display font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-             No solo programamos, <br/>
-             <span className="italic font-serif text-brand-blue">componemos.</span>
+             {t.philosophy.title_start} <br/>
+             <span className="italic font-serif text-brand-blue">{t.philosophy.title_end}</span>
            </h2>
            <p className={`text-lg mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-             En MelodIA La♭, creemos que el desarrollo de software debe tener ritmo. Eliminamos el ruido innecesario para centrarnos en lo que realmente importa: tu producto.
+             {t.philosophy.desc}
            </p>
 
            <div className="space-y-6">
-             {[
-               { title: "Certeza (Afinación)", desc: "Presupuestos claros desde el inicio. Sin sorpresas ni costos ocultos." },
-               { title: "Agilidad (Ritmo)", desc: "Sprints cortos y entregables tangibles. Ves el progreso semana a semana." },
-               { title: "Inteligencia (Armonía)", desc: "La IA es nuestro copiloto, permitiéndonos desarrollar más rápido y mejor." }
-             ].map((item, idx) => (
+             {t.philosophy.points.map((item: any, idx: number) => (
                <div key={idx} className="flex gap-4">
                  <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                    isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-100 text-blue-600'
@@ -580,15 +670,17 @@ const Philosophy = ({ isDark }: { isDark: boolean }) => (
                   <Terminal size={16} />
                   <span>terminal — zsh</span>
                 </div>
-                <div>
-                  <span className="text-green-500">➜</span> <span className="text-blue-500">~</span> <span className={isDark ? 'text-white' : 'text-gray-800'}>melodia-lab start-project</span>
-                </div>
-                <div className="text-gray-500">Initializing environment...</div>
-                <div className="text-gray-500">Loading AI modules... <span className="text-green-500">Done</span></div>
-                <div className="text-gray-500">Optimizing budget... <span className="text-green-500">Done</span></div>
-                <div className="text-gray-500">Generating agility... <span className="text-green-500">Done</span></div>
-                <div>
-                  <span className="text-green-500">➜</span> <span className="text-blue-500">~</span> <span className={`${isDark ? 'text-white' : 'text-gray-800'} animate-pulse`}>_</span>
+                <div dir="ltr" className="text-start">
+                  <div>
+                    <span className="text-green-500">➜</span> <span className="text-blue-500">~</span> <span className={isDark ? 'text-white' : 'text-gray-800'}>{t.philosophy.terminal.start}</span>
+                  </div>
+                  <div className="text-gray-500">{t.philosophy.terminal.init}</div>
+                  <div className="text-gray-500">{t.philosophy.terminal.loading} <span className="text-green-500">{t.philosophy.terminal.done}</span></div>
+                  <div className="text-gray-500">{t.philosophy.terminal.budget} <span className="text-green-500">{t.philosophy.terminal.done}</span></div>
+                  <div className="text-gray-500">{t.philosophy.terminal.agility} <span className="text-green-500">{t.philosophy.terminal.done}</span></div>
+                  <div>
+                    <span className="text-green-500">➜</span> <span className="text-blue-500">~</span> <span className={`${isDark ? 'text-white' : 'text-gray-800'} animate-pulse`}>_</span>
+                  </div>
                 </div>
              </div>
           </div>
@@ -598,29 +690,29 @@ const Philosophy = ({ isDark }: { isDark: boolean }) => (
   </section>
 );
 
-const Contact = ({ isDark }: { isDark: boolean }) => (
+const Contact = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <section id="contact" className={`py-24 ${isDark ? 'bg-brand-surface' : 'bg-white'}`}>
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className={`rounded-3xl p-8 md:p-12 overflow-hidden relative border ${
         isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
       }`}>
         {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-orange/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
+        <div className="absolute top-0 end-0 w-64 h-64 bg-brand-blue/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 start-0 w-64 h-64 bg-brand-orange/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
 
         <div className="relative z-10 text-center mb-12">
           <h2 className={`text-3xl md:text-4xl font-display font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            ¿Quién dijo yo?
+            {t.contact.title}
           </h2>
           <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            Cuéntanos tu idea. Te respondemos con un plan concreto y un presupuesto transparente.
+            {t.contact.subtitle}
           </p>
         </div>
 
         <form action="https://formspree.io/f/xdkkpapn" method="POST" className="space-y-6 max-w-xl mx-auto relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label htmlFor="name" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Nombre</label>
+              <label htmlFor="name" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t.contact.name}</label>
               <input 
                 type="text" 
                 id="name" 
@@ -631,11 +723,11 @@ const Contact = ({ isDark }: { isDark: boolean }) => (
                     ? 'bg-white/5 border border-white/10 text-white placeholder-gray-600' 
                     : 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
                 }`}
-                placeholder="Tu nombre" 
+                placeholder={t.contact.name_ph} 
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="email" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Email</label>
+              <label htmlFor="email" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t.contact.email}</label>
               <input 
                 type="email" 
                 id="email" 
@@ -646,13 +738,13 @@ const Contact = ({ isDark }: { isDark: boolean }) => (
                     ? 'bg-white/5 border border-white/10 text-white placeholder-gray-600' 
                     : 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
                 }`} 
-                placeholder="hola@ejemplo.com" 
+                placeholder={t.contact.email_ph} 
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="message" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Mensaje</label>
+            <label htmlFor="message" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t.contact.message}</label>
             <textarea 
               id="message" 
               name="message"
@@ -663,7 +755,7 @@ const Contact = ({ isDark }: { isDark: boolean }) => (
                   ? 'bg-white/5 border border-white/10 text-white placeholder-gray-600' 
                   : 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
               }`} 
-              placeholder="Descríbenos brevemente tu proyecto..." 
+              placeholder={t.contact.message_ph} 
             ></textarea>
           </div>
 
@@ -671,7 +763,7 @@ const Contact = ({ isDark }: { isDark: boolean }) => (
             type="submit" 
             className="w-full bg-brand-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
           >
-            Enviar Mensaje <MessageSquare size={20} />
+            {t.contact.submit} <MessageSquare size={20} />
           </button>
         </form>
       </div>
@@ -679,13 +771,13 @@ const Contact = ({ isDark }: { isDark: boolean }) => (
   </section>
 );
 
-const Footer = ({ isDark }: { isDark: boolean }) => (
+const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <footer className={`py-12 border-t ${isDark ? 'bg-brand-dark border-white/10' : 'bg-gray-50 border-gray-200'}`}>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
       <div className={isDark ? 'text-white' : 'text-gray-900'}>
         <Logo />
         <p className={`text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-          &copy; {new Date().getFullYear()} MelodIA La♭. Todos los derechos reservados.
+          &copy; {new Date().getFullYear()} MelodIA La♭. {t.footer.rights}
         </p>
       </div>
       
@@ -703,6 +795,9 @@ const Footer = ({ isDark }: { isDark: boolean }) => (
 const App = () => {
   // Default to dark mode for that tech vibe
   const [isDark, setIsDark] = useState(true);
+  
+  // Use custom hook for language management
+  const { lang, setLang, t } = useLanguage();
 
   // Apply dark class to html element for Tailwind dark mode to work
   useEffect(() => {
@@ -718,17 +813,17 @@ const App = () => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 font-sans ${isDark ? 'bg-brand-dark text-white' : 'bg-brand-light text-gray-900'}`}>
-      <Navbar isDark={isDark} toggleTheme={toggleTheme} />
+      <Navbar isDark={isDark} toggleTheme={toggleTheme} lang={lang} setLang={setLang} t={t} />
       
       <main>
-        <Hero isDark={isDark} />
-        <Services isDark={isDark} />
-        <Portfolio isDark={isDark} />
-        <Philosophy isDark={isDark} />
-        <Contact isDark={isDark} />
+        <Hero isDark={isDark} t={t} lang={lang} />
+        <Services isDark={isDark} t={t} />
+        <Portfolio isDark={isDark} t={t} />
+        <Philosophy isDark={isDark} t={t} />
+        <Contact isDark={isDark} t={t} />
       </main>
 
-      <Footer isDark={isDark} />
+      <Footer isDark={isDark} t={t} />
     </div>
   );
 };
