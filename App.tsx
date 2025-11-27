@@ -411,13 +411,13 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
         }`}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-12 items-center">
             <div className="order-2 lg:order-1 relative group">
-              {/* Lifestyle Image Frame - USING BACKGROUND IMAGE FOR RELIABILITY */}
+              {/* Lifestyle Image Frame - USING LOCAL IMAGE */}
               <div 
                 className={`rounded-xl border shadow-xl overflow-hidden relative transition-transform duration-500 group-hover:-translate-y-2 h-64 md:h-80 w-full bg-cover bg-center ${
                  isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-gray-200'
                 }`}
                 style={{
-                  backgroundImage: "url('https://images.unsplash.com/photo-1595977507304-63c6d7a12628?q=80&w=2070&auto=format&fit=crop')" // Father and daughter playing guitar
+                  backgroundImage: "url('/armonix_landing.png')" 
                 }}
               >
                  {/* Fallback content or Overlay */}
@@ -511,13 +511,13 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
             </div>
 
             <div className="order-2 relative group">
-               {/* Lifestyle Image Frame - USING BACKGROUND IMAGE FOR RELIABILITY */}
+               {/* Lifestyle Image Frame - USING LOCAL IMAGE */}
               <div 
                  className={`rounded-xl border shadow-xl overflow-hidden relative transition-transform duration-500 group-hover:-translate-y-2 h-64 md:h-80 w-full bg-cover bg-center ${
                  isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-white'
                 }`}
                 style={{
-                  backgroundImage: "url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=2070&auto=format&fit=crop')" // Peaceful reading / book
+                  backgroundImage: "url('/lapalabradiaria_landing.png')" 
                 }}
               >
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
