@@ -417,7 +417,7 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
                  isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-gray-200'
                 }`}
                 style={{
-                  backgroundImage: "url('/armonix_landing.png')" 
+                  backgroundImage: "url('/armonix_landing.jpg')" 
                 }}
               >
                  {/* Fallback content or Overlay */}
@@ -517,7 +517,7 @@ const Portfolio = ({ isDark }: { isDark: boolean }) => (
                  isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-white'
                 }`}
                 style={{
-                  backgroundImage: "url('/lapalabradiaria_landing.png')" 
+                  backgroundImage: "url('/lapalabradiaria_landing.jpg')" 
                 }}
               >
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
