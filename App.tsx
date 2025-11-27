@@ -782,9 +782,14 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => (
       </div>
       
       <div className="flex gap-6">
-        <a href="#" className={`transition-colors ${isDark ? 'text-gray-500 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>GitHub</a>
-        <a href="#" className={`transition-colors ${isDark ? 'text-gray-500 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>LinkedIn</a>
-        <a href="#" className={`transition-colors ${isDark ? 'text-gray-500 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>Twitter</a>
+        <a 
+          href="https://www.linkedin.com/company/melodialab/" 
+          target="_blank" 
+          rel="noreferrer" 
+          className={`transition-colors ${isDark ? 'text-gray-500 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}
+        >
+          LinkedIn
+        </a>
       </div>
     </div>
   </footer>
