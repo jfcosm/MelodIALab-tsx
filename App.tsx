@@ -25,7 +25,12 @@ import {
   BookOpen,
   Music4,
   Sparkles,
-  Globe
+  Globe,
+  Church,
+  FileSignature,
+  Mic2,
+  Users,
+  CloudLightning
 } from 'lucide-react';
 import { translations, LANGUAGES, Language } from './translations';
 
@@ -499,13 +504,12 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
       </div>
 
       <div className="grid grid-cols-1 gap-12">
-        {/* Armonix Project - Lifestyle Image */}
+        {/* Armonix Project */}
         <div className={`rounded-3xl border overflow-hidden transition-all hover:shadow-2xl hover:shadow-brand-blue/10 ${
           isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
         }`}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-12 items-center">
             <div className="order-2 lg:order-1 relative group">
-              {/* Lifestyle Image Frame - USING LOCAL IMAGE */}
               <div 
                 className={`rounded-xl border shadow-xl overflow-hidden relative transition-transform duration-500 group-hover:-translate-y-2 h-64 md:h-80 w-full bg-cover bg-center ${
                  isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-gray-200'
@@ -514,10 +518,8 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
                   backgroundImage: "url('/armonix_landing.jpg')" 
                 }}
               >
-                 {/* Fallback content or Overlay */}
                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
               </div>
-              {/* Glow */}
               <div className="absolute -inset-4 bg-purple-500/20 blur-3xl -z-10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             
@@ -561,7 +563,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           </div>
         </div>
 
-        {/* La Palabra Diaria Project - Lifestyle Image */}
+        {/* La Palabra Diaria Project */}
         <div className={`rounded-3xl border overflow-hidden transition-all hover:shadow-2xl hover:shadow-brand-blue/10 ${
           isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
         }`}>
@@ -605,7 +607,6 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
             </div>
 
             <div className="order-2 relative group">
-               {/* Lifestyle Image Frame - USING LOCAL IMAGE */}
               <div 
                  className={`rounded-xl border shadow-xl overflow-hidden relative transition-transform duration-500 group-hover:-translate-y-2 h-64 md:h-80 w-full bg-cover bg-center ${
                  isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-white'
@@ -616,8 +617,123 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
               >
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
               </div>
-               {/* Glow */}
                <div className="absolute -inset-4 bg-indigo-500/20 blur-3xl -z-10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Emaús Project */}
+        <div className={`rounded-3xl border overflow-hidden transition-all hover:shadow-2xl hover:shadow-brand-blue/10 ${
+          isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
+        }`}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-12 items-center">
+            <div className="order-2 lg:order-1 relative group">
+              <div 
+                className={`rounded-xl border shadow-xl overflow-hidden relative transition-transform duration-500 group-hover:-translate-y-2 h-64 md:h-80 w-full bg-cover bg-center ${
+                 isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-gray-200'
+                }`}
+                style={{
+                  backgroundImage: "url('/emaus_landing.jpg')" 
+                }}
+              >
+                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+              </div>
+              <div className="absolute -inset-4 bg-orange-500/20 blur-3xl -z-10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            
+            <div className="order-1 lg:order-2 space-y-6">
+              <div className="flex items-center gap-3">
+                 <div className={`p-3 rounded-xl ${isDark ? 'bg-orange-500/10 text-orange-400' : 'bg-orange-100 text-orange-600'}`}>
+                   <Church size={28} />
+                 </div>
+                 <h3 className={`text-3xl font-bold font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>Emaús</h3>
+              </div>
+              
+              <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                {t.portfolio.emaus.desc}
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                 {['SaaS', 'Digital Archive', 'Signature API', 'Catholic Tech'].map(tag => (
+                   <span key={tag} className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                     isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-600'
+                   }`}>
+                     {tag}
+                   </span>
+                 ))}
+              </div>
+
+              <div className="pt-4">
+                <a 
+                  href="https://www.emaus.social"
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
+                    isDark 
+                      ? 'bg-white text-black hover:bg-gray-200' 
+                      : 'bg-gray-900 text-white hover:bg-gray-800'
+                  }`}
+                >
+                  {t.portfolio.emaus.cta} <ExternalLink size={18} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Verso Project */}
+        <div className={`rounded-3xl border overflow-hidden transition-all hover:shadow-2xl hover:shadow-brand-blue/10 ${
+          isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
+        }`}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-12 items-center">
+             <div className="order-1 space-y-6">
+              <div className="flex items-center gap-3">
+                 <div className={`p-3 rounded-xl ${isDark ? 'bg-emerald-500/10 text-emerald-400' : 'bg-emerald-100 text-emerald-600'}`}>
+                   <Mic2 size={28} />
+                 </div>
+                 <h3 className={`text-3xl font-bold font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>Verso</h3>
+              </div>
+              
+              <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                {t.portfolio.verso.desc}
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                 {['React 19', 'Firebase', 'Gemini AI', 'Real-time'].map(tag => (
+                   <span key={tag} className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                     isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-600'
+                   }`}>
+                     {tag}
+                   </span>
+                 ))}
+              </div>
+
+              <div className="pt-4">
+                <button 
+                  disabled
+                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all opacity-80 cursor-not-allowed ${
+                    isDark 
+                      ? 'bg-white/10 text-white' 
+                      : 'bg-gray-200 text-gray-500'
+                  }`}
+                >
+                  {t.portfolio.verso.cta}
+                </button>
+              </div>
+            </div>
+
+            <div className="order-2 relative group">
+              <div 
+                 className={`rounded-xl border shadow-xl overflow-hidden relative transition-transform duration-500 group-hover:-translate-y-2 h-64 md:h-80 w-full bg-cover bg-center ${
+                 isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-white'
+                }`}
+                style={{
+                  backgroundImage: "url('/verso_landing.jpg')" 
+                }}
+              >
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+              </div>
+               <div className="absolute -inset-4 bg-emerald-500/20 blur-3xl -z-10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
           </div>
         </div>
