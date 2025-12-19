@@ -310,10 +310,9 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/40 z-10"></div>
           <img 
-            src="/public/manuel-vera-suit.jpg" 
+            src="/manuel-vera-suit.jpg" 
             alt="Manuel Vera Space"
             className="w-full h-full object-cover scale-100 transition-transform duration-[10s] animate-pulse-slow"
-            onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop" }}
           />
         </div>
 
@@ -336,10 +335,9 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
           <div className="relative group">
             <div className="aspect-[16/10] rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
               <img 
-                src="/public/jose-bolados-manuel.jpg" 
+                src="/jose-bolados-manuel.jpg" 
                 alt="José Bolados Milla Actor"
                 className="w-full h-full object-cover grayscale sepia-[0.3] hover:grayscale-0 transition-all duration-700"
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=2119&auto=format&fit=crop" }}
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
                  <p className="font-mono text-xs text-brand-orange mb-1">PROTAGONISTA</p>
@@ -408,10 +406,9 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
              <div className="order-1 lg:order-2">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-square lg:aspect-[4/5]">
                   <img 
-                    src="/public/maunita-studio.jpg" 
+                    src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" 
                     className="w-full h-full object-cover" 
                     alt="Maunita Recording" 
-                    onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
                   <div className="absolute bottom-8 left-8">
@@ -459,16 +456,16 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5">
-              <img src="/public/moon-concept.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Moon" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?q=80&w=2070&auto=format&fit=crop" }} />
+              <img src="/moon-concept.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Moon" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5 md:translate-y-8">
-              <img src="/public/pilot-suit.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Suit" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?q=80&w=2080&auto=format&fit=crop" }} />
+              <img src="/pilot-suit.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Suit" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5">
-              <img src="/public/ystad-biotech.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Ystad" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2070&auto=format&fit=crop" }} />
+              <img src="/ystad-biotech.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Ystad" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5 md:translate-y-8">
-              <img src="/public/poster-tierrita.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Poster" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=3540&auto=format&fit=crop" }} />
+              <img src="/poster-tierrita.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Poster" />
             </div>
           </div>
         </div>
@@ -580,7 +577,7 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
   <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
     <div className="absolute inset-0 z-0">
       <img 
-        src="/public/hero-bg.jpg" 
+        src="/hero-bg.jpg" 
         alt="Background" 
         className="w-full h-full object-cover"
         onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=3540&auto=format&fit=crop" }}
@@ -880,7 +877,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           icon={Music4}
           tags={['React', 'Web Audio API', 'Tone.js', 'UI Design']}
           cta={t.portfolio.armonix.cta}
-          image="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop"
+          image="/armonix_landing.jpg"
           isDark={isDark}
         />
         <PortfolioCard 
@@ -889,7 +886,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           icon={Type}
           tags={['Typography', 'Accessibility', 'Daily Content', 'Reading Mode']}
           cta={t.portfolio.palabra.cta}
-          image="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=2073&auto=format&fit=crop"
+          image="/lapalabradiaria_landing.jpg"
           link="https://lapalabradiaria.com"
           isDark={isDark}
           isAlternate
@@ -900,7 +897,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           icon={Church}
           tags={['SaaS', 'Management', 'Digital Signature', 'Security']}
           cta={t.portfolio.emaus.cta}
-          image="https://images.unsplash.com/photo-1548625361-195fe6115887?q=80&w=2072&auto=format&fit=crop"
+          image="/emaus_landing.jpg"
           isDark={isDark}
         />
         <PortfolioCard 
@@ -909,7 +906,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           icon={Mic2}
           tags={['Real-time', 'AI Music', 'Collab', 'Gemini API']}
           cta={t.portfolio.verso.cta}
-          image="https://images.unsplash.com/photo-1514525253361-bee8d48200f5?q=80&w=2064&auto=format&fit=crop"
+          image="/verso_landing.jpg"
           isDark={isDark}
           isAlternate
           badge="In Alpha"
@@ -1090,4 +1087,4 @@ const App = () => {
 };
 
 export default App;
-// v2.4.2 - Fixed section titles and complete detailed view translations across all languages.
+// v2.4.3 - Fixed local image paths (removed /public/ prefix) and linked portfolio assets.
