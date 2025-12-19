@@ -11,6 +11,33 @@ export const LANGUAGES: { code: Language; name: string; flag: string }[] = [
   { code: 'ar', name: 'العربية', flag: '🇸🇦' },
 ];
 
+const tierritaDefault = {
+  badge: "Official Music Video", 
+  title: "Tierra Tierrita", 
+  subtitle: "A bridge between AI vanguard and the roots of Chilean Folk.", 
+  story_title: "The Odyssey of Manuel Vera", 
+  desc: "The 'Tierra Tierrita' music video tells the epic of a pilot in lunar exile. A MelodIA La♭ production starring José Bolados Milla.", 
+  more: "Explore the Work", 
+  tagline: "Generative AI, Memory & Folklore.", 
+  quote: "\"It's not about space conquest; it's about returning to the earth through the stars.\"",
+  detailed: {
+    back: "Go Back",
+    hero_tag: "2024 Premiere",
+    hero_title: "From Ystad to the Moon",
+    lore_title: "Manuel Vera: The Unity Pilot",
+    lore_desc: "Manuel Vera was the heart of the 'Víctor Jara Lunar Station', a project started in 1972. After exile, Manuel rebuilt his life in Sweden (Ystad), merging his love for the land with sustainable biotechnology.",
+    mission_title: "Víctor Jara Mission (1972)",
+    mission_desc: "Inspired by the dream of a space-faring Chile, this station was designed to preserve culture. José Bolados Milla portrays the nostalgia of a man watching his homeland from the cosmos.",
+    audiovisual_label: "Audiovisual Production",
+    music_prod_title: "The Music Version",
+    music_prod_desc: "The interpretation of 'Tierra Tierrita' is led by Maunita's voice, with music production by Francisco Carle and guitars by Claudio Pérez. A version that honors original author, Jorge Cartes Palacios (Tomé).",
+    music_author_label: "Original Author: Jorge Cartes Palacios",
+    credits: { prod: "Production", guitars: "Guitars", voice: "Voice", record: "Recording Session" },
+    gallery_title: "Conceptual Art",
+    gallery_subtitle: "Víctor Jara Lunar Station — Chile 1972"
+  }
+};
+
 const baseEn = {
   nav: { services: "Services", audiovisual: "Audiovisual", projects: "Projects", philosophy: "Philosophy", contact: "Contact", start: "Start Project" },
   hero: { badge: "Web & AI Development", title_start: "Composing Intelligent", title_end: "Software", subtitle: "Where agility meets rhythm. AI-tuned digital experiences.", cta_primary: "Consulting", cta_secondary: "Services", dashboard_caption: "*Total clarity, zero noise." },
@@ -19,7 +46,8 @@ const baseEn = {
   portfolio: { badge: "Developments", title: "Ideas to Life", subtitle: "We prove code.", armonix: { desc: "Interactive music suite.", cta: "Try" }, palabra: { desc: "Reading & reflection.", cta: "Visit" }, emaus: { desc: "SaaS management.", cta: "Visit" }, verso: { desc: "AI Band coordination.", cta: "Soon" } },
   philosophy: { badge: "Philosophy", title_start: "We don't just code,", title_end: "we compose.", desc: "Software with rhythm.", points: [ { title: "Certainty", desc: "Clear budgets." }, { title: "Agility", desc: "Short sprints." }, { title: "Intelligence", desc: "AI co-pilot." } ], terminal: { start: "melodia-lab start", init: "Init...", loading: "Loading IA...", budget: "Optimizing...", agility: "Agility...", done: "Done" } },
   contact: { title: "Contact", subtitle: "Tell us your idea.", name: "Name", name_ph: "Name", email: "Email", email_ph: "hello@ex.com", message: "Message", message_ph: "Project...", submit: "Send" },
-  footer: { rights: "All rights reserved." }
+  footer: { rights: "All rights reserved." },
+  tierrita: tierritaDefault
 };
 
 export const translations = {
@@ -59,41 +87,15 @@ export const translations = {
     contact: { title: "¿Hablamos?", subtitle: "Cuéntanos tu idea.", name: "Nombre", name_ph: "Tu nombre", email: "Email", email_ph: "hola@ejemplo.com", message: "Mensaje", message_ph: "Tu proyecto...", submit: "Enviar" },
     footer: { rights: "Todos los derechos reservados." }
   },
-  en: {
-    ...baseEn,
-    tierrita: { 
-      badge: "Official Music Video", 
-      title: "Tierra Tierrita", 
-      subtitle: "A bridge between AI vanguard and the roots of Chilean Folk.", 
-      story_title: "The Odyssey of Manuel Vera", 
-      desc: "The 'Tierra Tierrita' music video tells the epic of a pilot in lunar exile. A MelodIA La♭ production starring José Bolados Milla.", 
-      more: "Explore the Work", 
-      tagline: "Generative AI, Memory & Folklore.", 
-      quote: "\"It's not about space conquest; it's about returning to the earth through the stars.\"",
-      detailed: {
-        back: "Go Back",
-        hero_tag: "2024 Premiere",
-        hero_title: "From Ystad to the Moon",
-        lore_title: "Manuel Vera: The Unity Pilot",
-        lore_desc: "Manuel Vera was the heart of the 'Víctor Jara Lunar Station', a project started in 1972. After exile, Manuel rebuilt his life in Sweden (Ystad), merging his love for the land with sustainable biotechnology.",
-        mission_title: "Víctor Jara Mission (1972)",
-        mission_desc: "Inspired by the dream of a space-faring Chile, this station was designed to preserve culture. José Bolados Milla portrays the nostalgia of a man watching his homeland from the cosmos.",
-        audiovisual_label: "Audiovisual Production",
-        music_prod_title: "The Music Version",
-        music_prod_desc: "The interpretation of 'Tierra Tierrita' is led by Maunita's voice, with music production by Francisco Carle and guitars by Claudio Pérez. A version that honors original author, Jorge Cartes Palacios (Tomé).",
-        music_author_label: "Original Author: Jorge Cartes Palacios",
-        credits: { prod: "Production", guitars: "Guitarras", voice: "Voice", record: "Recording Session" },
-        gallery_title: "Conceptual Art",
-        gallery_subtitle: "Víctor Jara Lunar Station — Chile 1972"
-      }
-    }
-  },
+  en: baseEn,
   fr: {
     ...baseEn,
     nav: { services: "Services", audiovisual: "Audiovisuel", projects: "Projets", philosophy: "Philosophie", contact: "Contact", start: "Démarrer" },
     tierrita: { 
+      ...tierritaDefault,
       more: "Explorer", 
       detailed: { 
+        ...tierritaDefault.detailed,
         back: "Retour", 
         hero_tag: "Première 2024", 
         hero_title: "D'Ystad à la Lune",
@@ -115,15 +117,17 @@ export const translations = {
     ...baseEn,
     nav: { services: "Servizi", audiovisual: "Audiovisivo", projects: "Progetti", philosophy: "Filosofia", contact: "Contatto", start: "Inizia" },
     tierrita: { 
+      ...tierritaDefault,
       more: "Esplora", 
       detailed: { 
+        ...tierritaDefault.detailed,
         back: "Indietro", 
         hero_tag: "Premiere 2024", 
         hero_title: "Da Ystad alla Luna",
         lore_title: "Manuel Vera: Il Pilota dell'Unità",
         lore_desc: "Manuel Vera era il cuore della 'Stazione Lunare Víctor Jara'. Dopo l'esilio, ha ricostruito la sua vida in Svezia.",
         mission_title: "Missione Víctor Jara (1972)",
-        mission_desc: "Ispirata dal sogno di un Cile spaziale, questa stazione è stata progettata per preservare la cultura.",
+        mission_desc: "Ispirata dal sogno di un Cile spaziale, esta stazione è stata progettata per preservare la cultura.",
         audiovisual_label: "Produzione Audiovisiva",
         music_prod_title: "Produzione Musicale",
         music_prod_desc: "Interpretato da Maunita, prodotto da Francisco Carle. Omaggio a Jorge Cartes Palacios.",
@@ -138,8 +142,10 @@ export const translations = {
     ...baseEn,
     nav: { services: "Dienste", audiovisual: "Audiovisuell", projects: "Projekte", philosophy: "Philosophie", contact: "Kontakt", start: "Starten" },
     tierrita: { 
+      ...tierritaDefault,
       more: "Entdecken", 
       detailed: { 
+        ...tierritaDefault.detailed,
         back: "Zurück", 
         hero_tag: "Premiere 2024", 
         hero_title: "Von Ystad zum Mond",
@@ -161,8 +167,10 @@ export const translations = {
     ...baseEn,
     nav: { services: "サービス", audiovisual: "映像制作", projects: "プロジェクト", philosophy: "哲学", contact: "連絡", start: "開始" },
     tierrita: { 
+      ...tierritaDefault,
       more: "探索する", 
       detailed: { 
+        ...tierritaDefault.detailed,
         back: "戻る", 
         hero_tag: "2024年公開", 
         hero_title: "イースタッドから月へ",
@@ -172,7 +180,7 @@ export const translations = {
         mission_desc: "宇宙進出というチリの夢にインスパイアされた、文化を保存するための基地。",
         audiovisual_label: "映像制作",
         music_prod_title: "音楽制作",
-        music_prod_desc: "マウニータの歌唱、フランシスコ・カルレのプロデュース. ホルヘ・カルテス・パラシオスへのオマージュ。",
+        music_prod_desc: "マウニータの歌唱、フランシスコ・カルレによるプロデュース。 ホルヘ・カルテス・パラシオスへのオマージュ。",
         music_author_label: "原作者: ホルヘ・カルテス・パラシオス",
         credits: { prod: "プロデュース", guitars: "ギター", voice: "ヴォーカル", record: "レコーディング" },
         gallery_title: "コンセプトアート",
@@ -184,8 +192,10 @@ export const translations = {
     ...baseEn,
     nav: { services: "خدمات", audiovisual: "سمعي بصري", projects: "مشاريع", philosophy: "فلسفة", contact: "اتصال", start: "ابدأ" },
     tierrita: { 
+      ...tierritaDefault,
       more: "استكشف", 
       detailed: { 
+        ...tierritaDefault.detailed,
         back: "رجوع", 
         hero_tag: "عرض أول 2024", 
         hero_title: "من يستاد إلى القمر",
@@ -195,7 +205,7 @@ export const translations = {
         mission_desc: "مستوحاة من حلم تشيلي في الفضاء، صُممت هذه المحطة للحفاظ على الثقافة.",
         audiovisual_label: "الإنتاج السمعي البصري",
         music_prod_title: "الإنتاج الموسيقي",
-        music_prod_desc: "أداء ماونيta، إنتاج فرانسيسكو كارل. تكريم لخورخي كارتيس بالاسيوس.",
+        music_prod_desc: "أداء ماونيتا، إنتاج فرانسيسكو كارل. تكريم لخورخي كارتيس بالاسيوس.",
         music_author_label: "المؤلف الأصلي: خورخي كارتيس بالاسيوس",
         credits: { prod: "إنتاج", guitars: "جيتار", voice: "صوت", record: "جلسة تسجيل" },
         gallery_title: "فن مفاهيمي",
@@ -204,4 +214,4 @@ export const translations = {
     }
   }
 };
-// v2.4.4 - Fixed crash by ensuring full translation structure for all languages.
+// v2.4.6 - Flattened translations and ensured complete objects for all languages.

@@ -45,6 +45,29 @@ import {
 } from 'lucide-react';
 import { translations, LANGUAGES, Language } from './translations';
 
+// --- Utils ---
+
+const isObject = (item: any) => {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+};
+
+const mergeDeep = (target: any, source: any) => {
+  let output = Object.assign({}, target);
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach(key => {
+      if (isObject(source[key])) {
+        if (!(key in target))
+          Object.assign(output, { [key]: source[key] });
+        else
+          output[key] = mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
+};
+
 // --- Context / Hooks ---
 
 const useLanguage = () => {
@@ -65,7 +88,11 @@ const useLanguage = () => {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const t = translations[lang] || translations['en'];
+  // Fallback system: Merge current language with English base
+  const baseT = translations['en'];
+  const currentT = translations[lang] || baseT;
+  const t = lang === 'en' ? baseT : mergeDeep(baseT, currentT);
+
   return { lang, setLang, t };
 };
 
@@ -1088,4 +1115,4 @@ const App = () => {
 };
 
 export default App;
-// v2.4.4 - Ensured complete structure for all languages and corrected asset paths.
+// v2.4.6 - Added mergeDeep fallback and flattened translations to ensure stability.
