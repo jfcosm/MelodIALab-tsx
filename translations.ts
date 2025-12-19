@@ -1,5 +1,4 @@
 
-// Fix: Added 'ar' to Language type to support RTL logic in App.tsx
 export type Language = 'es' | 'en' | 'fr' | 'it' | 'de' | 'ja' | 'ar';
 
 export const LANGUAGES: { code: Language; name: string; flag: string }[] = [
@@ -11,6 +10,17 @@ export const LANGUAGES: { code: Language; name: string; flag: string }[] = [
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
   { code: 'ar', name: 'العربية', flag: '🇸🇦' },
 ];
+
+const baseEn = {
+  nav: { services: "Services", audiovisual: "Audiovisual", projects: "Projects", philosophy: "Philosophy", contact: "Contact", start: "Start Project" },
+  hero: { badge: "Web & AI Development", title_start: "Composing Intelligent", title_end: "Software", subtitle: "Where agility meets rhythm. AI-tuned digital experiences.", cta_primary: "Consulting", cta_secondary: "Services", dashboard_caption: "*Total clarity, zero noise." },
+  dashboard: { title: "Beta Project", updated: "Updated 2 min ago", status: "Ongoing", sprints: "Sprints", budget: "Budget", progress: "Sprint Progress", no_deviation: "No deviations", activity: "Recent Activity", model_opt: "Optimized AI Model", latency: "Latency reduced by 20%", deploy: "Frontend Deploy", live: "v2.4.0 Live" },
+  services: { title: "Our Service Suite", subtitle: "Modular solutions designed to scale with your business.", web: { title: "Web & App Development", desc: "Creating native and progressive digital experiences. High-impact landing pages and complex mobile apps using React and Node.js." }, ai: { title: "AI Solutions", desc: "Integrating LLMs and intelligent automation to optimize business processes. Not magic, just engineering." }, audiovisual: { title: "Audiovisual Production", desc: "Creative direction and AI-augmented narrative. Transcending the screen by combining cinema techniques with digital innovation." }, agile: { title: "Agile Consulting", desc: "Tech audits and workflow optimization using adapted Scrum methodologies." }, ui: { title: "UI/UX Design", desc: "Interfaces that don't just look good, but work perfectly. Focused on usability and accessibility." } },
+  portfolio: { badge: "Developments", title: "Ideas to Life", subtitle: "We prove code.", armonix: { desc: "Interactive music suite.", cta: "Try" }, palabra: { desc: "Reading & reflection.", cta: "Visit" }, emaus: { desc: "SaaS management.", cta: "Visit" }, verso: { desc: "AI Band coordination.", cta: "Soon" } },
+  philosophy: { badge: "Philosophy", title_start: "We don't just code,", title_end: "we compose.", desc: "Software with rhythm.", points: [ { title: "Certainty", desc: "Clear budgets." }, { title: "Agility", desc: "Short sprints." }, { title: "Intelligence", desc: "AI co-pilot." } ], terminal: { start: "melodia-lab start", init: "Init...", loading: "Loading IA...", budget: "Optimizing...", agility: "Agility...", done: "Done" } },
+  contact: { title: "Contact", subtitle: "Tell us your idea.", name: "Name", name_ph: "Name", email: "Email", email_ph: "hello@ex.com", message: "Message", message_ph: "Project...", submit: "Send" },
+  footer: { rights: "All rights reserved." }
+};
 
 export const translations = {
   es: {
@@ -50,10 +60,7 @@ export const translations = {
     footer: { rights: "Todos los derechos reservados." }
   },
   en: {
-    nav: { services: "Services", audiovisual: "Audiovisual", projects: "Projects", philosophy: "Philosophy", contact: "Contact", start: "Start Project" },
-    hero: { badge: "Web & AI Development", title_start: "Composing Intelligent", title_end: "Software", subtitle: "Where agility meets rhythm. AI-tuned digital experiences.", cta_primary: "Consulting", cta_secondary: "Services", dashboard_caption: "*Total clarity, zero noise." },
-    dashboard: { title: "Beta Project", updated: "Updated 2 min ago", status: "Ongoing", sprints: "Sprints", budget: "Budget", progress: "Sprint Progress", no_deviation: "No deviations", activity: "Recent Activity", model_opt: "Optimized AI Model", latency: "Latency reduced by 20%", deploy: "Frontend Deploy", live: "v2.4.0 Live" },
-    services: { title: "Our Service Suite", subtitle: "Modular solutions designed to scale with your business.", web: { title: "Web & App Development", desc: "Creating native and progressive digital experiences. High-impact landing pages and complex mobile apps using React and Node.js." }, ai: { title: "AI Solutions", desc: "Integrating LLMs and intelligent automation to optimize business processes. Not magic, just engineering." }, audiovisual: { title: "Audiovisual Production", desc: "Creative direction and AI-augmented narrative. Transcending the screen by combining cinema techniques with digital innovation." }, agile: { title: "Agile Consulting", desc: "Tech audits and workflow optimization using adapted Scrum methodologies." }, ui: { title: "UI/UX Design", desc: "Interfaces that don't just look good, but work perfectly. Focused on usability and accessibility." } },
+    ...baseEn,
     tierrita: { 
       badge: "Official Music Video", 
       title: "Tierra Tierrita", 
@@ -75,17 +82,14 @@ export const translations = {
         music_prod_title: "The Music Version",
         music_prod_desc: "The interpretation of 'Tierra Tierrita' is led by Maunita's voice, with music production by Francisco Carle and guitars by Claudio Pérez. A version that honors original author, Jorge Cartes Palacios (Tomé).",
         music_author_label: "Original Author: Jorge Cartes Palacios",
-        credits: { prod: "Production", guitars: "Guitars", voice: "Voice", record: "Recording Session" },
+        credits: { prod: "Production", guitars: "Guitarras", voice: "Voice", record: "Recording Session" },
         gallery_title: "Conceptual Art",
         gallery_subtitle: "Víctor Jara Lunar Station — Chile 1972"
       }
-    },
-    portfolio: { badge: "Developments", title: "Ideas to Life", subtitle: "We prove code.", armonix: { desc: "Interactive music suite.", cta: "Try" }, palabra: { desc: "Reading & reflection.", cta: "Visit" }, emaus: { desc: "SaaS management.", cta: "Visit" }, verso: { desc: "AI Band coordination.", cta: "Soon" } },
-    philosophy: { badge: "Philosophy", title_start: "We don't just code,", title_end: "we compose.", desc: "Software with rhythm.", points: [ { title: "Certainty", desc: "Clear budgets." }, { title: "Agility", desc: "Short sprints." }, { title: "Intelligence", desc: "AI co-pilot." } ], terminal: { start: "melodia-lab start", init: "Init...", loading: "Loading IA...", budget: "Optimizing...", agility: "Agility...", done: "Done" } },
-    contact: { title: "Contact", subtitle: "Tell us your idea.", name: "Name", name_ph: "Name", email: "Email", email_ph: "hello@ex.com", message: "Message", message_ph: "Project...", submit: "Send" },
-    footer: { rights: "All rights reserved." }
+    }
   },
   fr: {
+    ...baseEn,
     nav: { services: "Services", audiovisual: "Audiovisuel", projects: "Projets", philosophy: "Philosophie", contact: "Contact", start: "Démarrer" },
     tierrita: { 
       more: "Explorer", 
@@ -108,6 +112,7 @@ export const translations = {
     }
   },
   it: {
+    ...baseEn,
     nav: { services: "Servizi", audiovisual: "Audiovisivo", projects: "Progetti", philosophy: "Filosofia", contact: "Contatto", start: "Inizia" },
     tierrita: { 
       more: "Esplora", 
@@ -130,6 +135,7 @@ export const translations = {
     }
   },
   de: {
+    ...baseEn,
     nav: { services: "Dienste", audiovisual: "Audiovisuell", projects: "Projekte", philosophy: "Philosophie", contact: "Kontakt", start: "Starten" },
     tierrita: { 
       more: "Entdecken", 
@@ -152,6 +158,7 @@ export const translations = {
     }
   },
   ja: {
+    ...baseEn,
     nav: { services: "サービス", audiovisual: "映像制作", projects: "プロジェクト", philosophy: "哲学", contact: "連絡", start: "開始" },
     tierrita: { 
       more: "探索する", 
@@ -174,6 +181,7 @@ export const translations = {
     }
   },
   ar: {
+    ...baseEn,
     nav: { services: "خدمات", audiovisual: "سمعي بصري", projects: "مشاريع", philosophy: "فلسفة", contact: "اتصال", start: "ابدأ" },
     tierrita: { 
       more: "استكشف", 
@@ -187,7 +195,7 @@ export const translations = {
         mission_desc: "مستوحاة من حلم تشيلي في الفضاء، صُممت هذه المحطة للحفاظ على الثقافة.",
         audiovisual_label: "الإنتاج السمعي البصري",
         music_prod_title: "الإنتاج الموسيقي",
-        music_prod_desc: "أداء ماونيتا، إنتاج فرانسيسكو كارل. تكريم لخورخي كارتيس بالاسيوس.",
+        music_prod_desc: "أداء ماونيta، إنتاج فرانسيسكو كارل. تكريم لخورخي كارتيس بالاسيوس.",
         music_author_label: "المؤلف الأصلي: خورخي كارتيس بالاسيوس",
         credits: { prod: "إنتاج", guitars: "جيتار", voice: "صوت", record: "جلسة تسجيل" },
         gallery_title: "فن مفاهيمي",
@@ -196,4 +204,4 @@ export const translations = {
     }
   }
 };
-// v2.4.2 - Fixed section titles and complete detailed view translations across all languages.
+// v2.4.4 - Fixed crash by ensuring full translation structure for all languages.

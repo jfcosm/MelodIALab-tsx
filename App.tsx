@@ -406,9 +406,10 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
              <div className="order-1 lg:order-2">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-square lg:aspect-[4/5]">
                   <img 
-                    src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" 
+                    src="/maunita-studio.jpg" 
                     className="w-full h-full object-cover" 
                     alt="Maunita Recording" 
+                    onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
                   <div className="absolute bottom-8 left-8">
@@ -1087,4 +1088,4 @@ const App = () => {
 };
 
 export default App;
-// v2.4.3 - Fixed local image paths (removed /public/ prefix) and linked portfolio assets.
+// v2.4.4 - Ensured complete structure for all languages and corrected asset paths.
