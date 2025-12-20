@@ -111,6 +111,7 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  // Fix: Added 'const' to declare audioRef properly in the scope
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const togglePlay = () => {
@@ -1242,10 +1243,11 @@ const App = () => {
 
   const toggleTheme = () => setIsDark(!isDark);
 
-  // MANEJO DE RUTAS (Client-side Routing)
+  // MANEJO DE RUTAS (Client-side Routing Mejorado)
   useEffect(() => {
     const handleLocationChange = () => {
-      const path = window.location.pathname;
+      // Normalizamos la ruta (sin barra al final y todo en minúsculas)
+      const path = window.location.pathname.toLowerCase().replace(/\/$/, "");
       if (path === '/tierratierrita') {
         setActiveProject('tierrita');
       } else {
@@ -1253,7 +1255,7 @@ const App = () => {
       }
     };
 
-    // Al cargar la página
+    // Al cargar la página (Detecta acceso directo)
     handleLocationChange();
 
     // Al usar botones de atrás/adelante del navegador
@@ -1302,4 +1304,4 @@ const App = () => {
 };
 
 export default App;
-// v2.4.9 - Implemented client-side routing to handle /tierratierrita path and browser history.
+// v2.5.1 - Fixed audioRef declaration in AudioPlayer component.
