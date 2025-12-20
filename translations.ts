@@ -33,6 +33,12 @@ const tierritaDefault = {
     music_prod_desc: "The interpretation of 'Tierra Tierrita' is led by Maunita's voice, with music production by Francisco Carle and guitars by Claudio Pérez. A version that honors original author, Jorge Cartes Palacios (Tomé).",
     music_author_label: "Original Author: Jorge Cartes Palacios",
     credits: { prod: "Production", guitars: "Guitars", voice: "Voice", record: "Recording Session" },
+    player: {
+      song: "Song: \"Tierra Tierrita\".",
+      voice: "Vocals: Maunita.",
+      guitar_solo: "Guitar Solo: Claudio Pérez.",
+      full_prod: "Keys, drums, bass, guitars, vocals and production: Francisco Carle."
+    },
     gallery_title: "Conceptual Art",
     gallery_subtitle: "Víctor Jara Lunar Station — Chile 1972"
   }
@@ -78,6 +84,12 @@ export const translations = {
         music_prod_desc: "La interpretación de 'Tierra Tierrita' es liderada por la voz de Maunita, con la producción musical de Francisco Carle y las guitarras de Claudio Pérez. Una versión que honra al autor original, el cantautor Jorge Cartes Palacios (Tomé).",
         music_author_label: "Autor Original: Jorge Cartes Palacios",
         credits: { prod: "Producción", guitars: "Guitarras", voice: "Voz", record: "Sesión de Grabación" },
+        player: {
+          song: "Canción: \"Tierra Tierrita\".",
+          voice: "Voz: Maunita.",
+          guitar_solo: "Solo de guitarra: Claudio Pérez.",
+          full_prod: "Teclados, batería, bajo, guitarras, voces y producción: Francisco Carle."
+        },
         gallery_title: "Arte Conceptual",
         gallery_subtitle: "Estación Lunar Víctor Jara — Chile 1972"
       }
@@ -108,6 +120,12 @@ export const translations = {
         music_prod_desc: "Interprété par Maunita, produit par Francisco Carle. Hommage à Jorge Cartes Palacios.",
         music_author_label: "Auteur Original : Jorge Cartes Palacios",
         credits: { prod: "Production", guitars: "Guitares", voice: "Voix", record: "Session d'enregistrement" },
+        player: {
+          song: "Chanson: \"Tierra Tierrita\".",
+          voice: "Voix: Maunita.",
+          guitar_solo: "Solo de guitare: Claudio Pérez.",
+          full_prod: "Claviers, batterie, basse, guitares, voix et production: Francisco Carle."
+        },
         gallery_title: "Art Conceptuel",
         gallery_subtitle: "Station Lunaire Víctor Jara — Chili 1972"
       } 
@@ -133,6 +151,12 @@ export const translations = {
         music_prod_desc: "Interpretato da Maunita, prodotto da Francisco Carle. Omaggio a Jorge Cartes Palacios.",
         music_author_label: "Autore Originale: Jorge Cartes Palacios",
         credits: { prod: "Produzione", guitars: "Chitarre", voice: "Voce", record: "Sessione di registrazione" },
+        player: {
+          song: "Canzone: \"Tierra Tierrita\".",
+          voice: "Voce: Maunita.",
+          guitar_solo: "Assolo di chitarra: Claudio Pérez.",
+          full_prod: "Tastiere, batteria, basso, chitarre, voci e produzione: Francisco Carle."
+        },
         gallery_title: "Arte Concettuale",
         gallery_subtitle: "Stazione Lunare Víctor Jara — Cile 1972"
       }
@@ -158,6 +182,12 @@ export const translations = {
         music_prod_desc: "Gesungen von Maunita, produziert von Francisco Carle. Ehrt Jorge Cartes Palacios.",
         music_author_label: "Originalautor: Jorge Cartes Palacios",
         credits: { prod: "Produktion", guitars: "Gitarren", voice: "Stimme", record: "Aufnahmesitzung" },
+        player: {
+          song: "Lied: \"Tierra Tierrita\".",
+          voice: "Stimme: Maunita.",
+          guitar_solo: "Gitarrensolo: Claudio Pérez.",
+          full_prod: "Keyboards, Schlagzeug, Bass, Gitarren, Gesang und Produktion: Francisco Carle."
+        },
         gallery_title: "Konzeptkunst",
         gallery_subtitle: "Mondstation Víctor Jara — Chile 1972"
       }
@@ -183,6 +213,12 @@ export const translations = {
         music_prod_desc: "マウニータの歌唱、フランシスコ・カルレによるプロデュース。 ホルヘ・カルテス・パラシオスへのオマージュ。",
         music_author_label: "原作者: ホルヘ・カルテス・パラシオス",
         credits: { prod: "プロデュース", guitars: "ギター", voice: "ヴォーカル", record: "レコーディング" },
+        player: {
+          song: "曲名: \"Tierra Tierrita\"。",
+          voice: "ヴォーカル: Maunita。",
+          guitar_solo: "ギターソロ: Claudio Pérez。",
+          full_prod: "キーボード、ドラム、ベース、ギター、ボーカル、プロデュース: Francisco Carle。"
+        },
         gallery_title: "コンセプトアート",
         gallery_subtitle: "ビクトル・ハラ月面基地 — チリ 1972"
       }
@@ -208,10 +244,16 @@ export const translations = {
         music_prod_desc: "أداء ماونيتا، إنتاج فرانسيسكو كارل. تكريم لخورخي كارتيس بالاسيوس.",
         music_author_label: "المؤلف الأصلي: خورخي كارتيس بالاسيوس",
         credits: { prod: "إنتاج", guitars: "جيتار", voice: "صوت", record: "جلسة تسجيل" },
+        player: {
+          song: "أغنية: \"Tierra Tierrita\".",
+          voice: "صوت: ماونيتا.",
+          guitar_solo: "سولو جيتار: كلاوديو بيريز.",
+          full_prod: "لوحات المفاتيح والطبول والباس والجيتار والأصوات والإنتاج: فرانسيسكو كارل."
+        },
         gallery_title: "فن مفاهيمي",
         gallery_subtitle: "محطة فيكتور جارا القمرية — تشيلي 1972"
       }
     }
   }
 };
-// v2.4.6 - Flattened translations and ensured complete objects for all languages.
+// v2.4.7 - Added audio player credits for Tierra Tierrita project.

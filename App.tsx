@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Monitor, 
   Smartphone, 
@@ -41,7 +41,9 @@ import {
   Rocket,
   Leaf,
   Waves,
-  Disc
+  Disc,
+  Volume2,
+  RotateCcw
 } from 'lucide-react';
 import { translations, LANGUAGES, Language } from './translations';
 
@@ -103,6 +105,159 @@ const Logo = () => (
     Melod<span className="text-brand-blue">IA</span> La<span className="text-brand-orange italic text-3xl leading-none">♭</span>
   </span>
 );
+
+const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const onTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+      setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
+    }
+  };
+
+  const onLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (audioRef.current) {
+      const newTime = (parseFloat(e.target.value) / 100) * duration;
+      audioRef.current.currentTime = newTime;
+      setProgress(parseFloat(e.target.value));
+    }
+  };
+
+  const formatTime = (time: number) => {
+    if (isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const reset = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      if (!isPlaying) audioRef.current.pause();
+      setProgress(0);
+      setCurrentTime(0);
+    }
+  };
+
+  const p = t.tierrita.detailed.player;
+
+  return (
+    <div className={`mt-10 p-6 rounded-3xl border transition-all duration-300 font-sans ${
+      isDark ? 'bg-white/5 border-white/10 shadow-2xl' : 'bg-white border-gray-200 shadow-xl'
+    }`}>
+      <audio 
+        ref={audioRef} 
+        src={src} 
+        onTimeUpdate={onTimeUpdate} 
+        onLoadedMetadata={onLoadedMetadata}
+        onEnded={() => setIsPlaying(false)}
+      />
+      
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center gap-5">
+          <button 
+            onClick={togglePlay}
+            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 ${
+              isDark ? 'bg-brand-blue text-white' : 'bg-brand-blue text-white'
+            }`}
+          >
+            {isPlaying ? <X size={28} /> : <Play size={28} className="ms-1" />}
+          </button>
+          
+          <div className="flex-1 overflow-hidden">
+             <div className="flex items-center gap-2 mb-1">
+               <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${
+                 isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600'
+               }`}>Preview</span>
+               <p className={`text-[10px] font-mono opacity-40 uppercase tracking-tighter ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                 HIFI AUDIO
+               </p>
+             </div>
+             <h4 className={`text-2xl font-display font-bold truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
+               Tierra Tierrita
+             </h4>
+          </div>
+
+          <button 
+            onClick={reset}
+            className={`p-3 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-gray-400' : 'hover:bg-gray-100 text-gray-500'}`}
+          >
+            <RotateCcw size={20} />
+          </button>
+        </div>
+
+        <div className="space-y-2">
+           <div className="relative group w-full h-2 bg-gray-500/10 rounded-full overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-blue to-brand-orange transition-all duration-100 ease-linear pointer-events-none"
+                style={{ width: `${progress}%` }}
+              ></div>
+              <input 
+                type="range" 
+                value={progress} 
+                min="0"
+                max="100"
+                step="0.1"
+                onChange={handleProgressChange}
+                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+              />
+           </div>
+           <div className="flex justify-between text-[11px] font-mono opacity-40">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration)}</span>
+           </div>
+        </div>
+
+        <div className={`pt-6 border-t ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+               <div className="flex items-start gap-2">
+                 <Disc size={14} className="mt-0.5 text-brand-blue shrink-0" />
+                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.song}</p>
+               </div>
+               <div className="flex items-start gap-2">
+                 <Mic2 size={14} className="mt-0.5 text-brand-blue shrink-0" />
+                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.voice}</p>
+               </div>
+            </div>
+            <div className="space-y-2">
+               <div className="flex items-start gap-2">
+                 <Zap size={14} className="mt-0.5 text-brand-orange shrink-0" />
+                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.guitar_solo}</p>
+               </div>
+               <div className="flex items-start gap-2">
+                 <Sparkles size={14} className="mt-0.5 text-brand-orange shrink-0" />
+                 <p className={`text-xs leading-relaxed opacity-60 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{p.full_prod}</p>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boolean; toggleTheme: () => void; lang: Language; setLang: (l: Language) => void; t: any; onBack?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -408,13 +563,11 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
                <p className="text-xl leading-relaxed opacity-80">
                  {d.music_prod_desc}
                </p>
-               <div className={`inline-block p-4 rounded-xl border border-dashed ${isDark ? 'border-white/10 bg-white/5' : 'border-gray-300 bg-gray-50'}`}>
-                 <p className="text-sm font-mono opacity-60">
-                   {d.music_author_label}
-                 </p>
-               </div>
+
+               {/* REPRODUCTOR DE AUDIO AGREGADO AQUÍ */}
+               <AudioPlayer isDark={isDark} src="/tierra_tierrita.mp3" t={t} />
                
-               <div className="flex flex-wrap gap-8 pt-4">
+               <div className="flex flex-wrap gap-8 pt-8 border-t border-white/5">
                   <div className="space-y-1">
                     <p className="text-[10px] uppercase opacity-40 font-bold tracking-wider text-brand-blue">{d.credits.prod}</p>
                     <p className="font-bold text-lg">Francisco Carle</p>
@@ -1115,4 +1268,4 @@ const App = () => {
 };
 
 export default App;
-// v2.4.6 - Added mergeDeep fallback and flattened translations to ensure stability.
+// v2.4.7 - Integrated custom audio player for Tierra Tierrita project with themed UI and credits.
