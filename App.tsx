@@ -616,7 +616,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
             <iframe 
               className="absolute inset-0 w-full h-full"
-              src="https://www.youtube-nocookie.com/embed/99ykgzvP49s?autoplay=0&rel=0&modestbranding=1" 
+              src="https://www.youtube-nocookie.com/embed/ybe4eGlZTGc?autoplay=0&rel=0&modestbranding=1" 
               title="Tierra Tierrita Video Clip"
               loading="lazy"
               frameBorder="0"
