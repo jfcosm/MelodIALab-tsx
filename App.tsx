@@ -298,7 +298,7 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
                 <ArrowLeft size={24} />
               </button>
             )}
-            <a href="#" className={`flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            <a href="/" onClick={(e) => { e.preventDefault(); if (onBack) onBack(); else window.scrollTo(0,0); }} className={`flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               <Logo />
             </a>
           </div>
@@ -482,7 +482,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
   const d = t.tierrita.detailed;
 
   return (
-    <div className={`min-h-screen relative overflow-x-hidden font-sans ${isDark ? 'bg-brand-dark text-white' : 'bg-white text-gray-900'}`}>
+    <div className={`min-h-screen relative overflow-x-hidden font-sans animate-in fade-in duration-700 ${isDark ? 'bg-brand-dark text-white' : 'bg-white text-gray-900'}`}>
       <div className="fixed inset-0 pointer-events-none opacity-10 mix-blend-overlay z-40 bg-[url('https://www.transparenttextures.com/patterns/film-grain.png')]"></div>
       
       <Navbar isDark={isDark} toggleTheme={toggleTheme} lang={lang} setLang={setLang} t={t} onBack={onBack} />
@@ -564,7 +564,6 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
                  {d.music_prod_desc}
                </p>
 
-               {/* REPRODUCTOR DE AUDIO AGREGADO AQUÍ */}
                <AudioPlayer isDark={isDark} src="/tierra_tierrita.mp3" t={t} />
                
                <div className="flex flex-wrap gap-8 pt-8 border-t border-white/5">
@@ -756,7 +755,6 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
 
 const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) => (
   <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
-    {/* Fondo Estático */}
     <div className="absolute inset-0 z-0">
       <img 
         src="/hero-bg.jpg" 
@@ -771,23 +769,12 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
       }`}></div>
     </div>
 
-    {/* LUCES DINÁMICAS Y BOKEH - Restaurado y Mejorado */}
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-      {/* Grano cinemático */}
       <div className="absolute inset-0 grain-overlay z-10"></div>
-      
-      {/* Blobs de Luz Dinámicos */}
       <div className="absolute top-0 left-0 w-full h-full mix-blend-screen">
-        {/* Luz 1: Azul Principal */}
         <div className={`absolute -top-20 -right-20 w-[600px] h-[600px] bg-brand-blue/30 rounded-full bokeh-blur animate-drift-slow opacity-60`}></div>
-        
-        {/* Luz 2: Morada Profunda */}
         <div className={`absolute -bottom-40 -left-40 w-[700px] h-[700px] bg-purple-600/25 rounded-full bokeh-blur animate-drift-medium opacity-50`} style={{ animationDelay: '-5s' }}></div>
-        
-        {/* Luz 3: Acento Azul Eléctrico */}
         <div className={`absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-blue-400/20 rounded-full bokeh-blur animate-drift-fast opacity-40`} style={{ animationDelay: '-10s' }}></div>
-        
-        {/* Luz 4: Resplandor Morado Suave */}
         <div className={`absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-purple-500/15 rounded-full bokeh-blur animate-drift-slow opacity-30`} style={{ animationDelay: '-15s' }}></div>
       </div>
     </div>
@@ -1255,11 +1242,41 @@ const App = () => {
 
   const toggleTheme = () => setIsDark(!isDark);
 
+  // MANEJO DE RUTAS (Client-side Routing)
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname;
+      if (path === '/tierratierrita') {
+        setActiveProject('tierrita');
+      } else {
+        setActiveProject(null);
+      }
+    };
+
+    // Al cargar la página
+    handleLocationChange();
+
+    // Al usar botones de atrás/adelante del navegador
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  const navigateToProject = (projectId: string | null) => {
+    if (projectId === 'tierrita') {
+      window.history.pushState({}, '', '/tierratierrita');
+      setActiveProject('tierrita');
+    } else {
+      window.history.pushState({}, '', '/');
+      setActiveProject(null);
+    }
+    window.scrollTo(0, 0);
+  };
+
   if (activeProject === 'tierrita') {
     return (
       <TierraTierritaDetailed 
         t={t} 
-        onBack={() => setActiveProject(null)} 
+        onBack={() => navigateToProject(null)} 
         isDark={isDark} 
         toggleTheme={toggleTheme}
         lang={lang}
@@ -1274,7 +1291,7 @@ const App = () => {
       <main className="animate-in fade-in duration-700">
         <Hero isDark={isDark} t={t} lang={lang} />
         <Services isDark={isDark} t={t} />
-        <TierraTierritaTeaser isDark={isDark} t={t} onEnter={() => setActiveProject('tierrita')} />
+        <TierraTierritaTeaser isDark={isDark} t={t} onEnter={() => navigateToProject('tierrita')} />
         <Portfolio isDark={isDark} t={t} />
         <Philosophy isDark={isDark} t={t} />
         <Contact isDark={isDark} t={t} />
@@ -1285,4 +1302,4 @@ const App = () => {
 };
 
 export default App;
-// v2.4.8 - Restored and enhanced Hero background with dynamic bokeh lights, cinematic grain, and improved stacking order.
+// v2.4.9 - Implemented client-side routing to handle /tierratierrita path and browser history.
