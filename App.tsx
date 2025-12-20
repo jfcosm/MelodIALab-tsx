@@ -755,7 +755,8 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
 };
 
 const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) => (
-  <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+  <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
+    {/* Fondo Estático */}
     <div className="absolute inset-0 z-0">
       <img 
         src="/hero-bg.jpg" 
@@ -765,52 +766,68 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
       />
       <div className={`absolute inset-0 ${
         isDark 
-          ? 'bg-gradient-to-b from-brand-dark/95 via-brand-dark/80 to-brand-dark' 
-          : 'bg-gradient-to-b from-white/90 via-white/60 to-gray-50'
+          ? 'bg-gradient-to-b from-brand-dark/95 via-brand-dark/85 to-brand-dark' 
+          : 'bg-gradient-to-b from-white/90 via-white/70 to-gray-50'
       }`}></div>
     </div>
 
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none z-0 mix-blend-screen opacity-50">
-      <div className="absolute top-20 right-10 w-72 h-72 bg-brand-blue/30 rounded-full blur-[100px] animate-pulse-slow"></div>
-      <div className="absolute bottom-10 left-10 w-96 h-96 bg-purple-500/30 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+    {/* LUCES DINÁMICAS Y BOKEH - Restaurado y Mejorado */}
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      {/* Grano cinemático */}
+      <div className="absolute inset-0 grain-overlay z-10"></div>
+      
+      {/* Blobs de Luz Dinámicos */}
+      <div className="absolute top-0 left-0 w-full h-full mix-blend-screen">
+        {/* Luz 1: Azul Principal */}
+        <div className={`absolute -top-20 -right-20 w-[600px] h-[600px] bg-brand-blue/30 rounded-full bokeh-blur animate-drift-slow opacity-60`}></div>
+        
+        {/* Luz 2: Morada Profunda */}
+        <div className={`absolute -bottom-40 -left-40 w-[700px] h-[700px] bg-purple-600/25 rounded-full bokeh-blur animate-drift-medium opacity-50`} style={{ animationDelay: '-5s' }}></div>
+        
+        {/* Luz 3: Acento Azul Eléctrico */}
+        <div className={`absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-blue-400/20 rounded-full bokeh-blur animate-drift-fast opacity-40`} style={{ animationDelay: '-10s' }}></div>
+        
+        {/* Luz 4: Resplandor Morado Suave */}
+        <div className={`absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-purple-500/15 rounded-full bokeh-blur animate-drift-slow opacity-30`} style={{ animationDelay: '-15s' }}></div>
+      </div>
     </div>
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center font-sans">
-      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 border backdrop-blur-sm ${
+      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 border backdrop-blur-sm animate-in slide-in-from-top duration-1000 ${
         isDark ? 'bg-white/5 border-white/10 text-brand-blue' : 'bg-white/80 border-blue-100 text-brand-blue shadow-sm'
       }`}>
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
         </span>
-        <span className="text-sm font-semibold tracking-wide">{t.hero.badge}</span>
+        <span className="text-sm font-semibold tracking-wide uppercase">{t.hero.badge}</span>
       </div>
 
-      <h1 className={`text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight ${
+      <h1 className={`text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tight animate-in zoom-in duration-1000 ${
         isDark ? 'text-white' : 'text-gray-900'
       }`}>
         {t.hero.title_start} <br className="hidden md:block" />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-purple-500">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-purple-400 to-brand-blue bg-[length:200%_auto] animate-pulse-slow">
           {t.hero.title_end}
         </span>
       </h1>
 
-      <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed ${
+      <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom duration-1000 delay-300 ${
         isDark ? 'text-gray-300' : 'text-gray-700'
       }`}>
         {t.hero.subtitle}
       </p>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in duration-1000 delay-500">
         <a 
           href="#contact"
-          className="w-full sm:w-auto px-8 py-4 bg-brand-blue hover:bg-blue-600 text-white rounded-xl font-bold text-lg transition-all hover:-translate-y-1 shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
+          className="w-full sm:w-auto px-10 py-4 bg-brand-blue hover:bg-blue-600 text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/40 flex items-center justify-center gap-2"
         >
           {t.hero.cta_primary} <ArrowRight size={20} />
         </a>
         <a 
           href="#services"
-          className={`w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-lg transition-all border backdrop-blur-sm ${
+          className={`w-full sm:w-auto px-10 py-4 rounded-2xl font-bold text-lg transition-all border backdrop-blur-md ${
             isDark 
               ? 'border-white/10 hover:bg-white/5 text-white' 
               : 'border-gray-300 hover:bg-white/50 text-gray-800'
@@ -820,12 +837,12 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
         </a>
       </div>
 
-      <div className="mt-20 relative max-w-4xl mx-auto animate-float">
+      <div className="mt-24 relative max-w-4xl mx-auto animate-float">
         <div className="relative">
-           <div className="absolute -inset-1 bg-gradient-to-r from-brand-blue to-purple-600 rounded-2xl blur opacity-20"></div>
+           <div className="absolute -inset-4 bg-gradient-to-r from-brand-blue to-purple-600 rounded-3xl blur-[40px] opacity-15"></div>
            <DashboardMockup isDark={isDark} t={t} lang={lang} />
         </div>
-        <p className={`mt-4 text-sm font-medium opacity-60 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className={`mt-6 text-sm font-medium opacity-50 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
           {t.hero.dashboard_caption}
         </p>
       </div>
@@ -1268,4 +1285,4 @@ const App = () => {
 };
 
 export default App;
-// v2.4.7 - Integrated custom audio player for Tierra Tierrita project with themed UI and credits.
+// v2.4.8 - Restored and enhanced Hero background with dynamic bokeh lights, cinematic grain, and improved stacking order.
