@@ -47,7 +47,8 @@ import {
   Camera,
   Film,
   Instagram,
-  Linkedin
+  Linkedin,
+  AlertCircle
 } from 'lucide-react';
 import { translations, LANGUAGES, Language } from './translations';
 
@@ -111,19 +112,41 @@ const Logo = ({ className = "" }: { className?: string }) => (
   </div>
 );
 
-const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any }) => {
+const AudioPlayer = ({ isDark, filename, t }: { isDark: boolean; filename: string; t: any }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [audioError, setAudioError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Intentar cargar primero de raíz, luego de /public/
+  const initialSrc = `/${filename}`;
+  const fallbackSrc = `/public/${filename}`;
+  const [currentSrc, setCurrentSrc] = useState(initialSrc);
+
+  const handleAudioError = () => {
+    if (retryCount === 0) {
+      console.warn(`Audio no encontrado en ${currentSrc}. Intentando fallback...`);
+      setCurrentSrc(fallbackSrc);
+      setRetryCount(1);
+    } else {
+      console.error(`Audio no encontrado en ninguna ruta (${initialSrc} o ${fallbackSrc}).`);
+      setAudioError(true);
+      setIsPlaying(false);
+    }
+  };
+
   const togglePlay = () => {
-    if (audioRef.current) {
+    if (audioRef.current && !audioError) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play();
+        audioRef.current.play().catch(e => {
+          console.error("Error al reproducir:", e);
+          setAudioError(true);
+        });
       }
       setIsPlaying(!isPlaying);
     }
@@ -139,6 +162,7 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
   const onLoadedMetadata = () => {
     if (audioRef.current) {
       setDuration(audioRef.current.duration);
+      setAudioError(false);
     }
   };
 
@@ -171,12 +195,13 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
   return (
     <div className={`mt-10 p-6 rounded-3xl border transition-all duration-300 font-sans ${
       isDark ? 'bg-white/5 border-white/10 shadow-2xl' : 'bg-white border-gray-200 shadow-xl'
-    }`}>
+    } ${audioError ? 'border-red-500/30 ring-1 ring-red-500/10' : ''}`}>
       <audio 
         ref={audioRef} 
-        src={src} 
+        src={currentSrc} 
         onTimeUpdate={onTimeUpdate} 
         onLoadedMetadata={onLoadedMetadata}
+        onError={handleAudioError}
         onEnded={() => setIsPlaying(false)}
       />
       
@@ -184,25 +209,27 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
         <div className="flex items-center gap-5">
           <button 
             onClick={togglePlay}
+            disabled={audioError}
             className={`w-16 h-16 rounded-full flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 ${
-              isDark ? 'bg-brand-blue text-white' : 'bg-brand-blue text-white'
+              audioError ? 'bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-brand-blue text-white'
             }`}
           >
-            {isPlaying ? <X size={28} /> : <Play size={28} className="ms-1" />}
+            {audioError ? <AlertCircle size={28} /> : (isPlaying ? <X size={28} /> : <Play size={28} className="ms-1" />)}
           </button>
           
           <div className="flex-1 overflow-hidden">
              <div className="flex items-center gap-2 mb-1">
                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${
-                 isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600'
-               }`}>{t.dashboard.status}</span>
+                 audioError ? 'bg-red-500/20 text-red-400' : (isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600')
+               }`}>{audioError ? 'Error de Carga' : t.dashboard.status}</span>
                <p className={`text-[10px] font-mono opacity-40 uppercase tracking-tighter ${isDark ? 'text-white' : 'text-gray-900'}`}>
                  HIFI AUDIO
                </p>
              </div>
-             <h4 className={`text-2xl font-display font-bold truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
+             <h4 className={`text-2xl font-display font-bold truncate ${isDark ? 'text-white' : 'text-gray-900'} ${audioError ? 'opacity-50' : ''}`}>
                Tierra Tierrita
              </h4>
+             {audioError && <p className="text-[10px] text-red-500 font-mono mt-1 uppercase italic">Archivo no encontrado en /public/</p>}
           </div>
 
           <button 
@@ -216,7 +243,9 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
         <div className="space-y-2">
            <div className="relative group w-full h-2 bg-gray-500/10 rounded-full overflow-hidden">
               <div 
-                className="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-blue to-brand-orange transition-all duration-100 ease-linear pointer-events-none"
+                className={`absolute top-0 left-0 h-full transition-all duration-100 ease-linear pointer-events-none ${
+                  audioError ? 'bg-gray-600' : 'bg-gradient-to-r from-brand-blue to-brand-orange'
+                }`}
                 style={{ width: `${progress}%` }}
               ></div>
               <input 
@@ -226,6 +255,7 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
                 max="100"
                 step="0.1"
                 onChange={handleProgressChange}
+                disabled={audioError}
                 className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
               />
            </div>
@@ -262,6 +292,21 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
       </div>
     </div>
   );
+};
+
+// Componente de imagen resiliente que busca en raíz, /public/ y luego fallback
+const ResilientImage = ({ filename, fallback, alt, className }: { filename: string, fallback: string, alt: string, className?: string }) => {
+  const [retryStage, setRetryStage] = useState(0); // 0: root, 1: /public/, 2: fallback
+  
+  const src = retryStage === 0 ? `/${filename}` : (retryStage === 1 ? `/public/${filename}` : fallback);
+
+  const handleError = () => {
+    if (retryStage < 2) {
+      setRetryStage(retryStage + 1);
+    }
+  };
+
+  return <img src={src} alt={alt} className={className} onError={handleError} />;
 };
 
 const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boolean; toggleTheme: () => void; lang: Language; setLang: (l: Language) => void; t: any; onBack?: () => void }) => {
@@ -496,11 +541,11 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
       <header className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/40 z-10"></div>
-          <img 
-            src="/manuel-vera-hero.jpg" 
+          <ResilientImage 
+            filename="manuel-vera-hero.jpg"
+            fallback="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop"
             alt="Manuel Vera Space"
             className="w-full h-full object-cover scale-100 transition-transform duration-[10s] animate-pulse-slow"
-            onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop" }}
           />
         </div>
 
@@ -522,11 +567,11 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="relative group">
             <div className="aspect-[16/10] rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
-              <img 
-                src="/jose-bolados-actor.jpg" 
+              <ResilientImage 
+                filename="jose-bolados-actor.jpg"
+                fallback="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop"
                 alt="José Bolados Milla Actor"
                 className="w-full h-full object-cover grayscale sepia-[0.3] hover:grayscale-0 transition-all duration-700"
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop" }}
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
                  <p className="font-mono text-xs text-brand-orange mb-1">{d.audiovisual_label}</p>
@@ -571,7 +616,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
                  {d.music_prod_desc}
                </p>
 
-               <AudioPlayer isDark={isDark} src="/tierra_tierrita.mp3" t={t} />
+               <AudioPlayer isDark={isDark} filename="tierra_tierrita.mp3" t={t} />
                
                <div className="flex flex-wrap gap-8 pt-8 border-t border-white/5">
                   <div className="space-y-1">
@@ -591,11 +636,11 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
 
              <div className="order-1 lg:order-2">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-square lg:aspect-[4/5]">
-                  <img 
-                    src="/maunita-studio.jpg" 
-                    className="w-full h-full object-cover" 
-                    alt="Maunita Recording" 
-                    onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" }}
+                  <ResilientImage 
+                    filename="maunita-studio.jpg"
+                    fallback="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop"
+                    alt="Maunita Recording"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
                   <div className="absolute bottom-8 left-8">
@@ -643,16 +688,16 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5">
-              <img src="/moon-concept.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1522030239044-129314828b10?q=80&w=2040&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Moon Concept" />
+              <ResilientImage filename="moon-concept.jpg" fallback="https://images.unsplash.com/photo-1522030239044-129314828b10?q=80&w=2040&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Moon Concept" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5 md:translate-y-8">
-              <img src="/pilot-suit.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2088&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Pilot Suit" />
+              <ResilientImage filename="pilot-suit.jpg" fallback="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2088&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Pilot Suit" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5">
-              <img src="/ystad-biotech.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Biotech Ystad" />
+              <ResilientImage filename="ystad-biotech.jpg" fallback="https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Biotech Ystad" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5 md:translate-y-8">
-              <img src="/poster-tierrita.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1446941611759-ad16727a294d?q=80&w=2070&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Poster Tierra Tierrita" />
+              <ResilientImage filename="poster-tierrita.jpg" fallback="https://images.unsplash.com/photo-1446941611759-ad16727a294d?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Poster Tierra Tierrita" />
             </div>
           </div>
         </div>
@@ -1338,7 +1383,7 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
           </p>
           <div className="flex items-center gap-6">
              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
-               v2.7.2 — HYBRID ENGINE STABLE
+               v2.7.3 — HYBRID ENGINE STABLE
              </span>
           </div>
         </div>
@@ -1409,4 +1454,4 @@ const App = () => {
 };
 
 export default App;
-// v2.7.2 - Personalization Layer: User can now upload local images to /public with automatic high-quality fallbacks.
+// v2.7.3 - Smart Route Detection: Fixed issues with /public/ subdirectory paths for images and audio player.
