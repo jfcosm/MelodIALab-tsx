@@ -497,10 +497,10 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/40 z-10"></div>
           <img 
-            src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop" 
+            src="/manuel-vera-hero.jpg" 
             alt="Manuel Vera Space"
             className="w-full h-full object-cover scale-100 transition-transform duration-[10s] animate-pulse-slow"
-            onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" }}
+            onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop" }}
           />
         </div>
 
@@ -523,10 +523,10 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
           <div className="relative group">
             <div className="aspect-[16/10] rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
               <img 
-                src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop" 
+                src="/jose-bolados-actor.jpg" 
                 alt="José Bolados Milla Actor"
                 className="w-full h-full object-cover grayscale sepia-[0.3] hover:grayscale-0 transition-all duration-700"
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1505685296765-3a2736de412f?q=80&w=2070&auto=format&fit=crop" }}
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop" }}
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
                  <p className="font-mono text-xs text-brand-orange mb-1">{d.audiovisual_label}</p>
@@ -592,10 +592,10 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
              <div className="order-1 lg:order-2">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-square lg:aspect-[4/5]">
                   <img 
-                    src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" 
+                    src="/maunita-studio.jpg" 
                     className="w-full h-full object-cover" 
                     alt="Maunita Recording" 
-                    onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop" }}
+                    onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
                   <div className="absolute bottom-8 left-8">
@@ -643,16 +643,16 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5">
-              <img src="https://images.unsplash.com/photo-1522030239044-129314828b10?q=80&w=2040&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Moon Concept" />
+              <img src="/moon-concept.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1522030239044-129314828b10?q=80&w=2040&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Moon Concept" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5 md:translate-y-8">
-              <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2088&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Pilot Suit" />
+              <img src="/pilot-suit.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2088&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Pilot Suit" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5">
-              <img src="https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Biotech Ystad" />
+              <img src="/ystad-biotech.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Biotech Ystad" />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5 md:translate-y-8">
-              <img src="https://images.unsplash.com/photo-1446941611759-ad16727a294d?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Poster Tierra Tierrita" />
+              <img src="/poster-tierrita.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1446941611759-ad16727a294d?q=80&w=2070&auto=format&fit=crop" }} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Poster Tierra Tierrita" />
             </div>
           </div>
         </div>
@@ -1338,7 +1338,7 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
           </p>
           <div className="flex items-center gap-6">
              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
-               v2.7.1 — HYBRID ENGINE STABLE
+               v2.7.2 — HYBRID ENGINE STABLE
              </span>
           </div>
         </div>
@@ -1409,4 +1409,4 @@ const App = () => {
 };
 
 export default App;
-// v2.7.1 - Visual Integrity Patch: Fixed all broken image links with high-fidelity Unsplash assets.
+// v2.7.2 - Personalization Layer: User can now upload local images to /public with automatic high-quality fallbacks.
