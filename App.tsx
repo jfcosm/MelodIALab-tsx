@@ -43,7 +43,11 @@ import {
   Waves,
   Disc,
   Volume2,
-  RotateCcw
+  RotateCcw,
+  Camera,
+  Film,
+  Instagram,
+  Linkedin
 } from 'lucide-react';
 import { translations, LANGUAGES, Language } from './translations';
 
@@ -61,7 +65,7 @@ const mergeDeep = (target: any, source: any) => {
         if (!(key in target))
           Object.assign(output, { [key]: source[key] });
         else
-          output[key] = mergeDeep(target[key], source[key]);
+          output[key] = mergeDeep(translations['en'], source[key]); // Use specific lang or fallback
       } else {
         Object.assign(output, { [key]: source[key] });
       }
@@ -90,20 +94,22 @@ const useLanguage = () => {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  // Fallback system: Merge current language with English base
-  const baseT = translations['en'];
-  const currentT = translations[lang] || baseT;
-  const t = lang === 'en' ? baseT : mergeDeep(baseT, currentT);
+  const currentT = translations[lang];
+  // Prioritize current language fields over base English
+  const t = lang === 'en' ? translations['en'] : { ...translations['en'], ...currentT };
 
   return { lang, setLang, t };
 };
 
 // --- Components ---
 
-const Logo = () => (
-  <span className="font-display font-bold text-2xl tracking-tighter">
-    Melod<span className="text-brand-blue">IA</span> La<span className="text-brand-orange italic text-3xl leading-none">♭</span>
-  </span>
+const Logo = ({ className = "" }: { className?: string }) => (
+  <div className={`flex flex-col items-start leading-none ${className}`}>
+    <span className="font-display font-bold text-2xl tracking-tighter">
+      Melod<span className="text-brand-blue">IA</span> La<span className="text-brand-orange italic text-3xl leading-none">♭</span>
+    </span>
+    <span className="text-[9px] uppercase tracking-[0.2em] font-mono opacity-60 ps-1">Inteligencia Audiovisual</span>
+  </div>
 );
 
 const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any }) => {
@@ -111,7 +117,6 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  // Fix: Added 'const' to declare audioRef properly in the scope
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const togglePlay = () => {
@@ -191,7 +196,7 @@ const AudioPlayer = ({ isDark, src, t }: { isDark: boolean; src: string; t: any 
              <div className="flex items-center gap-2 mb-1">
                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${
                  isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600'
-               }`}>Preview</span>
+               }`}>{t.dashboard.status}</span>
                <p className={`text-[10px] font-mono opacity-40 uppercase tracking-tighter ${isDark ? 'text-white' : 'text-gray-900'}`}>
                  HIFI AUDIO
                </p>
@@ -504,7 +509,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
             {d.hero_tag}
           </div>
           <h1 className="text-6xl md:text-9xl font-display font-bold mb-8 leading-none tracking-tighter drop-shadow-2xl">
-            TIERRA <br/> <span className="text-brand-blue italic">TIERRITA</span>
+            {t.tierrita.title.split(' ')[0]} <br/> <span className="text-brand-blue italic">{t.tierrita.title.split(' ')[1]}</span>
           </h1>
           <p className="text-xl md:text-2xl font-light opacity-90 max-w-2xl mx-auto italic">
             {d.hero_title}
@@ -523,7 +528,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
                 className="w-full h-full object-cover grayscale sepia-[0.3] hover:grayscale-0 transition-all duration-700"
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
-                 <p className="font-mono text-xs text-brand-orange mb-1">PROTAGONISTA</p>
+                 <p className="font-mono text-xs text-brand-orange mb-1">{d.audiovisual_label}</p>
                  <h4 className="text-2xl font-bold font-display tracking-tight">José Bolados Milla</h4>
               </div>
             </div>
@@ -653,7 +658,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
       </section>
 
       <section className="py-32 text-center border-t border-white/5 font-sans">
-        <Logo />
+        <Logo className="mx-auto flex items-center" />
         <h3 className="text-3xl font-display font-bold mt-8 mb-8 opacity-80 italic">"{d.music_author_label}"</h3>
         <button 
           onClick={onBack}
@@ -680,17 +685,17 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
           <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
         </div>
         <div className={`ms-4 text-[10px] font-mono opacity-50 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-          melodia-client-portal.app
+          melodia-production-portal.reel
         </div>
       </div>
 
       <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="hidden md:flex flex-col gap-3 border-e pe-6 border-dashed border-gray-500/20">
           <div className={`flex items-center gap-2 font-medium text-sm p-2 rounded-lg ${isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-50 text-blue-600'}`}>
-            <LayoutDashboard size={14} /> Dashboard
+            <Video size={14} /> {t.dashboard.title}
           </div>
           <div className={`flex items-center gap-2 text-sm p-2 rounded-lg opacity-60 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            <Clock size={14} /> {t.dashboard.sprints}
+            <Code2 size={14} /> {t.dashboard.sprints}
           </div>
           <div className={`flex items-center gap-2 text-sm p-2 rounded-lg opacity-60 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             <DollarSign size={14} /> {t.dashboard.budget}
@@ -711,18 +716,18 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
           <div className="grid grid-cols-2 gap-4">
             <div className={`p-4 rounded-xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
               <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                <Clock size={12} /> {t.dashboard.progress}
+                <Activity size={12} /> {t.dashboard.progress}
               </div>
-              <div className={`text-xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>75%</div>
+              <div className={`text-xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>94%</div>
               <div className="w-full h-1 bg-gray-700/50 rounded-full mt-2 overflow-hidden">
-                <div className={`h-full bg-brand-blue w-3/4 rounded-full ${lang === 'ar' ? 'origin-right' : 'origin-left'}`}></div>
+                <div className={`h-full bg-brand-orange w-[94%] rounded-full ${lang === 'ar' ? 'origin-right' : 'origin-left'}`}></div>
               </div>
             </div>
             <div className={`p-4 rounded-xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
               <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                 <DollarSign size={12} /> {t.dashboard.budget}
               </div>
-              <div className={`text-xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>OK</div>
+              <div className={`text-xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>OPTIMIZED</div>
               <div className="text-[10px] text-green-500 mt-1">{t.dashboard.no_deviation}</div>
             </div>
           </div>
@@ -731,7 +736,7 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
             <h4 className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{t.dashboard.activity}</h4>
             <div className="flex gap-3 items-center">
               <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500">
-                <Cpu size={14} />
+                <Sparkles size={14} />
               </div>
               <div>
                 <div className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{t.dashboard.model_opt}</div>
@@ -740,7 +745,7 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
             </div>
              <div className="flex gap-3 items-center">
               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
-                <GitCommit size={14} />
+                <Terminal size={14} />
               </div>
               <div>
                 <div className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{t.dashboard.deploy}</div>
@@ -761,7 +766,7 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
         src="/hero-bg.jpg" 
         alt="Background" 
         className="w-full h-full object-cover"
-        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=3540&auto=format&fit=crop" }}
+        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop" }}
       />
       <div className={`absolute inset-0 ${
         isDark 
@@ -773,20 +778,19 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
       <div className="absolute inset-0 grain-overlay z-10"></div>
       <div className="absolute top-0 left-0 w-full h-full mix-blend-screen">
-        <div className={`absolute -top-20 -right-20 w-[600px] h-[600px] bg-brand-blue/30 rounded-full bokeh-blur animate-drift-slow opacity-60`}></div>
-        <div className={`absolute -bottom-40 -left-40 w-[700px] h-[700px] bg-purple-600/25 rounded-full bokeh-blur animate-drift-medium opacity-50`} style={{ animationDelay: '-5s' }}></div>
-        <div className={`absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-blue-400/20 rounded-full bokeh-blur animate-drift-fast opacity-40`} style={{ animationDelay: '-10s' }}></div>
-        <div className={`absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-purple-500/15 rounded-full bokeh-blur animate-drift-slow opacity-30`} style={{ animationDelay: '-15s' }}></div>
+        <div className={`absolute -top-20 -right-20 w-[600px] h-[600px] bg-brand-orange/20 rounded-full bokeh-blur animate-drift-slow opacity-60`}></div>
+        <div className={`absolute -bottom-40 -left-40 w-[700px] h-[700px] bg-brand-blue/25 rounded-full bokeh-blur animate-drift-medium opacity-50`} style={{ animationDelay: '-5s' }}></div>
+        <div className={`absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-purple-400/20 rounded-full bokeh-blur animate-drift-fast opacity-40`} style={{ animationDelay: '-10s' }}></div>
       </div>
     </div>
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center font-sans">
       <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 border backdrop-blur-sm animate-in slide-in-from-top duration-1000 ${
-        isDark ? 'bg-white/5 border-white/10 text-brand-blue' : 'bg-white/80 border-blue-100 text-brand-blue shadow-sm'
+        isDark ? 'bg-white/5 border-white/10 text-brand-orange' : 'bg-white/80 border-orange-100 text-brand-orange shadow-sm'
       }`}>
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-orange"></span>
         </span>
         <span className="text-sm font-semibold tracking-wide uppercase">{t.hero.badge}</span>
       </div>
@@ -795,7 +799,7 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
         isDark ? 'text-white' : 'text-gray-900'
       }`}>
         {t.hero.title_start} <br className="hidden md:block" />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-purple-400 to-brand-blue bg-[length:200%_auto] animate-pulse-slow">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange via-white to-brand-blue bg-[length:200%_auto] animate-pulse-slow">
           {t.hero.title_end}
         </span>
       </h1>
@@ -808,10 +812,12 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in duration-1000 delay-500">
         <a 
-          href="#contact"
-          className="w-full sm:w-auto px-10 py-4 bg-brand-blue hover:bg-blue-600 text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/40 flex items-center justify-center gap-2"
+          href="https://www.instagram.com/francisco.carle"
+          target="_blank"
+          rel="noreferrer"
+          className="w-full sm:w-auto px-10 py-4 bg-brand-orange hover:bg-orange-600 text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-orange/40 flex items-center justify-center gap-2"
         >
-          {t.hero.cta_primary} <ArrowRight size={20} />
+          <Instagram size={20} /> {t.hero.cta_primary}
         </a>
         <a 
           href="#services"
@@ -827,7 +833,7 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
 
       <div className="mt-24 relative max-w-4xl mx-auto animate-float">
         <div className="relative">
-           <div className="absolute -inset-4 bg-gradient-to-r from-brand-blue to-purple-600 rounded-3xl blur-[40px] opacity-15"></div>
+           <div className="absolute -inset-4 bg-gradient-to-r from-brand-orange to-brand-blue rounded-3xl blur-[40px] opacity-15"></div>
            <DashboardMockup isDark={isDark} t={t} lang={lang} />
         </div>
         <p className={`mt-6 text-sm font-medium opacity-50 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -841,14 +847,14 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
 const BentoItem = ({ title, desc, icon: Icon, cols = "col-span-1", isDark }: any) => (
   <div className={`${cols} group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 ${
     isDark 
-      ? 'bg-brand-surface border border-white/10 hover:border-brand-blue/50' 
-      : 'bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-blue/50'
+      ? 'bg-brand-surface border border-white/10 hover:border-brand-orange/50' 
+      : 'bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-orange/50'
   }`}>
-    <div className={`absolute top-0 end-0 p-32 bg-brand-blue/5 rounded-full blur-3xl transition-opacity opacity-0 group-hover:opacity-100`}></div>
+    <div className={`absolute top-0 end-0 p-32 bg-brand-orange/5 rounded-full blur-3xl transition-opacity opacity-0 group-hover:opacity-100`}></div>
     
     <div className="relative z-10">
       <div className={`inline-flex p-3 rounded-lg mb-4 ${
-        isDark ? 'bg-white/5 text-brand-blue' : 'bg-blue-50 text-brand-blue'
+        isDark ? 'bg-white/5 text-brand-orange' : 'bg-orange-50 text-brand-orange'
       }`}>
         <Icon size={24} />
       </div>
@@ -873,16 +879,23 @@ const Services = ({ isDark, t }: { isDark: boolean; t: any }) => (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <BentoItem 
           isDark={isDark}
-          cols="md:col-span-2"
+          cols="md:col-span-1"
           title={t.services.web.title}
           desc={t.services.web.desc}
-          icon={Monitor}
+          icon={Smartphone}
         />
         <BentoItem 
           isDark={isDark}
+          cols="md:col-span-2"
           title={t.services.ai.title}
           desc={t.services.ai.desc}
-          icon={Cpu}
+          icon={Camera}
+        />
+        <BentoItem 
+          isDark={isDark}
+          title={t.services.software.title}
+          desc={t.services.software.desc}
+          icon={Code2}
         />
         <BentoItem 
           isDark={isDark}
@@ -901,7 +914,7 @@ const Services = ({ isDark, t }: { isDark: boolean; t: any }) => (
           cols="md:col-span-1"
           title={t.services.ui.title}
           desc={t.services.ui.desc}
-          icon={Smartphone}
+          icon={Film}
         />
       </div>
     </div>
@@ -1043,9 +1056,9 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center max-w-3xl mx-auto mb-16 font-sans">
         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 border ${
-          isDark ? 'bg-white/5 border-white/10 text-brand-orange' : 'bg-orange-50 border-orange-200 text-brand-orange'
+          isDark ? 'bg-white/5 border-white/10 text-brand-blue' : 'bg-blue-50 border-blue-200 text-brand-blue'
         }`}>
-          <Sparkles size={14} />
+          <Code2 size={14} />
           <span className="text-xs font-bold uppercase tracking-wider">{t.portfolio.badge}</span>
         </div>
         <h2 className={`text-3xl md:text-5xl font-display font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
@@ -1108,7 +1121,7 @@ const Philosophy = ({ isDark, t }: { isDark: boolean; t: any }) => (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
            <div className="flex items-center gap-2 mb-4 text-brand-orange font-bold tracking-wider text-sm uppercase">
-             <Music size={16} /> {t.philosophy.badge}
+             <Video size={16} /> {t.philosophy.badge}
            </div>
            <h2 className={`text-4xl md:text-5xl font-display font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
              {t.philosophy.title_start} <br/>
@@ -1122,7 +1135,7 @@ const Philosophy = ({ isDark, t }: { isDark: boolean; t: any }) => (
              {t.philosophy.points.map((item: any, idx: number) => (
                <div key={idx} className="flex gap-4">
                  <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                   isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-100 text-blue-600'
+                   isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600'
                  }`}>
                    <CheckCircle2 size={18} />
                  </div>
@@ -1142,18 +1155,18 @@ const Philosophy = ({ isDark, t }: { isDark: boolean; t: any }) => (
              <div className="space-y-4 font-mono text-sm">
                 <div className="flex items-center gap-2 text-gray-500 mb-4">
                   <Terminal size={16} />
-                  <span>terminal — zsh</span>
+                  <span>render-engine — melodia-lab</span>
                 </div>
                 <div dir="ltr" className="text-start">
                   <div>
-                    <span className="text-green-500">➜</span> <span className="text-blue-500">~</span> <span className={isDark ? 'text-white' : 'text-gray-800'}>{t.philosophy.terminal.start}</span>
+                    <span className="text-brand-orange">➜</span> <span className="text-blue-500">~</span> <span className={isDark ? 'text-white' : 'text-gray-800'}>{t.philosophy.terminal.start}</span>
                   </div>
                   <div className="text-gray-500">{t.philosophy.terminal.init}</div>
-                  <div className="text-gray-500">{t.philosophy.terminal.loading} <span className="text-green-500">{t.philosophy.terminal.done}</span></div>
-                  <div className="text-gray-500">{t.philosophy.terminal.budget} <span className="text-green-500">{t.philosophy.terminal.done}</span></div>
-                  <div className="text-gray-500">{t.philosophy.terminal.agility} <span className="text-green-500">{t.philosophy.terminal.done}</span></div>
+                  <div className="text-gray-500">{t.philosophy.terminal.loading} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
+                  <div className="text-gray-500">{t.philosophy.terminal.budget} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
+                  <div className="text-gray-500">{t.philosophy.terminal.agility} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
                   <div>
-                    <span className="text-green-500">➜</span> <span className="text-blue-500">~</span> <span className={`${isDark ? 'text-white' : 'text-gray-800'} animate-pulse`}>_</span>
+                    <span className="text-brand-orange">➜</span> <span className="text-blue-500">~</span> <span className={`${isDark ? 'text-white' : 'text-gray-800'} animate-pulse`}>_</span>
                   </div>
                 </div>
              </div>
@@ -1214,9 +1227,9 @@ const Contact = ({ isDark, t }: { isDark: boolean; t: any }) => (
           </div>
           <button 
             type="submit" 
-            className="w-full bg-brand-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
+            className="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-brand-orange/25 flex items-center justify-center gap-2"
           >
-            {t.contact.submit} <MessageSquare size={20} />
+            {t.contact.submit} <Play size={20} />
           </button>
         </form>
       </div>
@@ -1224,17 +1237,114 @@ const Contact = ({ isDark, t }: { isDark: boolean; t: any }) => (
   </section>
 );
 
-const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => (
-  <footer className={`py-12 border-t font-sans ${isDark ? 'bg-brand-dark border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-      <div className={isDark ? 'text-white' : 'text-gray-900'}>
-        <Logo />
-        <p className="mt-2 text-gray-500">&copy; {new Date().getFullYear()} MelodIA La♭. {t.footer.rights}</p>
-      </div>
-      <a href="https://www.linkedin.com/company/melodialab/" target="_blank" rel="noreferrer" className="text-gray-500 hover:text-brand-blue transition-colors">LinkedIn</a>
+const FooterCard = ({ title, label, icon: Icon, colorClass, link, isDark, connectLabel }: any) => (
+  <a 
+    href={link} 
+    target="_blank" 
+    rel="noreferrer"
+    className={`group relative overflow-hidden p-6 md:p-10 rounded-[2.5rem] border transition-all duration-500 hover:-translate-y-2 ${
+      isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+    }`}
+  >
+    <div className={`absolute top-0 end-0 p-24 blur-[80px] opacity-0 group-hover:opacity-20 transition-opacity ${colorClass}`}></div>
+    <div className="relative z-10 flex flex-col gap-4">
+       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 ${
+         isDark ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900'
+       }`}>
+         <Icon size={32} />
+       </div>
+       <div>
+         <p className="text-xs font-bold uppercase tracking-widest opacity-40 mb-1">{label}</p>
+         <h4 className={`text-2xl md:text-3xl font-display font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h4>
+       </div>
+       <div className={`inline-flex items-center gap-2 text-sm font-bold transition-colors group-hover:text-brand-orange ${isDark ? 'text-white/60' : 'text-gray-500'}`}>
+         {connectLabel} <ArrowRight size={16} />
+       </div>
     </div>
-  </footer>
+  </a>
 );
+
+const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
+  const navItems = [
+    { name: t.nav.services, href: '#services' },
+    { name: t.nav.audiovisual, href: '#audiovisual' },
+    { name: t.nav.projects, href: '#portfolio' },
+    { name: t.nav.philosophy, href: '#philosophy' },
+    { name: t.nav.contact, href: '#contact' },
+  ];
+
+  return (
+    <footer className={`relative overflow-hidden pt-24 font-sans ${isDark ? 'bg-brand-dark' : 'bg-brand-light'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
+          <FooterCard 
+            isDark={isDark}
+            label={t.footer.connect_corporate}
+            title="LinkedIn"
+            icon={Linkedin}
+            colorClass="bg-brand-blue"
+            link="https://www.linkedin.com/company/melodialab/"
+            connectLabel={t.footer.connect}
+          />
+          <FooterCard 
+            isDark={isDark}
+            label={t.footer.connect_visual}
+            title="Instagram"
+            icon={Instagram}
+            colorClass="bg-brand-orange"
+            link="https://www.instagram.com/francisco.carle"
+            connectLabel={t.footer.connect}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-gray-500/10">
+          <div className="lg:col-span-4 space-y-6">
+            <Logo />
+            <p className={`text-sm leading-relaxed max-w-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              {t.footer.subtitle}
+            </p>
+          </div>
+          
+          <div className="lg:col-span-4">
+             <h5 className={`font-bold mb-6 text-sm uppercase tracking-widest ${isDark ? 'text-white' : 'text-gray-900'}`}>{t.footer.nav_title}</h5>
+             <div className="grid grid-cols-2 gap-4">
+               {navItems.map(item => (
+                 <a 
+                   key={item.name} 
+                   href={item.href} 
+                   className={`text-sm transition-colors hover:text-brand-orange ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+                 >
+                   {item.name}
+                 </a>
+               ))}
+             </div>
+          </div>
+
+          <div className="lg:col-span-4">
+             <h5 className={`font-bold mb-6 text-sm uppercase tracking-widest ${isDark ? 'text-white' : 'text-gray-900'}`}>{t.footer.contact_title}</h5>
+             <div className={`space-y-4 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <div className="flex gap-4">
+                  <a href="https://www.instagram.com/francisco.carle" target="_blank" rel="noreferrer" className="hover:text-brand-orange"><Instagram size={18} /></a>
+                  <a href="https://www.linkedin.com/company/melodialab/" target="_blank" rel="noreferrer" className="hover:text-brand-orange"><Linkedin size={18} /></a>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <div className="py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+            &copy; {new Date().getFullYear()} MelodIA lab. {t.footer.rights}
+          </p>
+          <div className="flex items-center gap-6">
+             <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
+               v2.7.0 — HYBRID ENGINE STABLE
+             </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
 const App = () => {
   const [isDark, setIsDark] = useState(true);
@@ -1243,10 +1353,8 @@ const App = () => {
 
   const toggleTheme = () => setIsDark(!isDark);
 
-  // MANEJO DE RUTAS (Client-side Routing Mejorado)
   useEffect(() => {
     const handleLocationChange = () => {
-      // Normalizamos la ruta (sin barra al final y todo en minúsculas)
       const path = window.location.pathname.toLowerCase().replace(/\/$/, "");
       if (path === '/tierratierrita') {
         setActiveProject('tierrita');
@@ -1254,11 +1362,7 @@ const App = () => {
         setActiveProject(null);
       }
     };
-
-    // Al cargar la página (Detecta acceso directo)
     handleLocationChange();
-
-    // Al usar botones de atrás/adelante del navegador
     window.addEventListener('popstate', handleLocationChange);
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
@@ -1304,4 +1408,4 @@ const App = () => {
 };
 
 export default App;
-// v2.5.1 - Fixed audioRef declaration in AudioPlayer component.
+// v2.7.0 - Global Native Alignment: Fixed Dutch residues and fully localized ZH/KO/HI/GU ecosystems.
