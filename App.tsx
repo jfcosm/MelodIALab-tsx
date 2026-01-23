@@ -667,7 +667,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
             <iframe 
               className="absolute inset-0 w-full h-full"
-              src="https://www.youtube-nocookie.com/embed/ybe4eGlZTGc?autoplay=0&rel=0&modestbranding=1" 
+              src="https://www.youtube-nocookie.com/embed/6AbwPn-CIZc?autoplay=0&rel=0&modestbranding=1" 
               title="Tierra Tierrita Video Clip"
               loading="lazy"
               frameBorder="0"
@@ -995,7 +995,7 @@ const TierraTierritaTeaser = ({ isDark, t, onEnter }: { isDark: boolean; t: any;
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
              <iframe 
                className="absolute inset-0 w-full h-full"
-               src="https://www.youtube-nocookie.com/embed/ybe4eGlZTGc?autoplay=0&rel=0&modestbranding=1" 
+               src="https://www.youtube-nocookie.com/embed/6AbwPn-CIZc?autoplay=0&rel=0&modestbranding=1" 
                title="Tierra Tierrita Teaser"
                loading="lazy"
                frameBorder="0"
@@ -1383,7 +1383,7 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
           </p>
           <div className="flex items-center gap-6">
              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
-               v2.7.3 — HYBRID ENGINE STABLE
+               v2.7.4 — HYBRID ENGINE STABLE
              </span>
           </div>
         </div>
@@ -1454,4 +1454,4 @@ const App = () => {
 };
 
 export default App;
-// v2.7.3 - Smart Route Detection: Fixed issues with /public/ subdirectory paths for images and audio player.
+// v2.7.4 - Link Refresh: Updated Tierra Tierrita teaser with the new high-def version (6AbwPn-CIZc).
