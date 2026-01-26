@@ -70,7 +70,7 @@ const tierritaEs = {
     music_prod_title: "La Versión Musical",
     music_prod_desc: "La interpretación de 'Tierra Tierrita' es liderada por la voz de Maunita, con la producción musical de Francisco Carle y las guitarras de Adobe Suite. Una versión que honra al autor original, el cantautor Jorge Cartes Palacios (Tomé).",
     music_author_label: "Autor Original: Jorge Cartes Palacios",
-    credits: { prod: "Producción", guitars: "Guitarras", voice: "Voz", record: "Sesión de Grabación" },
+    credits: { prod: "Producción", guitarras: "Guitarras", voice: "Voz", record: "Sesión de Grabación" },
     player: {
       song: "Canción: \"Tierra Tierrita\".",
       voice: "Voz: Maunita.",
@@ -104,9 +104,17 @@ const baseEn = {
     agile: { title: "Digital Hybrid Lab", desc: "Merging human direction with AI tools to generate unique visual concepts and technical solutions." }, 
     ui: { title: "Interactive Design", desc: "Bringing brands to life through dynamic UI/UX and motion design that communicates and converts." } 
   },
-  portfolio: { badge: "Software Track", title: "App Ecosystem", subtitle: "Our developed apps and digital solutions.", armonix: { desc: "Interactive Audiovisual Suite.", cta: "Explore" }, palabra: { desc: "Visual Daily Reflection.", cta: "Visit" }, emaus: { desc: "Institutional Platform.", cta: "View" }, verso: { desc: "Music & AI Fusion.", cta: "Soon" } },
+  portfolio: { 
+    badge: "Software Track", 
+    title: "App Ecosystem", 
+    subtitle: "Our developed apps and digital solutions.", 
+    armonix: { title: "Armonix", desc: "Powerful web app focused on music education, rhythm and melody pattern generation, and understanding harmony and composition basics.", cta: "Explore" }, 
+    palabra: { title: "The Daily Word", desc: "Daily spiritual meditation and reading platform with a minimalist editorial design and high focus on readability.", cta: "Visit" }, 
+    emaus: { title: "Emaús", desc: "Administrative management software (SaaS) for parishes, dioceses, and chapels, specialized in workflows with certificates and sacraments.", cta: "View" }, 
+    verso: { title: "Verso", desc: "Rehearsal coordination space for bands, focused on facilitating date selection and repertoire management for each session or concert.", cta: "Soon" } 
+  },
   philosophy: { badge: "Why us?", title_start: "20 years of Art,", title_end: "20 years of Code.", desc: "Dominating the Adobe Suite and Software Architecture to lead the AI revolution.", points: [ { title: "Experience", desc: "TV, Music & Full-stack dev." }, { title: "Efficiency", desc: "AI-powered timelines." }, { title: "Hybrid ADN", desc: "Technical rigour meets Cinema." } ], terminal: { start: "melodia-lab --init-hybrid", init: "Init AI + Code...", loading: "Processing Lens...", budget: "Optimizing ROI...", agility: "Syncing Sound...", done: "Live" } },
-  contact: { title: "Let's Create", subtitle: "Tell us about your next viral hit, corporate film, or software project.", name: "Name", name_ph: "Full Name", email: "Email", email_ph: "director@studio.com", message: "Vision", message_ph: "Tell us your idea...", submit: "Send Vision" },
+  contact: { title: "Let's Talk", subtitle: "Tell us about your next viral hit, corporate film, or software project.", name: "Name", name_ph: "Full Name", email: "Email", email_ph: "director@studio.com", message: "Vision", message_ph: "Tell us your idea...", submit: "Send message" },
   footer: { 
     rights: "All rights reserved.", 
     connect_corporate: "Corporate & Tech",
@@ -143,9 +151,17 @@ export const translations = {
       agile: { title: "Lab Híbrido Digital", desc: "Fusionamos dirección humana con herramientas de IA para generar conceptos visuales y soluciones técnicas únicas." }, 
       ui: { title: "Diseño Interactivo", desc: "Damos vida a tu marca mediante UI/UX dinámico y motion design que comunica y convierte." } 
     },
-    portfolio: { badge: "Carril Software", title: "Ecosistema de Apps", subtitle: "Nuestras aplicaciones y soluciones digitales desarrolladas.", armonix: { desc: "Suite audiovisual interactiva.", cta: "Explorar" }, palabra: { desc: "Reflexión visual diaria.", cta: "Visitar" }, emaus: { desc: "Plataforma Institucional.", cta: "Ver" }, verso: { desc: "Fusión Música e IA.", cta: "Próximamente" } },
+    portfolio: { 
+      badge: "Carril Software", 
+      title: "Ecosistema de Apps", 
+      subtitle: "Nuestras aplicaciones y soluciones digitales desarrolladas.", 
+      armonix: { title: "Armonix", desc: "Potente app web enfocada en la educación musical, generación de patrones rítmicos y melódicos y comprensión de conceptos básicos como armonía y composición musical.", cta: "Explorar" }, 
+      palabra: { title: "La Palabra Diaria", desc: "Plataforma de meditación y lectura espiritual diaria con un diseño editorial minimalista y alta legibilidad.", cta: "Visitar" }, 
+      emaus: { title: "Emaús", desc: "Software de gestión administrativa (SaaS) para parroquias, diócesis y capillas, especializado en flujos de trabajo con certificados y sacramentos", cta: "Ver" }, 
+      verso: { title: "Verso", desc: "Espacio de coordinación en ensayos para bandas de música, con enfoque en facilitar la selección de fecha y la gestión del repertorio de cada ensayo o concierto de la banda", cta: "Próximamente" } 
+    },
     philosophy: { badge: "¿Por qué nosotros?", title_start: "20 años de Arte,", title_end: "20 años de Código.", desc: "Dominando la Suite Adobe y la Arquitectura de Software para liderar la revolución de la IA.", points: [ { title: "Experiencia", desc: "TV, Música y Dev Full-stack." }, { title: "Eficiencia", desc: "Tiempos potenciados por IA." }, { title: "ADN Híbrido", desc: "Rigor técnico unido al Cine." } ], terminal: { start: "melodia-lab --init-hybrid", init: "Init AI + Code...", loading: "Procesando Lentes...", budget: "Optimizando ROI...", agility: "Sincronizando Audio...", done: "Live" } },
-    contact: { title: "Creemos Juntos", subtitle: "Cuéntanos sobre tu próximo viral, video corporativo o proyecto de software.", name: "Nombre", name_ph: "Nombre Completo", email: "Email", email_ph: "director@estudio.com", message: "Visión", message_ph: "Cuéntanos tu idea...", submit: "Enviar Visión" },
+    contact: { title: "Conversemos", subtitle: "Cuéntanos sobre tu próximo viral, video corporativo o proyecto de software.", name: "Nombre", name_ph: "Nombre Completo", email: "Email", email_ph: "director@estudio.com", message: "Visión", message_ph: "Cuéntanos tu idea...", submit: "Envía tu mensaje" },
     footer: { 
       rights: "Todos los derechos reservados.",
       connect_corporate: "Corporativo y Tech",
@@ -162,182 +178,141 @@ export const translations = {
     ...baseEn,
     nav: { services: "Services", audiovisual: "Reel", projects: "Applications", philosophy: "Vibe", contact: "Contact", start: "Travailler avec nous" },
     hero: { ...baseEn.hero, title_end: "Cinéma", badge: "Intelligence Audiovisuelle" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "Application Web puissante axée sur l'éducation musicale, la generación de motifs et la composition." },
+      palabra: { title: "La Parole Quotidienne", desc: "Plateforme de méditation et de lecture spirituelle quotidienne avec un design éditorial minimaliste." },
+      emaus: { title: "Emaús", desc: "SaaS de gestion administrative pour les paroisses et diocèses, spécialisé dans les sacrements." },
+      verso: { title: "Verso", desc: "Espace de coordination des répétitions pour les groupes, axé sur la gestion du répertoire." }
+    },
+    contact: { ...baseEn.contact, title: "Parlons", submit: "Envoyez votre message" },
     footer: { ...baseEn.footer, connect: "Connecter", nav_title: "Navigation", contact_title: "Contact", rights: "Tous droits réservés." }
   },
   it: {
     ...baseEn,
     nav: { services: "Servizi", audiovisual: "Reel", projects: "Progetti", philosophy: "Vibe", contact: "Contatto", start: "Iniziamo" },
     hero: { ...baseEn.hero, title_end: "Cinema", badge: "Intelligenza Audiovisiva" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "Potente app web per l'educazione musicale, generazione di pattern e composizione." },
+      palabra: { title: "La Parola Quotidiana", desc: "Piattaforma di meditazione e lettura spirituale quotidiana con un design editoriale minimalista." },
+      emaus: { title: "Emaús", desc: "SaaS gestionale per parrocchie e diocesi, specializzato in certificati e sacramenti." },
+      verso: { title: "Verso", desc: "Spazio di coordinamento per le prove delle band, focalizzato sulla gestione del repertorio." }
+    },
+    contact: { ...baseEn.contact, title: "Parliamo", submit: "Invia il tuo messaggio" },
     footer: { ...baseEn.footer, connect: "Connetti", nav_title: "Navigazione", contact_title: "Contatto", rights: "Tutti i diritti riservati." }
   },
   de: {
     ...baseEn,
     nav: { services: "Dienste", audiovisual: "Reel", projects: "Apps", philosophy: "Vibe", contact: "Kontakt", start: "Starten" },
     hero: { ...baseEn.hero, title_end: "Kino", badge: "Audiovisuelle Intelligenz" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "Leistungsstarke Web-App für Musikerziehung, Mustergenerierung und Komposition." },
+      palabra: { title: "Das tägliche Wort", desc: "Tägliche spirituelle Meditations- und Leseplattform mit minimalistischem Design." },
+      emaus: { title: "Emaús", desc: "Administrative SaaS für Pfarreien und Diözesen, spezialisiert auf Sakramente." },
+      verso: { title: "Verso", desc: "Koordinationsraum für Bandproben, fokussiert auf Repertoire-Management." }
+    },
+    contact: { ...baseEn.contact, title: "Lass uns reden", submit: "Schicke deine Nachricht" },
     footer: { ...baseEn.footer, connect: "Verbinden", nav_title: "Navigation", contact_title: "Kontakt", rights: "Alle Rechte vorbehalten." }
   },
   ja: {
     ...baseEn,
     nav: { services: "サービス", audiovisual: "リール", projects: "アプリ", philosophy: "コンセプト", contact: "連絡", start: "開始" },
     hero: { ...baseEn.hero, title_start: "コードが映画に出会う場所", title_end: "シネマ", badge: "映像の知性" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "音楽教育、パターン生成、作曲の基礎に焦点を当てた強力なウェブアプリ。" },
+      palabra: { title: "今日の言葉", desc: "ミニマリストなデザインと高い可読性を備えた、毎日の精神的な瞑想と読書のためのプラットフォーム。" },
+      emaus: { title: "Emaús", desc: "教区や司教区のための行政管理SaaS。証明書と秘跡に特化。" },
+      verso: { title: "Verso", desc: "バンドのリハーサル調整スペース。レパートリー管理に重点。" }
+    },
+    contact: { ...baseEn.contact, title: "話しましょう", submit: "メッセージを送信" },
     footer: { ...baseEn.footer, connect: "つながる", nav_title: "ナビゲーション", contact_title: "お問い合わせ", rights: "全著作権所有。" }
   },
   zh: {
     ...baseEn,
     nav: { services: "服务", audiovisual: "作品集", projects: "应用", philosophy: "理念", contact: "联系", start: "合作" },
-    hero: { ...baseEn.hero, title_start: "当代码遇见", title_end: "电影", badge: "视听智能", subtitle: "20年电视制作与Adobe经验，由人工智能与软件工程赋能。我们打造令人驻足的内容与方案。" },
-    dashboard: { ...baseEn.dashboard, title: "制作日志", status: "活跃", progress: "渲染进度", updated: "2026年1月更新", sprints: "场景", budget: "效率" },
-    services: {
-      ...baseEn.services,
-      title: "双重精通：视频与代码",
-      web: { title: "社交爆款 (个人)", desc: "针对IG、TikTok和YouTube的高留存爆款视频。由影响力驱动的个人市场叙事。" },
-      ai: { title: "企业视频 (B2B)", desc: "电视级制作，创纪录的交付时间与颠覆性的成本。为机构量身定制。" },
-      software: { title: "定制软件", desc: "我们的核心基石。我们持续使用现代技术栈开发高端应用、SaaS及数字工具。" }
+    hero: { ...baseEn.hero, title_start: "当代码遇见", title_end: "电影", badge: "视听智能" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "专注于音乐教育、节奏生成和作曲基础的强大网页应用。" },
+      palabra: { title: "每日箴言", desc: "每日精神冥想和阅读平台，采用极简主义编辑设计，注重易读性。" },
+      emaus: { title: "Emaús", desc: "用于教区和教区的行政管理SaaS，专注于证书和圣礼流程。" },
+      verso: { title: "Verso", desc: "乐队排练协调空间，专注于曲目管理和演出安排。" }
     },
-    footer: { ...baseEn.footer, connect: "建立联系", nav_title: "导航", contact_title: "联系我们", rights: "版权所有。" },
-    tierrita: { ...tierritaEn, title: "Tierra Tierrita", badge: "官方音乐视频", more: "探索作品" }
+    contact: { ...baseEn.contact, title: "让我们谈谈", submit: "发送您的消息" },
+    footer: { ...baseEn.footer, connect: "建立联系", nav_title: "导航", contact_title: "联系我们", rights: "版权所有。" }
   },
   ko: {
     ...baseEn,
     nav: { services: "서비스", audiovisual: "릴", projects: "앱", philosophy: "철학", contact: "문의", start: "시작하기" },
-    hero: { ...baseEn.hero, title_start: "코드가 만나는 곳", title_end: "시네마", badge: "시각 지능", subtitle: "20년의 TV 제작 및 Adobe 전문 기술이 AI와 소프트웨어 공학을 만났습니다. 우리는 스크롤을 멈추게 하는 콘텐츠와 솔루션을 만듭니다." },
-    dashboard: { ...baseEn.dashboard, title: "제작 로그", status: "활성", progress: "렌더링 진행", updated: "2026년 1월 업데이트", sprints: "장면", budget: "효율성" },
-    services: {
-      ...baseEn.services,
-      title: "이중 마스터리: 비디오 및 코드",
-      web: { title: "소셜 바이럴 (개인)", desc: "IG, TikTok, YouTube를 위한 높은 유지율의 바이럴 비디오. 개인 시장을 위한 영향력 중심의 스토리텔링." },
-      ai: { title: "기업 비디오 (B2B)", desc: "기록적인 납기와 혁신적인 비용의 TV급 제작. 기관을 위한 완전한 맞춤형 서비스." },
-      software: { title: "맞춤형 소프트웨어", desc: "우리의 핵심 토대. 최신 스택으로 하이엔드 앱, SaaS 및 디지털 도구를 지속적으로 개발합니다." }
+    hero: { ...baseEn.hero, title_start: "코드가 만나는 곳", title_end: "시네마", badge: "시각 지능" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "음악 교육, 패턴 생성 및 작곡 기초를 위한 강력한 웹 앱." },
+      palabra: { title: "오늘의 말씀", desc: "미니멀한 디자인과 높은 가독성을 갖춘 일일 영성 명상 및 독서 플랫폼." },
+      emaus: { title: "Emaús", desc: "본당 및 교구를 위한 행정 관리 SaaS. 증명서 및 성사 워크플로우 전문." },
+      verso: { title: "Verso", desc: "밴드 리허설 조정 공간으로, 레퍼토리 관리 및 일정 선택에 집중함." }
     },
-    footer: { ...baseEn.footer, connect: "연결하기", nav_title: "탐색", contact_title: "문의처", rights: "모든 권리 보유." },
-    tierrita: { ...tierritaEn, title: "Tierra Tierrita", badge: "공식 뮤직 비디오", more: "작품 탐색" }
+    contact: { ...baseEn.contact, title: "이야기합시다", submit: "메시지 보내기" },
+    footer: { ...baseEn.footer, connect: "연결하기", nav_title: "탐색", contact_title: "문의처", rights: "모든 권리 보유." }
   },
   hi: {
     ...baseEn,
     nav: { services: "सेवाएं", audiovisual: "रील", projects: "ऐप्स", philosophy: "दर्शन", contact: "संपर्क", start: "जुड़ें" },
-    hero: { ...baseEn.hero, title_start: "जहाँ कोड मिलता है", title_end: "सिनेमा से", badge: "दृश्य बुद्धि", subtitle: "20 साल का टीवी मास्टर और एडोब विशेषज्ञता, एआई और सॉफ्टवेयर इंजीनियरिंग द्वारा संचालित। हम ऐसी सामग्री और समाधान बनाते हैं जो स्क्रॉल को रोक देते हैं।" },
-    dashboard: { ...baseEn.dashboard, title: "उत्पादन लॉग", status: "सक्रिय", progress: "रेंडर प्रगति", updated: "जनवरी 2026 को अपडेट किया गया" },
-    services: {
-      ...baseEn.services,
-      title: "दोहरी विशेषज्ञता: वीडियो और कोड",
-      web: { title: "सोशल वायरल (व्यक्तिगत)", desc: "आईजी, टिकटॉक और यूट्यूब के लिए उच्च-प्रतिधारण, वायरल वीडियो। व्यक्तिगत बाजार के लिए प्रभाव-संचालित कहानी।" }
+    hero: { ...baseEn.hero, title_start: "जहाँ कोड मिलता है", title_end: "सिनेमा से", badge: "दृश्य बुद्धि" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "संगीत शिक्षा, पैटर्न निर्माण और रचना पर केंद्रित शक्तिशाली वेब ऐप।" },
+      palabra: { title: "दैनिक शब्द", desc: "न्यूनतम संपादकीय डिजाइन और उच्च पठनीयता के साथ दैनिक आध्यात्मिक ध्यान और पठन मंच।" },
+      emaus: { title: "Emaús", desc: "पैरिश और सूबा के लिए प्रशासनिक प्रबंधन सास, प्रमाणपत्रों में विशेषज्ञ।" },
+      verso: { title: "Verso", desc: "बैंड रिहर्सल समन्वय स्थान, प्रदर्शन सूची प्रबंधन पर केंद्रित।" }
     },
-    footer: { ...baseEn.footer, connect: "जुड़ें", nav_title: "नेविगेशन", contact_title: "संपर्क", rights: "सर्वाधिकार सुरक्षित।" },
-    tierrita: { ...tierritaEn, title: "Tierra Tierrita", badge: "आधिकारिक संगीत वीडियो", more: "कार्य का अन्वेषण करें" }
+    contact: { ...baseEn.contact, title: "चलो बात करते हैं", submit: "अपना संदेश भेजें" },
+    footer: { ...baseEn.footer, connect: "जुड़ें", nav_title: "नेविगेशन", contact_title: "संपर्क", rights: "सर्वाधिकार सुरक्षित।" }
   },
   gu: {
     ...baseEn,
     nav: { services: "સેવાઓ", audiovisual: "રીલ", projects: "એપ્સ", philosophy: "વિચારધારા", contact: "સંપર્ક", start: "સાથે કામ કરીએ" },
-    hero: { ...baseEn.hero, title_start: "જ્યાં કોડ મળે છે", title_end: "સિનેમાને", badge: "શ્રાવ્ય-દ્રશ્ય બુદ્ધિ", subtitle: "20 વર્ષની ટીવી માસ્ટરી અને એડોબ નિપુણતા, AI અને સોફ્ટવેર એન્જિનિયરિંગ દ્વારા સંચાલિત. અમે એવી સામગ્રી અને ઉકેલો બનાવીએ છીએ જે સ્ક્રોલને અટકાવે છે." },
-    dashboard: { ...baseEn.dashboard, title: "ઉત્પાદન લોગ", status: "સક્રિય", progress: "રેન્ડર પ્રગતિ" },
-    services: {
-      ...baseEn.services,
-      title: "બેવડી નિપુણતા: વિડિઓ અને કોડ",
-      web: { title: "સોશિયલ વાયરલ (વ્યક્તિગત)", desc: "IG, TikTok અને YouTube માટે ઉચ્ચ-ધારણા, વાયરલ વિડિઓઝ. વ્યક્તિગત બજાર માટે પ્રભાવ-સંચાલિત વાર્તા કહેવા." }
+    hero: { ...baseEn.hero, title_start: "જ્યાં કોડ મળે છે", title_end: "સિનેમાને", badge: "શ્રાવ્ય-દ્રશ્ય બુદ્ધિ" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "સંગીત શિક્ષણ અને રચના પર ધ્યાન કેન્દ્રિત કરતી શક્તિશાળી વેબ એપ્લિકેશન." },
+      palabra: { title: "દૈનિક શબ્દ", desc: "ન્યૂનતમ સંપાદકીય ડિઝાઇન અને ઉચ્ચ વાંચનક્ષમતા સાથે દૈનિક આધ્યાત્મિક ધ્યાન અને વાંચન મંચ." },
+      emaus: { title: "Emaús", desc: "સંસ્થાઓ માટે વહીવટી સંચાલન SaaS, પ્રમાણપત્રોમાં નિષ્ણાત." },
+      verso: { title: "Verso", desc: "બેન્ડ રિહર્સલ સંકલન સ્થાન, સંગીત યાદી સંચાલન પર કેન્દ્રિત." }
     },
-    footer: { ...baseEn.footer, connect: "જોડાઓ", nav_title: "નેવિગેશન", contact_title: "સંપર્ક", rights: "તમામ હકો સુરક્ષિત." },
-    tierrita: { ...tierritaEn, title: "Tierra Tierrita", badge: "સત્તાવાર સંગીત વિડિઓ", more: "કાર્યનું અન્વેષણ કરો" }
+    contact: { ...baseEn.contact, title: "ચાલો વાત કરીએ", submit: "તમારો સંદેશ મોકલો" },
+    footer: { ...baseEn.footer, connect: "જોડાઓ", nav_title: "નેવિગેશન", contact_title: "સંપર્ક", rights: "તમામ હકો સુરક્ષિત." }
   },
   nl: {
     ...baseEn,
     nav: { services: "Diensten", audiovisual: "Reel", projects: "Apps", philosophy: "Vibe", contact: "Contact", start: "Werk met ons" },
-    hero: { 
-      badge: "Audiovisuele Intelligentie", 
-      title_start: "Waar Code en", 
-      title_end: "Cinema Samenkomen", 
-      subtitle: "20 jaar TV-meesterschap en Adobe-expertise aangedreven door AI en Software Engineering. Wij creëren content en oplossingen die de scroll doen stoppen.",
-      cta_primary: "Jan 2026 Reel",
-      cta_secondary: "Onze Diensten",
-      dashboard_caption: "*Audiovisuele precisie, AI-snelheid, Software stabiliteit."
+    hero: { ...baseEn.hero, badge: "Audiovisuele Intelligentie" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "Krachtige web-app gericht op muziekeducatie, patroongeneratie en compositie." },
+      palabra: { title: "Het Dagelijkse Woord", desc: "Dagelijks spiritueel meditatie- en leesplatform con un diseño editorial minimalista." },
+      emaus: { title: "Emaús", desc: "Administratieve beheer-SaaS voor parochies en bisdommen, gespecialiseerd in sacramenten." },
+      verso: { title: "Verso", desc: "Coördinatieruimte voor bandrepetities, gericht op repertoirebeheer." }
     },
-    dashboard: { 
-      title: "Productielogboek", 
-      updated: "Bijgewerkt jan 2026", 
-      status: "Actief", 
-      sprints: "Scènes", 
-      budget: "Efficiëntie", 
-      progress: "Render Voortgang", 
-      no_deviation: "Geoptimaliseerde Kosten", 
-      activity: "Recente Activiteit", 
-      model_opt: "AI-Video Verbetering", 
-      latency: "Rendering 3x Sneller", 
-      deploy: "Software Updates", 
-      live: "Jan 2026 Collectie" 
-    },
-    services: { 
-      title: "Duo-meesterschap: Video & Code", 
-      subtitle: "Professionele audiovisuele productie en software engineering voor het moderne tijdperk.", 
-      web: { title: "Social Viral (Mensen)", desc: "Video's met hoge retentie voor IG, TikTok en YouTube. Impact-gestuurde storytelling voor de persoonlijke markt." }, 
-      ai: { title: "Zakelijke Video (B2B)", desc: "Productie op TV-niveau met record-levertijden en disruptieve kosten. Volledig aanpasbaar voor instellingen." }, 
-      software: { title: "Maatwerk Software", desc: "Onze kernbasis. Wij blijven hoogwaardige apps, SaaS en digitale tools ontwikkelen met moderne stacks." },
-      audiovisual: { title: "Adobe & AI Post-Pro", desc: "20 jaar expertise in Adobe Suite. Professionele kleurcorrectie, upscaling en compositing met een menselijke touch." }, 
-      agile: { title: "Digitaal Hybride Lab", desc: "Het samenvoegen van menselijke regie met AI-tools om unieke visuele concepten en technische oplossingen te genereren." }, 
-      ui: { title: "Interactief Ontwerp", desc: "Merken tot leven brengen via dynamische UI/UX en motion design dat communiceert en converteert." } 
-    },
-    portfolio: { 
-      badge: "Software Track", 
-      title: "App Ecosysteem", 
-      subtitle: "Onze ontwikkelde apps en digitale oplossingen.", 
-      armonix: { desc: "Interactieve Audiovisuele Suite.", cta: "Ontdekken" }, 
-      palabra: { desc: "Visuele Dagelijkse Reflectie.", cta: "Bezoeken" }, 
-      emaus: { desc: "Institutioneel Platform.", cta: "Bekijken" }, 
-      verso: { desc: "Muziek & AI Fusie.", cta: "Binnenkort" } 
-    },
-    philosophy: { 
-      badge: "Waarom wij?", 
-      title_start: "20 jaar Kunst,", 
-      title_end: "20 jaar Code.", 
-      desc: "Het domineren van de Adobe Suite en Software Architectuur om de AI-revolutie te leiden.", 
-      points: [ 
-        { title: "Ervaring", desc: "TV, Muziek & Full-stack dev." }, 
-        { title: "Efficiëntie", desc: "Tijdlijnen aangedreven door AI." }, 
-        { title: "Hybride ADN", desc: "Technische discipline ontmoet Cinema." } 
-      ], 
-      terminal: { start: "melodia-lab --init-hybrid", init: "Init AI + Code...", loading: "Lenzen Verwerken...", budget: "ROI Optimaliseren...", agility: "Geluid Synchroniseren...", done: "Live" } 
-    },
-    contact: { 
-      title: "Laten we Creëren", 
-      subtitle: "Vertel ons over je volgende virale hit, bedrijfsfilm of softwareproject.", 
-      name: "Naam", 
-      name_ph: "Volledige Naam", 
-      email: "E-mail", 
-      email_ph: "director@studio.com", 
-      message: "Visie", 
-      message_ph: "Vertel ons je idee...", 
-      submit: "Visie Verzenden" 
-    },
-    footer: { 
-      rights: "Alle rechten voorbehouden.", 
-      connect_corporate: "Zakelijk & Tech",
-      connect_visual: "Visueel & Viral",
-      connect: "Verbinden",
-      nav_title: "Navigatie",
-      contact_title: "Contact",
-      subtitle: "Audiovisuele Intelligentie & Software Engineering."
-    },
-    tierrita: {
-      ...tierritaEn,
-      badge: "Officiële Muziekvideo",
-      title: "Tierra Tierrita",
-      subtitle: "Een brug tussen AI-voorhoede en de wortels van Chileense Folk.",
-      story_title: "De Odyssee van Manuel Vera",
-      desc: "De 'Tierra Tierrita' muziekvideo vertelt de epos van een piloot in maan-ballingschap. Een MelodIA La♭ productie met José Bolados Milla.",
-      more: "Ontdek het Werk",
-      detailed: {
-        ...tierritaEn.detailed,
-        back: "Ga Terug",
-        hero_tag: "2024 Première",
-        hero_title: "Van Ystad naar de Maan",
-        lore_title: "Manuel Vera: De Piloot van de Eenheid",
-        credits: { prod: "Productie", guitars: "Gitaren", voice: "Stem", record: "Opnamesessie" }
-      }
-    }
+    contact: { ...baseEn.contact, title: "Laten we praten", submit: "Stuur uw bericht" },
+    footer: { ...baseEn.footer, connect: "Verbinden", nav_title: "Navigatie", contact_title: "Contact", rights: "Alle rechten voorbehouden." }
   },
   ar: {
     ...baseEn,
     nav: { services: "خدمات", audiovisual: "الريل", projects: "تطبيقات", philosophy: "رؤية", contact: "اتصال", start: "ابدأ" },
     hero: { ...baseEn.hero, title_start: "حيث يلتقي الكود", title_end: "بالسينما", badge: "الذكاء السمعي البصري" },
+    portfolio: {
+      ...baseEn.portfolio,
+      armonix: { title: "Armonix", desc: "تطبيق ويب قوي يركز على التعليم الموسيقي وتوليد الأنماط والتأليف." },
+      palabra: { title: "الكلمة اليومية", desc: "منصة للتأمل الروحي والقراءة اليومية بتصميم بسيط وتركيز عالٍ على الوضوح." },
+      emaus: { title: "Emaús", desc: "برنامج SaaS للإدارة المؤسسية للأبرشيات، متخصص في الشهادات والأسرار المقدسة." },
+      verso: { title: "Verso", desc: "مساحة تنسيق لبروفات الفرق الموسيقية، تركز على إدارة قائمة المقطوعات." }
+    },
+    contact: { ...baseEn.contact, title: "لنَتحدث", submit: "أرسل رسالتك" },
     footer: { ...baseEn.footer, connect: "اتصل", nav_title: "تصفح", contact_title: "اتصل بنا", rights: "جميع الحقوق محفوظة." }
   }
 };
-// v2.7.0 - Native Precision: Fixed Dutch localization leaks and enhanced ZH/KO/HI/GU coverage.
+// v2.7.9 - UI Copy Polish: Simplified contact section title to "Conversemos" and button to "Envía tu mensaje" for a friendlier approach.

@@ -1038,18 +1038,19 @@ const TierraTierritaTeaser = ({ isDark, t, onEnter }: { isDark: boolean; t: any;
   </section>
 );
 
-const PortfolioCard = ({ title, desc, icon: Icon, tags, cta, isDark, image, link, isAlternate, badge }: any) => (
+const PortfolioCard = ({ title, desc, icon: Icon, tags, cta, isDark, filename, fallback, link, isAlternate, badge }: any) => (
   <div className={`rounded-3xl border overflow-hidden transition-all hover:shadow-2xl hover:shadow-brand-blue/10 ${
     isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
   }`}>
     <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-12 items-center`}>
       <div className={`order-2 ${isAlternate ? 'lg:order-2' : 'lg:order-1'} relative group`}>
-        <div 
-          className={`rounded-xl border shadow-xl overflow-hidden relative h-64 md:h-80 w-full bg-cover bg-center ${
-           isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-300 bg-gray-200'
-          }`}
-          style={{ backgroundImage: `url('${image}')` }}
-        >
+        <div className="rounded-xl border shadow-xl overflow-hidden relative h-64 md:h-80 w-full bg-brand-surface">
+           <ResilientImage 
+             filename={filename}
+             fallback={fallback}
+             alt={title}
+             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+           />
            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
            {badge && (
              <div className="absolute top-4 right-4 px-3 py-1 bg-brand-orange text-white text-[10px] font-bold uppercase rounded-full shadow-lg">
@@ -1117,41 +1118,45 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
 
       <div className="flex flex-col gap-16">
         <PortfolioCard 
-          title="Armonix"
+          title={t.portfolio.armonix.title}
           desc={t.portfolio.armonix.desc}
           icon={Music4}
           tags={['React', 'Web Audio API', 'Tone.js', 'UI Design']}
           cta={t.portfolio.armonix.cta}
-          image="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070&auto=format&fit=crop"
+          filename="armonix_landing.jpg"
+          fallback="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070&auto=format&fit=crop"
           isDark={isDark}
         />
         <PortfolioCard 
-          title="La Palabra"
+          title={t.portfolio.palabra.title}
           desc={t.portfolio.palabra.desc}
           icon={Type}
           tags={['Typography', 'Accessibility', 'Daily Content', 'Reading Mode']}
           cta={t.portfolio.palabra.cta}
-          image="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop"
+          filename="lapalabradiaria_landing.jpg"
+          fallback="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop"
           link="https://lapalabradiaria.com"
           isDark={isDark}
           isAlternate
         />
         <PortfolioCard 
-          title="Emaús"
+          title={t.portfolio.emaus.title}
           desc={t.portfolio.emaus.desc}
           icon={Church}
           tags={['SaaS', 'Management', 'Digital Signature', 'Security']}
           cta={t.portfolio.emaus.cta}
-          image="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop"
+          filename="emaus_landing.jpg"
+          fallback="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop"
           isDark={isDark}
         />
         <PortfolioCard 
-          title="Verso"
+          title={t.portfolio.verso.title}
           desc={t.portfolio.verso.desc}
           icon={Mic2}
           tags={['Real-time', 'AI Music', 'Collab', 'Gemini API']}
           cta={t.portfolio.verso.cta}
-          image="https://images.unsplash.com/photo-1514525253361-b83f859b73c0?q=80&w=2048&auto=format&fit=crop"
+          filename="verso_landing.jpg"
+          fallback="https://images.unsplash.com/photo-1514525253361-b83f859b73c0?q=80&w=2048&auto=format&fit=crop"
           isDark={isDark}
           isAlternate
           badge="In Alpha"
@@ -1383,7 +1388,7 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
           </p>
           <div className="flex items-center gap-6">
              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
-               v2.7.4 — HYBRID ENGINE STABLE
+               v2.7.9 — HYBRID ENGINE STABLE
              </span>
           </div>
         </div>
@@ -1454,4 +1459,4 @@ const App = () => {
 };
 
 export default App;
-// v2.7.4 - Link Refresh: Updated Tierra Tierrita teaser with the new high-def version (6AbwPn-CIZc).
+// v2.7.9 - UI Copy Polish: Simplified contact section title to "Conversemos" and button to "Envía tu mensaje" for a friendlier approach.
