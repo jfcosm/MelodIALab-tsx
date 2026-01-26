@@ -1388,7 +1388,7 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
           </p>
           <div className="flex items-center gap-6">
              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
-               v2.7.9 — HYBRID ENGINE STABLE
+               v2.8.0 — HYBRID ENGINE STABLE
              </span>
           </div>
         </div>
@@ -1459,4 +1459,4 @@ const App = () => {
 };
 
 export default App;
-// v2.7.9 - UI Copy Polish: Simplified contact section title to "Conversemos" and button to "Envía tu mensaje" for a friendlier approach.
+// v2.8.0 - Full Global Localization: Corrected all app names (La Palabra Diaria) and missions (music ed, parish mgmt, band rehearsal) across 12 languages. Updated contact section to "Conversemos" globally.
