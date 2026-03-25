@@ -1,19 +1,19 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Monitor, 
-  Smartphone, 
-  Cpu, 
-  Zap, 
-  Music, 
-  Menu, 
-  X, 
-  Moon, 
-  Sun, 
-  ArrowRight, 
+import {
+  Monitor,
+  Smartphone,
+  Cpu,
+  Zap,
+  Music,
+  Menu,
+  X,
+  Moon,
+  Sun,
+  ArrowRight,
   ArrowLeft,
-  CheckCircle2, 
-  Code2, 
+  CheckCircle2,
+  Code2,
   Terminal,
   MessageSquare,
   Activity,
@@ -48,7 +48,11 @@ import {
   Film,
   Instagram,
   Linkedin,
-  AlertCircle
+  AlertCircle,
+  Heart,
+  MessageCircle,
+  Send,
+  PenTool
 } from 'lucide-react';
 import { translations, LANGUAGES, Language } from './translations';
 
@@ -83,11 +87,11 @@ const useLanguage = () => {
   useEffect(() => {
     const browserLang = navigator.language.split('-')[0] as Language;
     const supportedCodes = LANGUAGES.map(l => l.code);
-    
+
     if (supportedCodes.includes(browserLang)) {
       setLang(browserLang);
     } else {
-      setLang('es'); 
+      setLang('es');
     }
   }, []);
 
@@ -193,46 +197,43 @@ const AudioPlayer = ({ isDark, filename, t }: { isDark: boolean; filename: strin
   const p = t.tierrita.detailed.player;
 
   return (
-    <div className={`mt-10 p-6 rounded-3xl border transition-all duration-300 font-sans ${
-      isDark ? 'bg-white/5 border-white/10 shadow-2xl' : 'bg-white border-gray-200 shadow-xl'
-    } ${audioError ? 'border-red-500/30 ring-1 ring-red-500/10' : ''}`}>
-      <audio 
-        ref={audioRef} 
-        src={currentSrc} 
-        onTimeUpdate={onTimeUpdate} 
+    <div className={`mt-10 p-6 rounded-3xl border transition-all duration-300 font-sans ${isDark ? 'bg-white/5 border-white/10 shadow-2xl' : 'bg-white border-gray-200 shadow-xl'
+      } ${audioError ? 'border-red-500/30 ring-1 ring-red-500/10' : ''}`}>
+      <audio
+        ref={audioRef}
+        src={currentSrc}
+        onTimeUpdate={onTimeUpdate}
         onLoadedMetadata={onLoadedMetadata}
         onError={handleAudioError}
         onEnded={() => setIsPlaying(false)}
       />
-      
+
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-5">
-          <button 
+          <button
             onClick={togglePlay}
             disabled={audioError}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 ${
-              audioError ? 'bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-brand-blue text-white'
-            }`}
+            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 ${audioError ? 'bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-brand-blue text-white'
+              }`}
           >
             {audioError ? <AlertCircle size={28} /> : (isPlaying ? <X size={28} /> : <Play size={28} className="ms-1" />)}
           </button>
-          
+
           <div className="flex-1 overflow-hidden">
-             <div className="flex items-center gap-2 mb-1">
-               <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${
-                 audioError ? 'bg-red-500/20 text-red-400' : (isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600')
-               }`}>{audioError ? 'Error de Carga' : t.dashboard.status}</span>
-               <p className={`text-[10px] font-mono opacity-40 uppercase tracking-tighter ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                 HIFI AUDIO
-               </p>
-             </div>
-             <h4 className={`text-2xl font-display font-bold truncate ${isDark ? 'text-white' : 'text-gray-900'} ${audioError ? 'opacity-50' : ''}`}>
-               Tierra Tierrita
-             </h4>
-             {audioError && <p className="text-[10px] text-red-500 font-mono mt-1 uppercase italic">Archivo no encontrado en /public/</p>}
+            <div className="flex items-center gap-2 mb-1">
+              <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${audioError ? 'bg-red-500/20 text-red-400' : (isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600')
+                }`}>{audioError ? 'Error de Carga' : t.dashboard.status}</span>
+              <p className={`text-[10px] font-mono opacity-40 uppercase tracking-tighter ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                HIFI AUDIO
+              </p>
+            </div>
+            <h4 className={`text-2xl font-display font-bold truncate ${isDark ? 'text-white' : 'text-gray-900'} ${audioError ? 'opacity-50' : ''}`}>
+              Tierra Tierrita
+            </h4>
+            {audioError && <p className="text-[10px] text-red-500 font-mono mt-1 uppercase italic">Archivo no encontrado en /public/</p>}
           </div>
 
-          <button 
+          <button
             onClick={reset}
             className={`p-3 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-gray-400' : 'hover:bg-gray-100 text-gray-500'}`}
           >
@@ -241,51 +242,50 @@ const AudioPlayer = ({ isDark, filename, t }: { isDark: boolean; filename: strin
         </div>
 
         <div className="space-y-2">
-           <div className="relative group w-full h-2 bg-gray-500/10 rounded-full overflow-hidden">
-              <div 
-                className={`absolute top-0 left-0 h-full transition-all duration-100 ease-linear pointer-events-none ${
-                  audioError ? 'bg-gray-600' : 'bg-gradient-to-r from-brand-blue to-brand-orange'
+          <div className="relative group w-full h-2 bg-gray-500/10 rounded-full overflow-hidden">
+            <div
+              className={`absolute top-0 left-0 h-full transition-all duration-100 ease-linear pointer-events-none ${audioError ? 'bg-gray-600' : 'bg-gradient-to-r from-brand-blue to-brand-orange'
                 }`}
-                style={{ width: `${progress}%` }}
-              ></div>
-              <input 
-                type="range" 
-                value={progress} 
-                min="0"
-                max="100"
-                step="0.1"
-                onChange={handleProgressChange}
-                disabled={audioError}
-                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-              />
-           </div>
-           <div className="flex justify-between text-[11px] font-mono opacity-40">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-           </div>
+              style={{ width: `${progress}%` }}
+            ></div>
+            <input
+              type="range"
+              value={progress}
+              min="0"
+              max="100"
+              step="0.1"
+              onChange={handleProgressChange}
+              disabled={audioError}
+              className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+            />
+          </div>
+          <div className="flex justify-between text-[11px] font-mono opacity-40">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
         </div>
 
         <div className={`pt-6 border-t ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-               <div className="flex items-start gap-2">
-                 <Disc size={14} className="mt-0.5 text-brand-blue shrink-0" />
-                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.song}</p>
-               </div>
-               <div className="flex items-start gap-2">
-                 <Mic2 size={14} className="mt-0.5 text-brand-blue shrink-0" />
-                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.voice}</p>
-               </div>
+              <div className="flex items-start gap-2">
+                <Disc size={14} className="mt-0.5 text-brand-blue shrink-0" />
+                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.song}</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Mic2 size={14} className="mt-0.5 text-brand-blue shrink-0" />
+                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.voice}</p>
+              </div>
             </div>
             <div className="space-y-2">
-               <div className="flex items-start gap-2">
-                 <Zap size={14} className="mt-0.5 text-brand-orange shrink-0" />
-                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.guitar_solo}</p>
-               </div>
-               <div className="flex items-start gap-2">
-                 <Sparkles size={14} className="mt-0.5 text-brand-orange shrink-0" />
-                 <p className={`text-xs leading-relaxed opacity-60 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{p.full_prod}</p>
-               </div>
+              <div className="flex items-start gap-2">
+                <Zap size={14} className="mt-0.5 text-brand-orange shrink-0" />
+                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{p.guitar_solo}</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Sparkles size={14} className="mt-0.5 text-brand-orange shrink-0" />
+                <p className={`text-xs leading-relaxed opacity-60 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{p.full_prod}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -297,7 +297,7 @@ const AudioPlayer = ({ isDark, filename, t }: { isDark: boolean; filename: strin
 // Componente de imagen resiliente que busca en raíz, /public/ y luego fallback
 const ResilientImage = ({ filename, fallback, alt, className }: { filename: string, fallback: string, alt: string, className?: string }) => {
   const [retryStage, setRetryStage] = useState(0); // 0: root, 1: /public/, 2: fallback
-  
+
   const src = retryStage === 0 ? `/${filename}` : (retryStage === 1 ? `/public/${filename}` : fallback);
 
   const handleError = () => {
@@ -329,49 +329,45 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
-      scrolled 
-        ? (isDark ? 'bg-brand-dark/80 backdrop-blur-md border-b border-white/10' : 'bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm') 
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled
+        ? (isDark ? 'bg-brand-dark/80 backdrop-blur-md border-b border-white/10' : 'bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm')
         : 'bg-transparent'
-    }`}>
+      }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center gap-4">
             {onBack && (
-              <button 
+              <button
                 onClick={onBack}
-                className={`p-2 rounded-full transition-colors ${
-                  isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-900'
-                }`}
+                className={`p-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-900'
+                  }`}
                 title={t.tierrita.detailed.back}
               >
                 <ArrowLeft size={24} />
               </button>
             )}
-            <a href="/" onClick={(e) => { e.preventDefault(); if (onBack) onBack(); else window.scrollTo(0,0); }} className={`flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            <a href="/" onClick={(e) => { e.preventDefault(); if (onBack) onBack(); else window.scrollTo(0, 0); }} className={`flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               <Logo />
             </a>
           </div>
 
           <div className="hidden md:flex items-center gap-6">
             {!onBack && navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href} 
-                className={`text-sm font-medium transition-colors hover:text-brand-blue ${
-                  isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}
+              <a
+                key={link.name}
+                href={link.href}
+                className={`text-sm font-medium transition-colors hover:text-brand-blue ${isDark ? 'text-gray-300' : 'text-gray-600'
+                  }`}
               >
                 {link.name}
               </a>
             ))}
-            
+
             <div className="flex items-center gap-2 border-s ps-6 border-gray-500/20">
-              <button 
+              <button
                 onClick={toggleTheme}
-                className={`p-2 rounded-full transition-colors ${
-                  isDark ? 'bg-white/10 hover:bg-white/20 text-yellow-400' : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                }`}
+                className={`p-2 rounded-full transition-colors ${isDark ? 'bg-white/10 hover:bg-white/20 text-yellow-400' : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                  }`}
                 title="Toggle Theme"
               >
                 {isDark ? <Sun size={18} /> : <Moon size={18} />}
@@ -380,18 +376,16 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
               <div className="relative">
                 <button
                   onClick={() => setLangMenuOpen(!langMenuOpen)}
-                  className={`flex items-center gap-1.5 p-2 rounded-full transition-colors text-sm font-medium ${
-                    isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-                  }`}
+                  className={`flex items-center gap-1.5 p-2 rounded-full transition-colors text-sm font-medium ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                    }`}
                 >
                   <Globe size={18} />
                   <span className="uppercase">{lang}</span>
                 </button>
 
                 {langMenuOpen && (
-                  <div className={`absolute end-0 mt-2 w-48 py-2 rounded-xl shadow-xl border overflow-hidden max-h-80 overflow-y-auto ${
-                    isDark ? 'bg-brand-surface border-white/10' : 'bg-white border-gray-200'
-                  }`}>
+                  <div className={`absolute end-0 mt-2 w-48 py-2 rounded-xl shadow-xl border overflow-hidden max-h-80 overflow-y-auto ${isDark ? 'bg-brand-surface border-white/10' : 'bg-white border-gray-200'
+                    }`}>
                     {LANGUAGES.map((l) => (
                       <button
                         key={l.code}
@@ -399,11 +393,10 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
                           setLang(l.code);
                           setLangMenuOpen(false);
                         }}
-                        className={`w-full text-start px-4 py-2 text-sm flex items-center gap-3 hover:bg-brand-blue/10 ${
-                          lang === l.code 
+                        className={`w-full text-start px-4 py-2 text-sm flex items-center gap-3 hover:bg-brand-blue/10 ${lang === l.code
                             ? (isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-50 text-blue-600')
                             : (isDark ? 'text-gray-300' : 'text-gray-700')
-                        }`}
+                          }`}
                       >
                         <span className="text-lg">{l.flag}</span>
                         <span>{l.name}</span>
@@ -415,7 +408,7 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
             </div>
 
             {!onBack && (
-              <a 
+              <a
                 href="#contact"
                 className="bg-brand-blue hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition-transform hover:scale-105 shadow-lg shadow-blue-500/30"
               >
@@ -425,14 +418,14 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
           </div>
 
           <div className="md:hidden flex items-center gap-4">
-            <button 
+            <button
               onClick={toggleTheme}
               className={`p-2 rounded-full ${isDark ? 'text-yellow-400' : 'text-gray-600'}`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             {!onBack && (
-              <button 
+              <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={isDark ? 'text-white' : 'text-gray-900'}
               >
@@ -440,19 +433,17 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
               </button>
             )}
             {onBack && (
-               <div className="relative">
+              <div className="relative">
                 <button
                   onClick={() => setLangMenuOpen(!langMenuOpen)}
-                  className={`flex items-center gap-1.5 p-2 rounded-full transition-colors text-sm font-medium ${
-                    isDark ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-800'
-                  }`}
+                  className={`flex items-center gap-1.5 p-2 rounded-full transition-colors text-sm font-medium ${isDark ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-800'
+                    }`}
                 >
                   <Globe size={18} />
                 </button>
                 {langMenuOpen && (
-                  <div className={`absolute end-0 mt-2 w-48 py-2 rounded-xl shadow-xl border overflow-hidden max-h-80 overflow-y-auto ${
-                    isDark ? 'bg-brand-surface border-white/10' : 'bg-white border-gray-200'
-                  }`}>
+                  <div className={`absolute end-0 mt-2 w-48 py-2 rounded-xl shadow-xl border overflow-hidden max-h-80 overflow-y-auto ${isDark ? 'bg-brand-surface border-white/10' : 'bg-white border-gray-200'
+                    }`}>
                     {LANGUAGES.map((l) => (
                       <button
                         key={l.code}
@@ -460,9 +451,8 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
                           setLang(l.code);
                           setLangMenuOpen(false);
                         }}
-                        className={`w-full text-start px-4 py-2 text-sm flex items-center gap-3 hover:bg-brand-blue/10 ${
-                          lang === l.code ? 'text-brand-blue font-bold' : ''
-                        }`}
+                        className={`w-full text-start px-4 py-2 text-sm flex items-center gap-3 hover:bg-brand-blue/10 ${lang === l.code ? 'text-brand-blue font-bold' : ''
+                          }`}
                       >
                         <span className="text-lg me-2">{l.flag}</span>
                         <span>{l.name}</span>
@@ -477,13 +467,12 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
       </div>
 
       {isOpen && !onBack && (
-        <div className={`md:hidden absolute w-full px-4 pt-2 pb-6 border-b ${
-          isDark ? 'bg-brand-surface border-white/10 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xl'
-        }`}>
+        <div className={`md:hidden absolute w-full px-4 pt-2 pb-6 border-b ${isDark ? 'bg-brand-surface border-white/10 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xl'
+          }`}>
           <div className="flex flex-col gap-4 mt-4">
             {navLinks.map((link) => (
-              <a 
-                key={link.name} 
+              <a
+                key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
                 className="text-lg font-medium p-2 hover:bg-brand-blue/10 rounded-lg"
@@ -499,18 +488,17 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
                     setLang(l.code);
                     setIsOpen(false);
                   }}
-                   className={`text-start px-3 py-2 text-sm rounded-lg flex items-center gap-2 ${
-                    lang === l.code 
-                      ? 'bg-brand-blue text-white' 
+                  className={`text-start px-3 py-2 text-sm rounded-lg flex items-center gap-2 ${lang === l.code
+                      ? 'bg-brand-blue text-white'
                       : (isDark ? 'bg-white/5' : 'bg-gray-100')
-                  }`}
+                    }`}
                 >
                   <span>{l.flag}</span>
                   <span>{l.name}</span>
                 </button>
               ))}
             </div>
-             <a 
+            <a
               href="#contact"
               onClick={() => setIsOpen(false)}
               className="bg-brand-blue text-white text-center py-3 rounded-lg font-bold mt-2"
@@ -534,14 +522,14 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
   return (
     <div className={`min-h-screen relative overflow-x-hidden font-sans animate-in fade-in duration-700 ${isDark ? 'bg-brand-dark text-white' : 'bg-white text-gray-900'}`}>
       <div className="fixed inset-0 pointer-events-none opacity-10 mix-blend-overlay z-40 bg-[url('https://www.transparenttextures.com/patterns/film-grain.png')]"></div>
-      
+
       <Navbar isDark={isDark} toggleTheme={toggleTheme} lang={lang} setLang={setLang} t={t} onBack={onBack} />
 
       {/* Hero Inmersivo */}
       <header className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/40 z-10"></div>
-          <ResilientImage 
+          <ResilientImage
             filename="manuel-vera-hero.jpg"
             fallback="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop"
             alt="Manuel Vera Space"
@@ -554,7 +542,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
             {d.hero_tag}
           </div>
           <h1 className="text-6xl md:text-9xl font-display font-bold mb-8 leading-none tracking-tighter drop-shadow-2xl">
-            {t.tierrita.title.split(' ')[0]} <br/> <span className="text-brand-blue italic">{t.tierrita.title.split(' ')[1]}</span>
+            {t.tierrita.title.split(' ')[0]} <br /> <span className="text-brand-blue italic">{t.tierrita.title.split(' ')[1]}</span>
           </h1>
           <p className="text-xl md:text-2xl font-light opacity-90 max-w-2xl mx-auto italic">
             {d.hero_title}
@@ -567,15 +555,15 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="relative group">
             <div className="aspect-[16/10] rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
-              <ResilientImage 
+              <ResilientImage
                 filename="jose-bolados-actor.jpg"
                 fallback="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop"
                 alt="José Bolados Milla Actor"
                 className="w-full h-full object-cover grayscale sepia-[0.3] hover:grayscale-0 transition-all duration-700"
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
-                 <p className="font-mono text-xs text-brand-orange mb-1">{d.audiovisual_label}</p>
-                 <h4 className="text-2xl font-bold font-display tracking-tight">José Bolados Milla</h4>
+                <p className="font-mono text-xs text-brand-orange mb-1">{d.audiovisual_label}</p>
+                <h4 className="text-2xl font-bold font-display tracking-tight">José Bolados Milla</h4>
               </div>
             </div>
             <div className="absolute -inset-4 bg-brand-orange/10 blur-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -606,50 +594,50 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
       {/* Producción Musical Especializada */}
       <section className={`py-32 ${isDark ? 'bg-[#0f0f0f]' : 'bg-gray-100'}`}>
         <div className="max-w-7xl mx-auto px-6">
-           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-             <div className="order-2 lg:order-1 space-y-8">
-               <div className="inline-flex items-center gap-2 text-brand-blue uppercase tracking-widest text-xs font-bold">
-                 <Disc size={16} /> {d.credits.prod}
-               </div>
-               <h2 className="text-4xl md:text-5xl font-display font-bold">{d.music_prod_title}</h2>
-               <p className="text-xl leading-relaxed opacity-80">
-                 {d.music_prod_desc}
-               </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="order-2 lg:order-1 space-y-8">
+              <div className="inline-flex items-center gap-2 text-brand-blue uppercase tracking-widest text-xs font-bold">
+                <Disc size={16} /> {d.credits.prod}
+              </div>
+              <h2 className="text-4xl md:text-5xl font-display font-bold">{d.music_prod_title}</h2>
+              <p className="text-xl leading-relaxed opacity-80">
+                {d.music_prod_desc}
+              </p>
 
-               <AudioPlayer isDark={isDark} filename="tierra_tierrita.mp3" t={t} />
-               
-               <div className="flex flex-wrap gap-8 pt-8 border-t border-white/5">
-                  <div className="space-y-1">
-                    <p className="text-[10px] uppercase opacity-40 font-bold tracking-wider text-brand-blue">{d.credits.prod}</p>
-                    <p className="font-bold text-lg">Francisco Carle</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] uppercase opacity-40 font-bold tracking-wider text-brand-blue">{d.credits.guitars}</p>
-                    <p className="font-bold text-lg">Claudio Pérez</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] uppercase opacity-40 font-bold tracking-wider text-brand-blue">{d.credits.voice}</p>
-                    <p className="font-bold text-lg">Maunita</p>
-                  </div>
-               </div>
-             </div>
+              <AudioPlayer isDark={isDark} filename="tierra_tierrita.mp3" t={t} />
 
-             <div className="order-1 lg:order-2">
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-square lg:aspect-[4/5]">
-                  <ResilientImage 
-                    filename="maunita-studio.jpg"
-                    fallback="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop"
-                    alt="Maunita Recording"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-8 left-8">
-                    <h4 className="text-3xl font-display font-bold">Maunita</h4>
-                    <p className="opacity-60 text-sm uppercase tracking-widest">{d.credits.record}</p>
-                  </div>
+              <div className="flex flex-wrap gap-8 pt-8 border-t border-white/5">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase opacity-40 font-bold tracking-wider text-brand-blue">{d.credits.prod}</p>
+                  <p className="font-bold text-lg">Francisco Carle</p>
                 </div>
-             </div>
-           </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase opacity-40 font-bold tracking-wider text-brand-blue">{d.credits.guitars}</p>
+                  <p className="font-bold text-lg">Claudio Pérez</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase opacity-40 font-bold tracking-wider text-brand-blue">{d.credits.voice}</p>
+                  <p className="font-bold text-lg">Maunita</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-square lg:aspect-[4/5]">
+                <ResilientImage
+                  filename="maunita-studio.jpg"
+                  fallback="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop"
+                  alt="Maunita Recording"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
+                <div className="absolute bottom-8 left-8">
+                  <h4 className="text-3xl font-display font-bold">Maunita</h4>
+                  <p className="opacity-60 text-sm uppercase tracking-widest">{d.credits.record}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -657,21 +645,21 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
       <section className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 space-y-4">
-             <div className="inline-flex items-center gap-2 text-brand-orange uppercase tracking-widest text-xs font-bold mb-2">
-                <Clapperboard size={16} /> {d.audiovisual_label}
-             </div>
-             <h2 className="text-4xl md:text-6xl font-display font-bold">{d.mission_title}</h2>
-             <p className="max-w-3xl mx-auto text-lg opacity-70 italic">{d.mission_desc}</p>
+            <div className="inline-flex items-center gap-2 text-brand-orange uppercase tracking-widest text-xs font-bold mb-2">
+              <Clapperboard size={16} /> {d.audiovisual_label}
+            </div>
+            <h2 className="text-4xl md:text-6xl font-display font-bold">{d.mission_title}</h2>
+            <p className="max-w-3xl mx-auto text-lg opacity-70 italic">{d.mission_desc}</p>
           </div>
 
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
-            <iframe 
+            <iframe
               className="absolute inset-0 w-full h-full"
-              src="https://www.youtube-nocookie.com/embed/6AbwPn-CIZc?autoplay=0&rel=0&modestbranding=1" 
+              src="https://www.youtube-nocookie.com/embed/6AbwPn-CIZc?autoplay=0&rel=0&modestbranding=1"
               title="Tierra Tierrita Video Clip"
               loading="lazy"
               frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             ></iframe>
           </div>
@@ -685,7 +673,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
             <h2 className="text-4xl md:text-6xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue">{d.gallery_title}</h2>
             <p className="font-mono text-sm opacity-50 uppercase tracking-tighter">{d.gallery_subtitle}</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/5">
               <ResilientImage filename="moon-concept.jpg" fallback="https://images.unsplash.com/photo-1522030239044-129314828b10?q=80&w=2040&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Moon Concept" />
@@ -706,7 +694,7 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
       <section className="py-32 text-center border-t border-white/5 font-sans">
         <Logo className="mx-auto flex items-center" />
         <h3 className="text-3xl font-display font-bold mt-8 mb-8 opacity-80 italic">"{d.music_author_label}"</h3>
-        <button 
+        <button
           onClick={onBack}
           className="px-10 py-4 bg-brand-blue text-white font-bold rounded-2xl hover:bg-blue-600 transition-all shadow-xl shadow-blue-500/20 active:scale-95"
         >
@@ -719,12 +707,10 @@ const TierraTierritaDetailed = ({ t, onBack, isDark, toggleTheme, lang, setLang 
 
 const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) => {
   return (
-    <div className={`w-full rounded-xl overflow-hidden border shadow-2xl backdrop-blur-xl ${
-      isDark ? 'bg-brand-surface/80 border-white/10' : 'bg-white/90 border-gray-200'
-    }`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      <div className={`h-10 border-b flex items-center px-4 gap-2 ${
-        isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'
-      }`}>
+    <div className={`w-full rounded-xl overflow-hidden border shadow-2xl backdrop-blur-xl ${isDark ? 'bg-brand-surface/80 border-white/10' : 'bg-white/90 border-gray-200'
+      }`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+      <div className={`h-10 border-b flex items-center px-4 gap-2 ${isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'
+        }`}>
         <div className="flex gap-1.5">
           <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
           <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
@@ -789,7 +775,7 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
                 <div className="text-xs text-gray-500">{t.dashboard.latency}</div>
               </div>
             </div>
-             <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center">
               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
                 <Terminal size={14} />
               </div>
@@ -805,103 +791,180 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
   );
 };
 
+const SmartphoneMockup = ({ isDark, t }: { isDark: boolean; t: any }) => {
+  return (
+    <div className="relative mx-auto w-full max-w-[300px] md:max-w-[340px] aspect-[9/19] hover:-translate-y-2 transition-transform duration-700">
+      <div className="absolute -inset-6 bg-gradient-to-r from-brand-orange via-pink-500 to-brand-blue rounded-[3rem] blur-2xl opacity-20 animate-pulse-slow"></div>
+
+      <div className={`relative w-full h-full rounded-[2.5rem] p-3 shadow-2xl border-4 ${isDark ? 'bg-[#111] border-gray-800 shadow-brand-orange/10' : 'bg-white border-gray-200 shadow-gray-300'
+        }`}>
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-20 flex items-center justify-between px-2 shadow-inner">
+          <div className="w-3 h-3 rounded-full bg-gray-900 border border-white/5"></div>
+          <div className="w-2 h-2 rounded-full bg-[#0a0a2a] relative overflow-hidden">
+            <div className="absolute inset-0 bg-blue-500/20 blur-[1px]"></div>
+          </div>
+        </div>
+
+        <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-black group">
+          {/* 
+             ------------------------------------------------------
+             INSTRUCCIONES PARA PONER TU PROPIO VIDEO AQUÍ:
+             1. Coloca tu video .mp4 dentro de la carpeta "public".
+             2. Cambia el 'src' en la etiqueta de video de abajo por el nombre de tu archivo (ej: "/resumen.mp4").
+             3. Descomenta el bloque de <video> y comenta (o elimina) el bloque <ResilientImage>.
+             ------------------------------------------------------
+           */}
+
+
+          <video
+            src="/hola-es.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover scale-[1.02] group-hover:scale-105 transition-transform duration-[10s]"
+          />
+
+
+
+          {/*            <ResilientImage 
+              filename="instagram-reel-placeholder.jpg"
+              fallback="https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=1932&auto=format&fit=crop"
+              alt="Reel Content"
+              className="w-full h-full object-cover scale-[1.02] group-hover:scale-105 transition-transform duration-[10s]"
+           /> */}
+
+
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 pointer-events-none"></div>
+
+          <div className="absolute bottom-6 left-5 right-4 flex justify-between items-end z-10">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-brand-orange overflow-hidden border-2 border-white/20">
+                  <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=100&auto=format&fit=crop" alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-white">
+                  <p className="text-sm font-bold tracking-tight">francisco.carle</p>
+                  <p className="text-[10px] opacity-70">{t.hero.phone_job}</p>
+                </div>
+              </div>
+              <p className="text-xs text-white/90 leading-tight pr-4">{t.hero.phone_bio}</p>
+            </div>
+
+            <div className="flex flex-col gap-4 text-white pr-2 pb-4">
+              <div className="flex flex-col items-center gap-1">
+                <div className="p-2.5 rounded-full bg-white/10 backdrop-blur-md mb-2">
+                  <Instagram size={22} />
+                </div>
+                <div className="flex flex-col gap-5 text-white/80">
+                  <span className="flex flex-col items-center gap-1"><Heart size={20} /><span className="text-[10px]">10K</span></span>
+                  <span className="flex flex-col items-center gap-1"><MessageCircle size={20} /><span className="text-[10px]">204</span></span>
+                  <span className="flex flex-col items-center gap-1"><Send size={20} /></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) => (
-  <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
+  <section className="relative overflow-hidden min-h-[95vh] flex items-center pt-24 pb-12">
     <div className="absolute inset-0 z-0">
-      <img 
-        src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop" 
-        alt="Background" 
-        className="w-full h-full object-cover"
-        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop" }}
-      />
-      <div className={`absolute inset-0 ${
-        isDark 
-          ? 'bg-gradient-to-b from-brand-dark/95 via-brand-dark/85 to-brand-dark' 
-          : 'bg-gradient-to-b from-white/90 via-white/70 to-gray-50'
-      }`}></div>
+      <div className={`absolute inset-0 ${isDark
+          ? 'bg-gradient-to-br from-[#050505] via-[#0a0f12] to-brand-dark'
+          : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
+        }`}></div>
     </div>
 
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
       <div className="absolute inset-0 grain-overlay z-10"></div>
-      <div className="absolute top-0 left-0 w-full h-full mix-blend-screen">
-        <div className={`absolute -top-20 -right-20 w-[600px] h-[600px] bg-brand-orange/20 rounded-full bokeh-blur animate-drift-slow opacity-60`}></div>
-        <div className={`absolute -bottom-40 -left-40 w-[700px] h-[700px] bg-brand-blue/25 rounded-full bokeh-blur animate-drift-medium opacity-50`} style={{ animationDelay: '-5s' }}></div>
-        <div className={`absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-purple-400/20 rounded-full bokeh-blur animate-drift-fast opacity-40`} style={{ animationDelay: '-10s' }}></div>
+      <div className="absolute top-0 left-0 w-full h-full mix-blend-screen overflow-hidden">
+        <div className={`absolute -top-40 -left-20 w-[600px] h-[600px] bg-brand-orange/10 rounded-full bokeh-blur animate-drift-slow opacity-60`}></div>
+        <div className={`absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-brand-blue/10 rounded-full bokeh-blur animate-drift-medium opacity-50`} style={{ animationDelay: '-5s' }}></div>
       </div>
     </div>
 
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center font-sans">
-      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 border backdrop-blur-sm animate-in slide-in-from-top duration-1000 ${
-        isDark ? 'bg-white/5 border-white/10 text-brand-orange' : 'bg-white/80 border-orange-100 text-brand-orange shadow-sm'
-      }`}>
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-orange"></span>
-        </span>
-        <span className="text-sm font-semibold tracking-wide uppercase">{t.hero.badge}</span>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 font-sans w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
 
-      <h1 className={`text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tight animate-in zoom-in duration-1000 ${
-        isDark ? 'text-white' : 'text-gray-900'
-      }`}>
-        {t.hero.title_start} <br className="hidden md:block" />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange via-white to-brand-blue bg-[length:200%_auto] animate-pulse-slow">
-          {t.hero.title_end}
-        </span>
-      </h1>
+        <div className={`text-center lg:text-start animate-in fade-in slide-in-from-left duration-1000 ${isDark ? 'text-white' : 'text-gray-900'
+          }`}>
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 border backdrop-blur-sm shadow-sm ${isDark ? 'bg-white/5 border-white/10 text-brand-orange' : 'bg-white/80 border-orange-200 text-brand-orange'
+            }`}>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-orange"></span>
+            </span>
+            <span className="text-xs md:text-sm font-bold tracking-widest uppercase">{t.hero.badge}</span>
+          </div>
 
-      <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom duration-1000 delay-300 ${
-        isDark ? 'text-gray-300' : 'text-gray-700'
-      }`}>
-        {t.hero.subtitle}
-      </p>
+          <h1 className="text-5xl md:text-7xl xl:text-[5.5rem] leading-[1.1] font-display font-bold mb-6 tracking-tight">
+            {t.hero.title_start} <br className="hidden lg:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange via-pink-400 to-brand-blue bg-[length:200%_auto] animate-pulse-slow">
+              {t.hero.title_end}
+            </span>
+          </h1>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in duration-1000 delay-500">
-        <a 
-          href="https://www.instagram.com/francisco.carle"
-          target="_blank"
-          rel="noreferrer"
-          className="w-full sm:w-auto px-10 py-4 bg-brand-orange hover:bg-orange-600 text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-orange/40 flex items-center justify-center gap-2"
-        >
-          <Instagram size={20} /> {t.hero.cta_primary}
-        </a>
-        <a 
-          href="#services"
-          className={`w-full sm:w-auto px-10 py-4 rounded-2xl font-bold text-lg transition-all border backdrop-blur-md ${
-            isDark 
-              ? 'border-white/10 hover:bg-white/5 text-white' 
-              : 'border-gray-300 hover:bg-white/50 text-gray-800'
-          }`}
-        >
-          {t.hero.cta_secondary}
-        </a>
-      </div>
+          <p className={`text-lg md:text-2xl max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed font-light ${isDark ? 'text-gray-300' : 'text-gray-600'
+            }`}>
+            {t.hero.subtitle}
+          </p>
 
-      <div className="mt-24 relative max-w-4xl mx-auto animate-float">
-        <div className="relative">
-           <div className="absolute -inset-4 bg-gradient-to-r from-brand-orange to-brand-blue rounded-3xl blur-[40px] opacity-15"></div>
-           <DashboardMockup isDark={isDark} t={t} lang={lang} />
+          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <a
+              href="https://www.instagram.com/francisco.carle"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-brand-orange via-pink-500 to-purple-600 hover:opacity-90 text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-orange/40 flex items-center justify-center gap-3"
+            >
+              <Instagram size={24} />
+              <span>{t.hero.cta_primary}</span>
+            </a>
+            <a
+              href="#services"
+              className={`w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg transition-all border backdrop-blur-md flex items-center justify-center gap-2 ${isDark
+                  ? 'border-white/10 hover:bg-white/5 text-white'
+                  : 'border-gray-300 hover:bg-gray-50 text-gray-800'
+                }`}
+            >
+              {t.hero.cta_secondary}
+            </a>
+          </div>
+
+          <div className="mt-8 flex items-center justify-center lg:justify-start gap-3">
+            <div className="flex -space-x-3">
+              <img className="w-8 h-8 rounded-full border-2 border-[#0a0a0a]" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=100&auto=format&fit=crop" alt="User" />
+              <img className="w-8 h-8 rounded-full border-2 border-[#0a0a0a]" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=100&auto=format&fit=crop" alt="User" />
+              <div className="w-8 h-8 rounded-full border-2 border-[#0a0a0a] bg-brand-blue flex items-center justify-center text-[10px] text-white font-bold">+10k</div>
+            </div>
+            <p className={`text-xs font-medium opacity-60 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              {t.hero.community_join}
+            </p>
+          </div>
         </div>
-        <p className={`mt-6 text-sm font-medium opacity-50 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          {t.hero.dashboard_caption}
-        </p>
+
+        <div className="relative w-full flex justify-center lg:justify-end animate-in fade-in slide-in-from-right duration-1000 delay-300 pt-8 lg:pt-0">
+          <SmartphoneMockup isDark={isDark} t={t} />
+        </div>
+
       </div>
     </div>
   </section>
 );
 
 const BentoItem = ({ title, desc, icon: Icon, cols = "col-span-1", isDark }: any) => (
-  <div className={`${cols} group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 ${
-    isDark 
-      ? 'bg-brand-surface border border-white/10 hover:border-brand-orange/50' 
+  <div className={`${cols} group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 ${isDark
+      ? 'bg-brand-surface border border-white/10 hover:border-brand-orange/50'
       : 'bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-orange/50'
-  }`}>
+    }`}>
     <div className={`absolute top-0 end-0 p-32 bg-brand-orange/5 rounded-full blur-3xl transition-opacity opacity-0 group-hover:opacity-100`}></div>
-    
+
     <div className="relative z-10">
-      <div className={`inline-flex p-3 rounded-lg mb-4 ${
-        isDark ? 'bg-white/5 text-brand-orange' : 'bg-orange-50 text-brand-orange'
-      }`}>
+      <div className={`inline-flex p-3 rounded-lg mb-4 ${isDark ? 'bg-white/5 text-brand-orange' : 'bg-orange-50 text-brand-orange'
+        }`}>
         <Icon size={24} />
       </div>
       <h3 className={`text-xl font-display font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h3>
@@ -923,44 +986,51 @@ const Services = ({ isDark, t }: { isDark: boolean; t: any }) => (
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <BentoItem 
+        <BentoItem
           isDark={isDark}
           cols="md:col-span-1"
           title={t.services.web.title}
           desc={t.services.web.desc}
           icon={Smartphone}
         />
-        <BentoItem 
+        <BentoItem
           isDark={isDark}
           cols="md:col-span-2"
           title={t.services.ai.title}
           desc={t.services.ai.desc}
           icon={Camera}
         />
-        <BentoItem 
+        <BentoItem
           isDark={isDark}
           title={t.services.software.title}
           desc={t.services.software.desc}
           icon={Code2}
         />
-        <BentoItem 
+        <BentoItem
           isDark={isDark}
           title={t.services.audiovisual.title}
           desc={t.services.audiovisual.desc}
           icon={Clapperboard}
         />
-        <BentoItem 
+        <BentoItem
           isDark={isDark}
           title={t.services.agile.title}
           desc={t.services.agile.desc}
           icon={Zap}
         />
-        <BentoItem 
+        <BentoItem
           isDark={isDark}
           cols="md:col-span-1"
           title={t.services.ui.title}
           desc={t.services.ui.desc}
           icon={Film}
+        />
+        <BentoItem
+          isDark={isDark}
+          cols="md:col-span-2"
+          title={t.services.design.title}
+          desc={t.services.design.desc}
+          icon={PenTool}
         />
       </div>
     </div>
@@ -970,15 +1040,14 @@ const Services = ({ isDark, t }: { isDark: boolean; t: any }) => (
 const TierraTierritaTeaser = ({ isDark, t, onEnter }: { isDark: boolean; t: any; onEnter: () => void }) => (
   <section id="audiovisual" className={`py-24 relative overflow-hidden ${isDark ? 'bg-brand-dark' : 'bg-white'}`}>
     <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/20 rounded-full blur-[120px]"></div>
-       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-blue/20 rounded-full blur-[120px]"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/20 rounded-full blur-[120px]"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-blue/20 rounded-full blur-[120px]"></div>
     </div>
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 font-sans">
       <div className="text-center max-w-4xl mx-auto mb-16">
-        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 border ${
-          isDark ? 'bg-brand-orange/10 border-brand-orange/20 text-brand-orange' : 'bg-orange-50 border-orange-200 text-brand-orange'
-        }`}>
+        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 border ${isDark ? 'bg-brand-orange/10 border-brand-orange/20 text-brand-orange' : 'bg-orange-50 border-orange-200 text-brand-orange'
+          }`}>
           <Video size={14} />
           <span className="text-xs font-bold uppercase tracking-wider">{t.tierrita.badge}</span>
         </div>
@@ -993,45 +1062,45 @@ const TierraTierritaTeaser = ({ isDark, t, onEnter }: { isDark: boolean; t: any;
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-8 group relative">
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
-             <iframe 
-               className="absolute inset-0 w-full h-full"
-               src="https://www.youtube-nocookie.com/embed/6AbwPn-CIZc?autoplay=0&rel=0&modestbranding=1" 
-               title="Tierra Tierrita Teaser"
-               loading="lazy"
-               frameBorder="0"
-               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-               allowFullScreen
-             ></iframe>
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src="https://www.youtube-nocookie.com/embed/6AbwPn-CIZc?autoplay=0&rel=0&modestbranding=1"
+              title="Tierra Tierrita Teaser"
+              loading="lazy"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
 
         <div className="lg:col-span-4 space-y-8">
-           <div className="space-y-4">
-              <h3 className={`text-2xl font-bold font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                {t.tierrita.story_title}
-              </h3>
-              <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                {t.tierrita.desc}
-              </p>
-           </div>
+          <div className="space-y-4">
+            <h3 className={`text-2xl font-bold font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              {t.tierrita.story_title}
+            </h3>
+            <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              {t.tierrita.desc}
+            </p>
+          </div>
 
-           <div className={`p-6 rounded-2xl border group transition-all duration-500 hover:scale-[1.02] ${isDark ? 'bg-white/5 border-white/10 hover:border-brand-orange/40' : 'bg-gray-50 border-gray-200 hover:border-brand-orange/40 shadow-sm'}`}>
-              <div className="flex items-center gap-3 mb-3 text-brand-orange font-bold text-sm uppercase tracking-wider">
-                <Sparkles size={16} className="animate-pulse-slow" /> {t.tierrita.tagline}
-              </div>
-              <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'} italic`}>
-                {t.tierrita.quote}
-              </p>
-           </div>
+          <div className={`p-6 rounded-2xl border group transition-all duration-500 hover:scale-[1.02] ${isDark ? 'bg-white/5 border-white/10 hover:border-brand-orange/40' : 'bg-gray-50 border-gray-200 hover:border-brand-orange/40 shadow-sm'}`}>
+            <div className="flex items-center gap-3 mb-3 text-brand-orange font-bold text-sm uppercase tracking-wider">
+              <Sparkles size={16} className="animate-pulse-slow" /> {t.tierrita.tagline}
+            </div>
+            <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'} italic`}>
+              {t.tierrita.quote}
+            </p>
+          </div>
 
-           <div className="flex items-center gap-4 pt-4">
-             <button 
-               onClick={onEnter}
-               className={`flex items-center gap-2 font-bold transition-all hover:text-brand-orange ${isDark ? 'text-white' : 'text-gray-900'}`}
-             >
-               {t.tierrita.more} <ArrowRight size={18} />
-             </button>
-           </div>
+          <div className="flex items-center gap-4 pt-4">
+            <button
+              onClick={onEnter}
+              className={`flex items-center gap-2 font-bold transition-all hover:text-brand-orange ${isDark ? 'text-white' : 'text-gray-900'}`}
+            >
+              {t.tierrita.more} <ArrowRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1039,56 +1108,53 @@ const TierraTierritaTeaser = ({ isDark, t, onEnter }: { isDark: boolean; t: any;
 );
 
 const PortfolioCard = ({ title, desc, icon: Icon, tags, cta, isDark, filename, fallback, link, isAlternate, badge }: any) => (
-  <div className={`rounded-3xl border overflow-hidden transition-all hover:shadow-2xl hover:shadow-brand-blue/10 ${
-    isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
-  }`}>
+  <div className={`rounded-3xl border overflow-hidden transition-all hover:shadow-2xl hover:shadow-brand-blue/10 ${isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
+    }`}>
     <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-12 items-center`}>
       <div className={`order-2 ${isAlternate ? 'lg:order-2' : 'lg:order-1'} relative group`}>
         <div className="rounded-xl border shadow-xl overflow-hidden relative h-64 md:h-80 w-full bg-brand-surface">
-           <ResilientImage 
-             filename={filename}
-             fallback={fallback}
-             alt={title}
-             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-           />
-           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
-           {badge && (
-             <div className="absolute top-4 right-4 px-3 py-1 bg-brand-orange text-white text-[10px] font-bold uppercase rounded-full shadow-lg">
-               {badge}
-             </div>
-           )}
+          <ResilientImage
+            filename={filename}
+            fallback={fallback}
+            alt={title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+          {badge && (
+            <div className="absolute top-4 right-4 px-3 py-1 bg-brand-orange text-white text-[10px] font-bold uppercase rounded-full shadow-lg">
+              {badge}
+            </div>
+          )}
         </div>
       </div>
-      
+
       <div className={`order-1 ${isAlternate ? 'lg:order-1' : 'lg:order-2'} space-y-6 font-sans`}>
         <div className="flex items-center gap-3">
-           <div className={`p-3 rounded-xl ${isDark ? 'bg-brand-blue/10 text-brand-blue' : 'bg-blue-100 text-blue-600'}`}>
-             <Icon size={28} />
-           </div>
-           <h3 className={`text-3xl font-bold font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h3>
+          <div className={`p-3 rounded-xl ${isDark ? 'bg-brand-blue/10 text-brand-blue' : 'bg-blue-100 text-blue-600'}`}>
+            <Icon size={28} />
+          </div>
+          <h3 className={`text-3xl font-bold font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h3>
         </div>
         <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
           {desc}
         </p>
         <div className="flex flex-wrap gap-2">
-           {tags.map((tag: string) => (
-             <span key={tag} className={`px-3 py-1 rounded-full text-xs font-medium border ${
-               isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-600'
-             }`}>
-               {tag}
-             </span>
-           ))}
+          {tags.map((tag: string) => (
+            <span key={tag} className={`px-3 py-1 rounded-full text-xs font-medium border ${isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-600'
+              }`}>
+              {tag}
+            </span>
+          ))}
         </div>
         <div className="pt-4">
-          <a 
-            href={link || "#"} 
+          <a
+            href={link || "#"}
             target={link ? "_blank" : "_self"}
             rel="noreferrer"
-            className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
-              isDark 
-                ? 'bg-white text-black hover:bg-gray-200' 
+            className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${isDark
+                ? 'bg-white text-black hover:bg-gray-200'
                 : 'bg-gray-900 text-white hover:bg-gray-800'
-            }`}
+              }`}
           >
             {cta} <ExternalLink size={18} />
           </a>
@@ -1102,9 +1168,8 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <section id="portfolio" className={`py-24 ${isDark ? 'bg-brand-surface' : 'bg-white'}`}>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center max-w-3xl mx-auto mb-16 font-sans">
-        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 border ${
-          isDark ? 'bg-white/5 border-white/10 text-brand-blue' : 'bg-blue-50 border-blue-200 text-brand-blue'
-        }`}>
+        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 border ${isDark ? 'bg-white/5 border-white/10 text-brand-blue' : 'bg-blue-50 border-blue-200 text-brand-blue'
+          }`}>
           <Code2 size={14} />
           <span className="text-xs font-bold uppercase tracking-wider">{t.portfolio.badge}</span>
         </div>
@@ -1117,7 +1182,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
       </div>
 
       <div className="flex flex-col gap-16">
-        <PortfolioCard 
+        <PortfolioCard
           title={t.portfolio.armonix.title}
           desc={t.portfolio.armonix.desc}
           icon={Music4}
@@ -1127,7 +1192,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           fallback="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070&auto=format&fit=crop"
           isDark={isDark}
         />
-        <PortfolioCard 
+        <PortfolioCard
           title={t.portfolio.palabra.title}
           desc={t.portfolio.palabra.desc}
           icon={Type}
@@ -1139,7 +1204,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           isDark={isDark}
           isAlternate
         />
-        <PortfolioCard 
+        <PortfolioCard
           title={t.portfolio.emaus.title}
           desc={t.portfolio.emaus.desc}
           icon={Church}
@@ -1149,7 +1214,7 @@ const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
           fallback="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop"
           isDark={isDark}
         />
-        <PortfolioCard 
+        <PortfolioCard
           title={t.portfolio.verso.title}
           desc={t.portfolio.verso.desc}
           icon={Mic2}
@@ -1171,56 +1236,54 @@ const Philosophy = ({ isDark, t }: { isDark: boolean; t: any }) => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
-           <div className="flex items-center gap-2 mb-4 text-brand-orange font-bold tracking-wider text-sm uppercase">
-             <Video size={16} /> {t.philosophy.badge}
-           </div>
-           <h2 className={`text-4xl md:text-5xl font-display font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-             {t.philosophy.title_start} <br/>
-             <span className="italic text-brand-blue">{t.philosophy.title_end}</span>
-           </h2>
-           <p className={`text-lg mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-             {t.philosophy.desc}
-           </p>
+          <div className="flex items-center gap-2 mb-4 text-brand-orange font-bold tracking-wider text-sm uppercase">
+            <Video size={16} /> {t.philosophy.badge}
+          </div>
+          <h2 className={`text-4xl md:text-5xl font-display font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            {t.philosophy.title_start} <br />
+            <span className="italic text-brand-blue">{t.philosophy.title_end}</span>
+          </h2>
+          <p className={`text-lg mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            {t.philosophy.desc}
+          </p>
 
-           <div className="space-y-6">
-             {t.philosophy.points.map((item: any, idx: number) => (
-               <div key={idx} className="flex gap-4">
-                 <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                   isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600'
-                 }`}>
-                   <CheckCircle2 size={18} />
-                 </div>
-                 <div>
-                   <h4 className={`font-bold text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>{item.title}</h4>
-                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{item.desc}</p>
-                 </div>
-               </div>
-             ))}
-           </div>
+          <div className="space-y-6">
+            {t.philosophy.points.map((item: any, idx: number) => (
+              <div key={idx} className="flex gap-4">
+                <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isDark ? 'bg-brand-orange/20 text-brand-orange' : 'bg-orange-100 text-orange-600'
+                  }`}>
+                  <CheckCircle2 size={18} />
+                </div>
+                <div>
+                  <h4 className={`font-bold text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>{item.title}</h4>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="relative">
-          <div className={`relative rounded-2xl p-8 border ${
-            isDark ? 'bg-brand-surface border-white/10' : 'bg-white border-gray-200 shadow-xl'
-          }`}>
-             <div className="space-y-4 font-mono text-sm">
-                <div className="flex items-center gap-2 text-gray-500 mb-4">
-                  <Terminal size={16} />
-                  <span>render-engine — melodia-lab</span>
+          <div className={`relative rounded-2xl p-8 border ${isDark ? 'bg-brand-surface border-white/10' : 'bg-white border-gray-200 shadow-xl'
+            }`}>
+            <div className="space-y-4 font-mono text-sm">
+              <div className="flex items-center gap-2 text-gray-500 mb-4">
+                <Terminal size={16} />
+                <span>render-engine — melodia-lab</span>
+              </div>
+              <div dir="ltr" className="text-start">
+                <div>
+                  <span className="text-brand-orange">➜</span> <span className="text-blue-500">~</span> <span className={isDark ? 'text-white' : 'text-gray-800'}>{t.philosophy.terminal.start}</span>
                 </div>
-                <div dir="ltr" className="text-start">
-                  <div>
-                    <span className="text-brand-orange">➜</span> <span className="text-blue-500">~</span> <span className={isDark ? 'text-white' : 'text-gray-800'}>{t.philosophy.terminal.start}</span>
-                  </div>
-                  <div className="text-gray-500">{t.philosophy.terminal.init}</div>
-                  <div className="text-gray-500">{t.philosophy.terminal.loading} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
-                  <div className="text-gray-500">{t.philosophy.terminal.budget} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
-                  <div className="text-gray-500">{t.philosophy.terminal.agility} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
-                  <div>
-                    <span className="text-brand-orange">➜</span> <span className="text-blue-500">~</span> <span className={`${isDark ? 'text-white' : 'text-gray-800'} animate-pulse`}>_</span>
-                  </div>
+                <div className="text-gray-500">{t.philosophy.terminal.init}</div>
+                <div className="text-gray-500">{t.philosophy.terminal.loading} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
+                <div className="text-gray-500">{t.philosophy.terminal.budget} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
+                <div className="text-gray-500">{t.philosophy.terminal.agility} <span className="text-brand-orange">{t.philosophy.terminal.done}</span></div>
+                <div>
+                  <span className="text-brand-orange">➜</span> <span className="text-blue-500">~</span> <span className={`${isDark ? 'text-white' : 'text-gray-800'} animate-pulse`}>_</span>
                 </div>
-             </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1231,9 +1294,8 @@ const Philosophy = ({ isDark, t }: { isDark: boolean; t: any }) => (
 const Contact = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <section id="contact" className={`py-24 ${isDark ? 'bg-brand-surface' : 'bg-white'} font-sans`}>
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className={`rounded-3xl p-8 md:p-12 overflow-hidden relative border ${
-        isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
-      }`}>
+      <div className={`rounded-3xl p-8 md:p-12 overflow-hidden relative border ${isDark ? 'bg-[#0a0a0a] border-white/10' : 'bg-gray-50 border-gray-200'
+        }`}>
         <div className="relative z-10 text-center mb-12">
           <h2 className={`text-3xl md:text-4xl font-display font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
             {t.contact.title}
@@ -1247,37 +1309,34 @@ const Contact = ({ isDark, t }: { isDark: boolean; t: any }) => (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="name" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t.contact.name}</label>
-              <input 
+              <input
                 type="text" id="name" name="name" required
-                className={`w-full px-4 py-3 rounded-lg outline-none border transition-all ${
-                  isDark ? 'bg-white/5 border-white/10 text-white placeholder-gray-600 focus:ring-brand-blue' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                }`}
-                placeholder={t.contact.name_ph} 
+                className={`w-full px-4 py-3 rounded-lg outline-none border transition-all ${isDark ? 'bg-white/5 border-white/10 text-white placeholder-gray-600 focus:ring-brand-blue' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                  }`}
+                placeholder={t.contact.name_ph}
               />
             </div>
             <div className="space-y-2">
               <label htmlFor="email" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t.contact.email}</label>
-              <input 
+              <input
                 type="email" id="email" name="email" required
-                className={`w-full px-4 py-3 rounded-lg outline-none border transition-all ${
-                  isDark ? 'bg-white/5 border-white/10 text-white placeholder-gray-600 focus:ring-brand-blue' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                }`} 
-                placeholder={t.contact.email_ph} 
+                className={`w-full px-4 py-3 rounded-lg outline-none border transition-all ${isDark ? 'bg-white/5 border-white/10 text-white placeholder-gray-600 focus:ring-brand-blue' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                  }`}
+                placeholder={t.contact.email_ph}
               />
             </div>
           </div>
           <div className="space-y-2">
             <label htmlFor="message" className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t.contact.message}</label>
-            <textarea 
-              id="message" name="message" required rows={4} 
-              className={`w-full px-4 py-3 rounded-lg outline-none border transition-all resize-none ${
-                isDark ? 'bg-white/5 border-white/10 text-white placeholder-gray-600 focus:ring-brand-blue' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-              }`} 
-              placeholder={t.contact.message_ph} 
+            <textarea
+              id="message" name="message" required rows={4}
+              className={`w-full px-4 py-3 rounded-lg outline-none border transition-all resize-none ${isDark ? 'bg-white/5 border-white/10 text-white placeholder-gray-600 focus:ring-brand-blue' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                }`}
+              placeholder={t.contact.message_ph}
             ></textarea>
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-brand-orange/25 flex items-center justify-center gap-2"
           >
             {t.contact.submit} <Play size={20} />
@@ -1289,28 +1348,26 @@ const Contact = ({ isDark, t }: { isDark: boolean; t: any }) => (
 );
 
 const FooterCard = ({ title, label, icon: Icon, colorClass, link, isDark, connectLabel }: any) => (
-  <a 
-    href={link} 
-    target="_blank" 
+  <a
+    href={link}
+    target="_blank"
     rel="noreferrer"
-    className={`group relative overflow-hidden p-6 md:p-10 rounded-[2.5rem] border transition-all duration-500 hover:-translate-y-2 ${
-      isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200 shadow-sm'
-    }`}
+    className={`group relative overflow-hidden p-6 md:p-10 rounded-[2.5rem] border transition-all duration-500 hover:-translate-y-2 ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+      }`}
   >
     <div className={`absolute top-0 end-0 p-24 blur-[80px] opacity-0 group-hover:opacity-20 transition-opacity ${colorClass}`}></div>
     <div className="relative z-10 flex flex-col gap-4">
-       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 ${
-         isDark ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900'
-       }`}>
-         <Icon size={32} />
-       </div>
-       <div>
-         <p className="text-xs font-bold uppercase tracking-widest opacity-40 mb-1">{label}</p>
-         <h4 className={`text-2xl md:text-3xl font-display font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h4>
-       </div>
-       <div className={`inline-flex items-center gap-2 text-sm font-bold transition-colors group-hover:text-brand-orange ${isDark ? 'text-white/60' : 'text-gray-500'}`}>
-         {connectLabel} <ArrowRight size={16} />
-       </div>
+      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 ${isDark ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900'
+        }`}>
+        <Icon size={32} />
+      </div>
+      <div>
+        <p className="text-xs font-bold uppercase tracking-widest opacity-40 mb-1">{label}</p>
+        <h4 className={`text-2xl md:text-3xl font-display font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h4>
+      </div>
+      <div className={`inline-flex items-center gap-2 text-sm font-bold transition-colors group-hover:text-brand-orange ${isDark ? 'text-white/60' : 'text-gray-500'}`}>
+        {connectLabel} <ArrowRight size={16} />
+      </div>
     </div>
   </a>
 );
@@ -1328,7 +1385,7 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
     <footer className={`relative overflow-hidden pt-24 font-sans ${isDark ? 'bg-brand-dark' : 'bg-brand-light'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
-          <FooterCard 
+          <FooterCard
             isDark={isDark}
             label={t.footer.connect_corporate}
             title="LinkedIn"
@@ -1337,7 +1394,7 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
             link="https://www.linkedin.com/company/melodialab/"
             connectLabel={t.footer.connect}
           />
-          <FooterCard 
+          <FooterCard
             isDark={isDark}
             label={t.footer.connect_visual}
             title="Instagram"
@@ -1355,30 +1412,30 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
               {t.footer.subtitle}
             </p>
           </div>
-          
+
           <div className="lg:col-span-4">
-             <h5 className={`font-bold mb-6 text-sm uppercase tracking-widest ${isDark ? 'text-white' : 'text-gray-900'}`}>{t.footer.nav_title}</h5>
-             <div className="grid grid-cols-2 gap-4">
-               {navItems.map(item => (
-                 <a 
-                   key={item.name} 
-                   href={item.href} 
-                   className={`text-sm transition-colors hover:text-brand-orange ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
-                 >
-                   {item.name}
-                 </a>
-               ))}
-             </div>
+            <h5 className={`font-bold mb-6 text-sm uppercase tracking-widest ${isDark ? 'text-white' : 'text-gray-900'}`}>{t.footer.nav_title}</h5>
+            <div className="grid grid-cols-2 gap-4">
+              {navItems.map(item => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className={`text-sm transition-colors hover:text-brand-orange ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
           </div>
 
           <div className="lg:col-span-4">
-             <h5 className={`font-bold mb-6 text-sm uppercase tracking-widest ${isDark ? 'text-white' : 'text-gray-900'}`}>{t.footer.contact_title}</h5>
-             <div className={`space-y-4 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                <div className="flex gap-4">
-                  <a href="https://www.instagram.com/francisco.carle" target="_blank" rel="noreferrer" className="hover:text-brand-orange"><Instagram size={18} /></a>
-                  <a href="https://www.linkedin.com/company/melodialab/" target="_blank" rel="noreferrer" className="hover:text-brand-orange"><Linkedin size={18} /></a>
-                </div>
-             </div>
+            <h5 className={`font-bold mb-6 text-sm uppercase tracking-widest ${isDark ? 'text-white' : 'text-gray-900'}`}>{t.footer.contact_title}</h5>
+            <div className={`space-y-4 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              <div className="flex gap-4">
+                <a href="https://www.instagram.com/francisco.carle" target="_blank" rel="noreferrer" className="hover:text-brand-orange"><Instagram size={18} /></a>
+                <a href="https://www.linkedin.com/company/melodialab/" target="_blank" rel="noreferrer" className="hover:text-brand-orange"><Linkedin size={18} /></a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1387,9 +1444,9 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
             &copy; {new Date().getFullYear()} MelodIA lab. {t.footer.rights}
           </p>
           <div className="flex items-center gap-6">
-             <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
-               v2.8.0 — HYBRID ENGINE STABLE
-             </span>
+            <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
+              v2.8.0 — HYBRID ENGINE STABLE
+            </span>
           </div>
         </div>
       </div>
@@ -1431,10 +1488,10 @@ const App = () => {
 
   if (activeProject === 'tierrita') {
     return (
-      <TierraTierritaDetailed 
-        t={t} 
-        onBack={() => navigateToProject(null)} 
-        isDark={isDark} 
+      <TierraTierritaDetailed
+        t={t}
+        onBack={() => navigateToProject(null)}
+        isDark={isDark}
         toggleTheme={toggleTheme}
         lang={lang}
         setLang={setLang}
