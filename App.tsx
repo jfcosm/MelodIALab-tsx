@@ -792,6 +792,15 @@ const DashboardMockup = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: L
 };
 
 const SmartphoneMockup = ({ isDark, t }: { isDark: boolean; t: any }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(e => console.log("Autoplay issue: ", e));
+    }
+  }, []);
+
   return (
     <div className="relative mx-auto w-full max-w-[300px] md:max-w-[340px] aspect-[9/19] hover:-translate-y-2 transition-transform duration-700">
       <div className="absolute -inset-6 bg-gradient-to-r from-brand-orange via-pink-500 to-brand-blue rounded-[3rem] blur-2xl opacity-20 animate-pulse-slow"></div>
@@ -817,10 +826,13 @@ const SmartphoneMockup = ({ isDark, t }: { isDark: boolean; t: any }) => {
 
 
           <video
+            ref={videoRef}
             src="/hola-es-HD 720p.mp4"
             autoPlay
             loop
+            muted
             playsInline
+            controls={false}
             className="w-full h-full object-cover scale-[1.02] group-hover:scale-105 transition-transform duration-[10s]"
           />
 
