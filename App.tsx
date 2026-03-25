@@ -817,7 +817,7 @@ const SmartphoneMockup = ({ isDark, t }: { isDark: boolean; t: any }) => {
 
 
           <video
-            src="/hola-es-HD 720p.mov"
+            src="/hola-es-HD 720p.mp4"
             autoPlay
             loop
             playsInline
