@@ -330,8 +330,8 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled
-        ? (isDark ? 'bg-brand-dark/80 backdrop-blur-md border-b border-white/10' : 'bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm')
-        : 'bg-transparent'
+      ? (isDark ? 'bg-brand-dark/80 backdrop-blur-md border-b border-white/10' : 'bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm')
+      : 'bg-transparent'
       }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
@@ -394,8 +394,8 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
                           setLangMenuOpen(false);
                         }}
                         className={`w-full text-start px-4 py-2 text-sm flex items-center gap-3 hover:bg-brand-blue/10 ${lang === l.code
-                            ? (isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-50 text-blue-600')
-                            : (isDark ? 'text-gray-300' : 'text-gray-700')
+                          ? (isDark ? 'bg-brand-blue/20 text-brand-blue' : 'bg-blue-50 text-blue-600')
+                          : (isDark ? 'text-gray-300' : 'text-gray-700')
                           }`}
                       >
                         <span className="text-lg">{l.flag}</span>
@@ -489,8 +489,8 @@ const Navbar = ({ isDark, toggleTheme, lang, setLang, t, onBack }: { isDark: boo
                     setIsOpen(false);
                   }}
                   className={`text-start px-3 py-2 text-sm rounded-lg flex items-center gap-2 ${lang === l.code
-                      ? 'bg-brand-blue text-white'
-                      : (isDark ? 'bg-white/5' : 'bg-gray-100')
+                    ? 'bg-brand-blue text-white'
+                    : (isDark ? 'bg-white/5' : 'bg-gray-100')
                     }`}
                 >
                   <span>{l.flag}</span>
@@ -873,8 +873,8 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
   <section className="relative overflow-hidden min-h-[95vh] flex items-center pt-24 pb-12">
     <div className="absolute inset-0 z-0">
       <div className={`absolute inset-0 ${isDark
-          ? 'bg-gradient-to-br from-[#050505] via-[#0a0f12] to-brand-dark'
-          : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
+        ? 'bg-gradient-to-br from-[#050505] via-[#0a0f12] to-brand-dark'
+        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
         }`}></div>
     </div>
 
@@ -925,8 +925,8 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
             <a
               href="#services"
               className={`w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg transition-all border backdrop-blur-md flex items-center justify-center gap-2 ${isDark
-                  ? 'border-white/10 hover:bg-white/5 text-white'
-                  : 'border-gray-300 hover:bg-gray-50 text-gray-800'
+                ? 'border-white/10 hover:bg-white/5 text-white'
+                : 'border-gray-300 hover:bg-gray-50 text-gray-800'
                 }`}
             >
               {t.hero.cta_secondary}
@@ -956,8 +956,8 @@ const Hero = ({ isDark, t, lang }: { isDark: boolean; t: any, lang: Language }) 
 
 const BentoItem = ({ title, desc, icon: Icon, cols = "col-span-1", isDark }: any) => (
   <div className={`${cols} group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 ${isDark
-      ? 'bg-brand-surface border border-white/10 hover:border-brand-orange/50'
-      : 'bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-orange/50'
+    ? 'bg-brand-surface border border-white/10 hover:border-brand-orange/50'
+    : 'bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-orange/50'
     }`}>
     <div className={`absolute top-0 end-0 p-32 bg-brand-orange/5 rounded-full blur-3xl transition-opacity opacity-0 group-hover:opacity-100`}></div>
 
@@ -1151,8 +1151,8 @@ const PortfolioCard = ({ title, desc, icon: Icon, tags, cta, isDark, filename, f
             target={link ? "_blank" : "_self"}
             rel="noreferrer"
             className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${isDark
-                ? 'bg-white text-black hover:bg-gray-200'
-                : 'bg-gray-900 text-white hover:bg-gray-800'
+              ? 'bg-white text-black hover:bg-gray-200'
+              : 'bg-gray-900 text-white hover:bg-gray-800'
               }`}
           >
             {cta} <ExternalLink size={18} />
