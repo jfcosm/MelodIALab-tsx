@@ -820,7 +820,6 @@ const SmartphoneMockup = ({ isDark, t }: { isDark: boolean; t: any }) => {
             src="/hola-es-HD 720p.mov"
             autoPlay
             loop
-            muted
             playsInline
             className="w-full h-full object-cover scale-[1.02] group-hover:scale-105 transition-transform duration-[10s]"
           />
