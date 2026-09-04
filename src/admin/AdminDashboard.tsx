@@ -23,8 +23,10 @@ import {
   Key, 
   Globe, 
   Save, 
-  Lock,
-  Code2
+  Code2,
+  Languages,
+  Loader2,
+  Bot
 } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 import { PortfolioItem } from '../types/cms';
@@ -40,6 +42,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
     portfolio,
     overrides,
     currentUser,
+    geminiApiKey,
+    setGeminiApiKey,
     logout,
     updateCredentials,
     addPortfolioItem,
@@ -48,6 +52,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
     togglePortfolioActive,
     reorderPortfolio,
     updateSectionOverride,
+    translateAllPortfolioItems,
     exportDataJSON,
     importDataJSON,
     resetToDefaults,
@@ -60,6 +65,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
   
   // Feedback toasts
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  // Global translation progress state
+  const [isTranslatingAll, setIsTranslatingAll] = useState(false);
+  const [translationProgress, setTranslationProgress] = useState<string | null>(null);
+
+  // Gemini API key state in settings
+  const [tempApiKey, setTempApiKey] = useState(geminiApiKey || '');
 
   // Settings form states
   const [newUsername, setNewUsername] = useState(currentUser || 'admin');
@@ -118,6 +130,38 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
       deletePortfolioItem(item.id);
       showToast('success', `Proyecto "${item.title}" eliminado.`);
     }
+  };
+
+  const handleTranslateAllCatalog = async () => {
+    if (!window.confirm(`¿Deseas traducir automáticamente los ${portfolio.length} proyectos del catálogo a los 11 idiomas soportados?`)) {
+      return;
+    }
+
+    setIsTranslatingAll(true);
+    setTranslationProgress(`Iniciando traducción de ${portfolio.length} proyectos...`);
+
+    try {
+      const res = await translateAllPortfolioItems((curr, total) => {
+        setTranslationProgress(`Traduciendo proyecto (${curr}/${total})...`);
+      });
+
+      if (res.success) {
+        showToast('success', res.message || 'Catálogo traducido con éxito.');
+      } else {
+        showToast('error', res.message || 'Error en la traducción.');
+      }
+    } catch (e: any) {
+      showToast('error', 'Error: ' + e.message);
+    } finally {
+      setIsTranslatingAll(false);
+      setTranslationProgress(null);
+    }
+  };
+
+  const handleSaveGeminiKey = (e: React.FormEvent) => {
+    e.preventDefault();
+    setGeminiApiKey(tempApiKey);
+    showToast('success', tempApiKey.trim() ? 'Clave de API de Gemini guardada.' : 'Clave de Gemini eliminada (usando traductor web gratuito).');
   };
 
   const handleSaveCredentials = async (e: React.FormEvent) => {
@@ -310,6 +354,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
                 <span>Idiomas front:</span>
                 <span className="text-brand-blue font-bold">{LANGUAGES.length} disponibles</span>
               </div>
+              <div className="flex justify-between">
+                <span>Motor IA:</span>
+                <span className="text-brand-orange font-bold">{geminiApiKey ? 'Gemini Pro' : 'Traductor Web'}</span>
+              </div>
               <div className="flex justify-between text-[11px] text-gray-400 pt-1 border-t border-white/5">
                 <span>Modificado:</span>
                 <span>{new Date(lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
@@ -323,129 +371,152 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
           {/* TAB 1: PORTAFOLIO */}
           {activeTab === 'portfolio' && (
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
                 <div>
                   <h2 className="text-2xl font-bold font-display text-white">Gestor del Portafolio</h2>
                   <p className="text-sm text-gray-400 mt-1">
-                    Administra las aplicaciones y proyectos mostrados en la sección de soluciones digitales.
+                    Administra aplicaciones, edita descripciones y genera traducciones automáticas en 11 idiomas.
                   </p>
                 </div>
-                <button
-                  onClick={handleOpenNewModal}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-500 hover:to-orange-400 text-white font-bold text-sm shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
-                >
-                  <Plus size={18} /> Agregar Proyecto
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    disabled={isTranslatingAll}
+                    onClick={handleTranslateAllCatalog}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-white font-semibold text-xs transition-all disabled:opacity-50"
+                    title="Traduce automáticamente todo el catálogo a los 11 idiomas"
+                  >
+                    {isTranslatingAll ? <Loader2 size={14} className="animate-spin text-brand-orange" /> : <Languages size={14} className="text-brand-orange" />}
+                    <span>{isTranslatingAll ? translationProgress : 'Traducir Todo el Catálogo'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleOpenNewModal}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-500 hover:to-orange-400 text-white font-bold text-xs shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
+                  >
+                    <Plus size={16} /> Agregar Proyecto
+                  </button>
+                </div>
               </div>
 
               {/* Lista de Proyectos */}
               <div className="space-y-4">
-                {portfolio.map((item, index) => (
-                  <div
-                    key={item.id}
-                    className={`p-5 rounded-2xl border transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-5 ${
-                      item.active
-                        ? 'bg-white/5 border-white/10 hover:border-blue-500/40'
-                        : 'bg-white/[0.02] border-white/5 opacity-60'
-                    }`}
-                  >
-                    <div className="flex items-center gap-4 flex-1">
-                      {/* Controles de orden */}
-                      <div className="flex flex-col gap-1 shrink-0 text-gray-400">
-                        <button
-                          disabled={index === 0}
-                          onClick={() => reorderPortfolio(index, index - 1)}
-                          className="p-1 hover:text-white disabled:opacity-20 disabled:hover:text-gray-400 rounded transition-colors"
-                          title="Subir posición"
-                        >
-                          <ArrowUp size={16} />
-                        </button>
-                        <button
-                          disabled={index === portfolio.length - 1}
-                          onClick={() => reorderPortfolio(index, index + 1)}
-                          className="p-1 hover:text-white disabled:opacity-20 disabled:hover:text-gray-400 rounded transition-colors"
-                          title="Bajar posición"
-                        >
-                          <ArrowDown size={16} />
-                        </button>
+                {portfolio.map((item, index) => {
+                  const translatedCount = Object.keys(item.titles || {}).length;
+                  return (
+                    <div
+                      key={item.id}
+                      className={`p-5 rounded-2xl border transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-5 ${
+                        item.active
+                          ? 'bg-white/5 border-white/10 hover:border-blue-500/40'
+                          : 'bg-white/[0.02] border-white/5 opacity-60'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4 flex-1">
+                        {/* Controles de orden */}
+                        <div className="flex flex-col gap-1 shrink-0 text-gray-400">
+                          <button
+                            disabled={index === 0}
+                            onClick={() => reorderPortfolio(index, index - 1)}
+                            className="p-1 hover:text-white disabled:opacity-20 disabled:hover:text-gray-400 rounded transition-colors"
+                            title="Subir posición"
+                          >
+                            <ArrowUp size={16} />
+                          </button>
+                          <button
+                            disabled={index === portfolio.length - 1}
+                            onClick={() => reorderPortfolio(index, index + 1)}
+                            className="p-1 hover:text-white disabled:opacity-20 disabled:hover:text-gray-400 rounded transition-colors"
+                            title="Bajar posición"
+                          >
+                            <ArrowDown size={16} />
+                          </button>
+                        </div>
+
+                        {/* Miniatura Imagen */}
+                        <div className="w-16 h-16 rounded-xl bg-[#16161d] border border-white/10 overflow-hidden shrink-0 relative">
+                          <img
+                            src={item.filename ? `/${item.filename}` : item.fallback}
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = item.fallback;
+                            }}
+                          />
+                        </div>
+
+                        {/* Info del Proyecto */}
+                        <div className="space-y-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="text-base font-bold text-white truncate">{item.title}</h3>
+                            {item.badge && (
+                              <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-brand-orange/20 text-brand-orange border border-brand-orange/30">
+                                {item.badge}
+                              </span>
+                            )}
+                            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                              translatedCount >= 10
+                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                : 'bg-blue-500/10 border-blue-500/30 text-blue-300'
+                            }`}>
+                              🌐 {translatedCount > 1 ? `${translatedCount} idiomas` : '1 idioma (ES)'}
+                            </span>
+                            {!item.active && (
+                              <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">
+                                Oculto
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+                            {item.desc}
+                          </p>
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {item.tags.slice(0, 4).map(tag => (
+                              <span key={tag} className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-gray-400">
+                                {tag}
+                              </span>
+                            ))}
+                            {item.tags.length > 4 && (
+                              <span className="text-[10px] text-gray-500">+{item.tags.length - 4} más</span>
+                            )}
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Miniatura Imagen */}
-                      <div className="w-16 h-16 rounded-xl bg-[#16161d] border border-white/10 overflow-hidden shrink-0 relative">
-                        <img
-                          src={item.filename ? `/${item.filename}` : item.fallback}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = item.fallback;
-                          }}
-                        />
-                      </div>
+                      {/* Acciones */}
+                      <div className="flex items-center gap-2 self-end md:self-center shrink-0">
+                        <button
+                          onClick={() => togglePortfolioActive(item.id)}
+                          className={`p-2.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                            item.active
+                              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/20'
+                              : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+                          }`}
+                          title={item.active ? 'Ocultar en la web' : 'Publicar en la web'}
+                        >
+                          {item.active ? <Eye size={16} /> : <EyeOff size={16} />}
+                          <span className="hidden sm:inline">{item.active ? 'Visible' : 'Oculto'}</span>
+                        </button>
 
-                      {/* Info del Proyecto */}
-                      <div className="space-y-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="text-base font-bold text-white truncate">{item.title}</h3>
-                          {item.badge && (
-                            <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-brand-orange/20 text-brand-orange border border-brand-orange/30">
-                              {item.badge}
-                            </span>
-                          )}
-                          {!item.active && (
-                            <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">
-                              Oculto
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
-                          {item.desc}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                          {item.tags.slice(0, 4).map(tag => (
-                            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-gray-400">
-                              {tag}
-                            </span>
-                          ))}
-                          {item.tags.length > 4 && (
-                            <span className="text-[10px] text-gray-500">+{item.tags.length - 4} más</span>
-                          )}
-                        </div>
+                        <button
+                          onClick={() => handleOpenEditModal(item)}
+                          className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 hover:text-white transition-colors"
+                          title="Editar Proyecto y Traducciones"
+                        >
+                          <Edit3 size={16} />
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteItem(item)}
+                          className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-300 transition-colors"
+                          title="Eliminar Proyecto"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </div>
-
-                    {/* Acciones */}
-                    <div className="flex items-center gap-2 self-end md:self-center shrink-0">
-                      <button
-                        onClick={() => togglePortfolioActive(item.id)}
-                        className={`p-2.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                          item.active
-                            ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/20'
-                            : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
-                        }`}
-                        title={item.active ? 'Ocultar en la web' : 'Publicar en la web'}
-                      >
-                        {item.active ? <Eye size={16} /> : <EyeOff size={16} />}
-                        <span className="hidden sm:inline">{item.active ? 'Visible' : 'Oculto'}</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleOpenEditModal(item)}
-                        className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 hover:text-white transition-colors"
-                        title="Editar Proyecto"
-                      >
-                        <Edit3 size={16} />
-                      </button>
-
-                      <button
-                        onClick={() => handleDeleteItem(item)}
-                        className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-300 transition-colors"
-                        title="Eliminar Proyecto"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -611,8 +682,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
               <div>
                 <h2 className="text-2xl font-bold font-display text-white">Configuración y Seguridad</h2>
                 <p className="text-sm text-gray-400 mt-1">
-                  Gestiona credenciales de acceso, exportación de copias de seguridad y restauración del sistema.
+                  Gestiona credenciales de acceso, claves de Inteligencia Artificial para traducción y copias de seguridad.
                 </p>
+              </div>
+
+              {/* Gemini AI Settings */}
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                <div className="flex items-center gap-2 text-brand-blue font-bold text-sm uppercase tracking-wider">
+                  <Bot size={16} /> Motor de Traducción IA (Google Gemini)
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Ingresa tu clave de API de Google AI Studio / Gemini para traducciones técnicas de máxima precisión y calidad publicitaria. Si la dejas vacía, el sistema utilizará el motor de traducción web de respaldo sin costo alguno.
+                </p>
+                <form onSubmit={handleSaveGeminiKey} className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="password"
+                    value={tempApiKey}
+                    onChange={(e) => setTempApiKey(e.target.value)}
+                    placeholder="AIzaSy..."
+                    className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 font-mono"
+                  />
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
+                  >
+                    <Save size={15} /> Guardar Clave API
+                  </button>
+                </form>
               </div>
 
               {/* Cambio de Contraseña */}
@@ -664,11 +760,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onGoToSite }) =>
 
               {/* Copia de Seguridad JSON */}
               <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-                <div className="flex items-center gap-2 text-brand-blue font-bold text-sm uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase tracking-wider">
                   <Download size={16} /> Copias de Seguridad y Migración
                 </div>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Exporta un archivo JSON con todos los proyectos del portafolio y personalizaciones para guardarlo como respaldo o cargarlo en otro entorno.
+                  Exporta un archivo JSON con todos los proyectos del portafolio (incluidas todas sus traducciones) y personalizaciones para guardarlo como respaldo o cargarlo en otro entorno.
                 </p>
                 <div className="flex flex-wrap gap-4 pt-2">
                   <button

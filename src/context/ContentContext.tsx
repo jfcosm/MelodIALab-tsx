@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PortfolioItem, SectionContentOverrides, CMSData, AdminCredentials } from '../types/cms';
 import { INITIAL_PORTFOLIO } from '../data/initialPortfolio';
+import { translatePortfolioItemWithAI } from '../services/translator';
 
 const CMS_STORAGE_KEY = 'melodialab_cms_data_v1';
 const AUTH_STORAGE_KEY = 'melodialab_admin_auth_v1';
 const CREDENTIALS_STORAGE_KEY = 'melodialab_admin_creds_v1';
+const GEMINI_API_KEY_STORAGE = 'melodialab_gemini_api_key_v1';
 
 // Default credentials: admin / melodia2026!
 const DEFAULT_CREDS: AdminCredentials = {
@@ -24,6 +26,8 @@ interface ContentContextType {
   overrides: Record<string, SectionContentOverrides>;
   isAuthenticated: boolean;
   currentUser: string | null;
+  geminiApiKey: string;
+  setGeminiApiKey: (key: string) => void;
   login: (user: string, pass: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
   updateCredentials: (newUsername: string, newPassword?: string) => Promise<{ success: boolean; message?: string }>;
@@ -33,6 +37,7 @@ interface ContentContextType {
   togglePortfolioActive: (id: string) => void;
   reorderPortfolio: (startIndex: number, endIndex: number) => void;
   updateSectionOverride: (lang: string, section: keyof SectionContentOverrides, values: any) => void;
+  translateAllPortfolioItems: (onProgress?: (curr: number, total: number) => void) => Promise<{ success: boolean; message?: string }>;
   exportDataJSON: () => string;
   importDataJSON: (jsonString: string) => { success: boolean; error?: string };
   resetToDefaults: () => void;
@@ -71,6 +76,27 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
     return {};
   });
+
+  const [geminiApiKey, setGeminiApiKeyState] = useState<string>(() => {
+    try {
+      return localStorage.getItem(GEMINI_API_KEY_STORAGE) || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const setGeminiApiKey = (key: string) => {
+    setGeminiApiKeyState(key.trim());
+    try {
+      if (key.trim()) {
+        localStorage.setItem(GEMINI_API_KEY_STORAGE, key.trim());
+      } else {
+        localStorage.removeItem(GEMINI_API_KEY_STORAGE);
+      }
+    } catch (e) {
+      console.error('Error saving Gemini API key:', e);
+    }
+  };
 
   const [lastUpdated, setLastUpdated] = useState<string>(() => new Date().toISOString());
 
@@ -211,6 +237,36 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }));
   };
 
+  const translateAllPortfolioItems = async (onProgress?: (curr: number, total: number) => void): Promise<{ success: boolean; message?: string }> => {
+    try {
+      const updatedList: PortfolioItem[] = [];
+      for (let i = 0; i < portfolio.length; i++) {
+        const item = portfolio[i];
+        if (onProgress) onProgress(i + 1, portfolio.length);
+
+        const trans = await translatePortfolioItemWithAI(
+          item.title,
+          item.desc,
+          item.cta || 'Explorar',
+          geminiApiKey
+        );
+
+        updatedList.push({
+          ...item,
+          titles: { ...item.titles, ...trans.titles },
+          descriptions: { ...item.descriptions, ...trans.descriptions },
+          ctas: { ...item.ctas, ...trans.ctas },
+          updatedAt: new Date().toISOString()
+        });
+      }
+
+      setPortfolio(updatedList);
+      return { success: true, message: `Se tradujeron ${updatedList.length} proyectos a los 11 idiomas.` };
+    } catch (e: any) {
+      return { success: false, message: 'Error durante la traducción global: ' + e.message };
+    }
+  };
+
   const exportDataJSON = (): string => {
     const exportObject: CMSData = {
       portfolio,
@@ -250,6 +306,8 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         overrides,
         isAuthenticated,
         currentUser,
+        geminiApiKey,
+        setGeminiApiKey,
         login,
         logout,
         updateCredentials,
@@ -259,6 +317,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         togglePortfolioActive,
         reorderPortfolio,
         updateSectionOverride,
+        translateAllPortfolioItems,
         exportDataJSON,
         importDataJSON,
         resetToDefaults,

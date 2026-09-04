@@ -17,11 +17,19 @@ import {
   Video, 
   Zap, 
   Layers, 
-  Flame,
-  Check,
-  Image as ImageIcon
+  Flame, 
+  Check, 
+  Image as ImageIcon,
+  Languages,
+  Loader2,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { PortfolioItem, IconType } from '../../types/cms';
+import { translatePortfolioItemWithAI } from '../../services/translator';
+import { useContent } from '../../context/ContentContext';
+import { LANGUAGES, Language } from '../../../translations';
 
 interface PortfolioModalProps {
   isOpen: boolean;
@@ -60,6 +68,8 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
   onSave,
   initialData
 }) => {
+  const { geminiApiKey } = useContent();
+
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [icon, setIcon] = useState<IconType>('Code2');
@@ -72,7 +82,17 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
   const [badge, setBadge] = useState('');
   const [isAlternate, setIsAlternate] = useState(false);
   const [active, setActive] = useState(true);
-  const [previewTab, setPreviewTab] = useState<'form' | 'preview'>('form');
+
+  // Multilingual state
+  const [titles, setTitles] = useState<Record<string, string>>({});
+  const [descriptions, setDescriptions] = useState<Record<string, string>>({});
+  const [ctas, setCtas] = useState<Record<string, string>>({});
+  
+  // UI Tabs & Translation controls
+  const [previewTab, setPreviewTab] = useState<'form' | 'translations' | 'preview'>('form');
+  const [selectedTransLang, setSelectedTransLang] = useState<Language>('en');
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translationStatus, setTranslationStatus] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -87,20 +107,28 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
       setBadge(initialData.badge || '');
       setIsAlternate(initialData.isAlternate || false);
       setActive(initialData.active !== undefined ? initialData.active : true);
+      setTitles(initialData.titles || { es: initialData.title || '' });
+      setDescriptions(initialData.descriptions || { es: initialData.desc || '' });
+      setCtas(initialData.ctas || { es: initialData.cta || 'Explorar' });
     } else {
       setTitle('');
       setDesc('');
       setIcon('Code2');
       setTags(['React', 'TypeScript', 'IA']);
-      setCta('Ver Proyecto');
+      setCta('Explorar');
       setLink('');
       setFilename('');
       setFallback('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2064&auto=format&fit=crop');
       setBadge('');
       setIsAlternate(false);
       setActive(true);
+      setTitles({});
+      setDescriptions({});
+      setCtas({});
     }
     setPreviewTab('form');
+    setIsTranslating(false);
+    setTranslationStatus(null);
   }, [initialData, isOpen]);
 
   if (!isOpen) return null;
@@ -116,6 +144,39 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
     setTags(tags.filter(t => t !== tagToRemove));
   };
 
+  const handleAutoTranslate = async () => {
+    if (!title.trim() || !desc.trim()) {
+      alert('Por favor ingresa primero el título y la descripción en español para poder traducirlos.');
+      return;
+    }
+
+    setIsTranslating(true);
+    setTranslationStatus('Generando traducciones para 11 idiomas con IA...');
+
+    try {
+      const result = await translatePortfolioItemWithAI(
+        title,
+        desc,
+        cta || 'Explorar',
+        geminiApiKey,
+        (curr, total, lang) => {
+          setTranslationStatus(`Traduciendo (${curr}/${total}) [${lang.toUpperCase()}]...`);
+        }
+      );
+
+      setTitles(result.titles);
+      setDescriptions(result.descriptions);
+      setCtas(result.ctas);
+      setTranslationStatus('¡Traducciones generadas con éxito! Puedes revisarlas en la pestaña Traducciones.');
+      setTimeout(() => setTranslationStatus(null), 5000);
+    } catch (e: any) {
+      alert('Error en la traducción: ' + (e.message || 'Desconocido'));
+      setTranslationStatus(null);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !desc.trim()) {
@@ -123,12 +184,19 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
       return;
     }
 
+    const mergedTitles = { ...titles, es: title };
+    const mergedDescriptions = { ...descriptions, es: desc };
+    const mergedCtas = { ...ctas, es: cta || 'Explorar' };
+
     onSave({
       title,
+      titles: mergedTitles,
       desc,
+      descriptions: mergedDescriptions,
       icon,
       tags,
       cta: cta || 'Explorar',
+      ctas: mergedCtas,
       link: link.trim() || undefined,
       filename: filename.trim() || undefined,
       fallback: fallback.trim() || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2064&auto=format&fit=crop',
@@ -140,36 +208,44 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
   };
 
   const SelectedIcon = ICON_MAP[icon] || Code2;
+  const currentLangObj = LANGUAGES.find(l => l.code === selectedTransLang) || LANGUAGES[1];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-[#111116] border border-white/10 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto text-white font-sans">
+      <div className="bg-[#111116] border border-white/10 rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto text-white font-sans">
         {/* Header Modal */}
-        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-[#16161d]">
+        <div className="p-6 border-b border-white/10 flex flex-wrap items-center justify-between gap-4 bg-[#16161d]">
           <div>
             <h2 className="text-xl font-bold font-display text-white">
               {initialData ? 'Editar Proyecto del Portafolio' : 'Agregar Nuevo Proyecto'}
             </h2>
             <p className="text-xs text-gray-400">
-              Personaliza los detalles, badges, imágenes y enlaces del trabajo realizado.
+              Personaliza detalles en español y genera traducciones automáticas para el público global.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            {/* Tabs Formulario vs Vista Previa */}
+            {/* Tabs */}
             <div className="flex bg-white/5 rounded-xl p-1 border border-white/10 text-xs">
               <button
                 type="button"
                 onClick={() => setPreviewTab('form')}
                 className={`px-3 py-1.5 rounded-lg transition-all ${previewTab === 'form' ? 'bg-brand-blue text-white font-bold' : 'text-gray-400 hover:text-white'}`}
               >
-                Formulario
+                1. General (ES)
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewTab('translations')}
+                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${previewTab === 'translations' ? 'bg-brand-blue text-white font-bold' : 'text-gray-400 hover:text-white'}`}
+              >
+                <Languages size={13} /> 2. Traducciones ({Object.keys(titles).length > 1 ? '✓' : '11'})
               </button>
               <button
                 type="button"
                 onClick={() => setPreviewTab('preview')}
                 className={`px-3 py-1.5 rounded-lg transition-all ${previewTab === 'preview' ? 'bg-brand-blue text-white font-bold' : 'text-gray-400 hover:text-white'}`}
               >
-                Vista Previa
+                3. Vista Previa
               </button>
             </div>
             <button
@@ -181,68 +257,53 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
           </div>
         </div>
 
+        {/* Notificación de Traducción */}
+        {translationStatus && (
+          <div className="px-6 py-3 bg-blue-500/15 border-b border-blue-500/30 text-xs text-blue-200 flex items-center gap-2">
+            {isTranslating ? <Loader2 size={14} className="animate-spin text-brand-blue" /> : <CheckCircle2 size={14} className="text-emerald-400" />}
+            <span>{translationStatus}</span>
+          </div>
+        )}
+
         {/* Body Modal */}
         <div className="p-6 sm:p-8 overflow-y-auto flex-1 custom-scrollbar">
-          {previewTab === 'preview' ? (
-            <div className="space-y-6">
-              <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                Así se verá en la landing page:
-              </div>
-              <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
-                <div className="rounded-3xl border overflow-hidden bg-[#0a0a0a] border-white/10">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 items-center">
-                    <div className={`order-2 ${isAlternate ? 'lg:order-2' : 'lg:order-1'} relative group`}>
-                      <div className="rounded-xl border border-white/10 shadow-xl overflow-hidden relative h-64 w-full bg-[#16161d]">
-                        <img
-                          src={filename ? `/${filename}` : fallback}
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = fallback;
-                          }}
-                          alt={title}
-                          className="w-full h-full object-cover"
-                        />
-                        {badge && (
-                          <div className="absolute top-4 right-4 px-3 py-1 bg-brand-orange text-white text-[10px] font-bold uppercase rounded-full shadow-lg">
-                            {badge}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className={`order-1 ${isAlternate ? 'lg:order-1' : 'lg:order-2'} space-y-5`}>
-                      <div className="flex items-center gap-3">
-                        <div className="p-3 rounded-xl bg-brand-blue/10 text-brand-blue">
-                          <SelectedIcon size={26} />
-                        </div>
-                        <h3 className="text-2xl font-bold font-display text-white">{title || 'Título del Proyecto'}</h3>
-                      </div>
-                      <p className="text-base text-gray-400 leading-relaxed">
-                        {desc || 'Descripción del proyecto y su propósito o alcance técnico.'}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {tags.map((t) => (
-                          <span key={t} className="px-3 py-1 rounded-full text-xs font-medium border bg-white/5 border-white/10 text-gray-300">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="pt-2">
-                        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold bg-white text-black hover:bg-gray-200 text-sm">
-                          {cta || 'Explorar'} <ExternalLink size={16} />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
+          {/* TAB 1: FORMULARIO PRINCIPAL EN ESPAÑOL */}
+          {previewTab === 'form' && (
             <form id="portfolio-form" onSubmit={handleSubmit} className="space-y-6">
+              {/* Botón Acción Rápida de IA */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-900/30 via-indigo-900/20 to-orange-900/30 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <div className="text-sm font-bold text-white flex items-center gap-2">
+                    <Sparkles size={16} className="text-brand-orange" />
+                    Auto-traducción Inteligente Multilingüe
+                  </div>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Genera las versiones en inglés, francés, alemán, japonés, chino y 6 idiomas más con un solo clic.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled={isTranslating}
+                  onClick={handleAutoTranslate}
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-500 hover:to-orange-400 text-white font-bold text-xs shadow-lg shadow-blue-500/20 flex items-center gap-2 transition-all disabled:opacity-50 shrink-0"
+                >
+                  {isTranslating ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" /> Traducción en curso...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={14} /> ✨ Auto-traducir a 11 idiomas
+                    </>
+                  )}
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Título */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
-                    Título del Proyecto *
+                    Título del Proyecto (Español) *
                   </label>
                   <input
                     type="text"
@@ -272,7 +333,7 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
               {/* Descripción */}
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
-                  Descripción Detallada *
+                  Descripción Detallada (Español) *
                 </label>
                 <textarea
                   rows={3}
@@ -363,7 +424,7 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">
-                    Texto del Botón CTA
+                    Texto del Botón CTA (Español)
                   </label>
                   <input
                     type="text"
@@ -447,6 +508,172 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
                 </label>
               </div>
             </form>
+          )}
+
+          {/* TAB 2: GESTOR DE TRADUCCIONES MANUALES & REVISIÓN */}
+          {previewTab === 'translations' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
+                <div>
+                  <h3 className="text-base font-bold text-white">Revisión y Ajuste de Traducciones</h3>
+                  <p className="text-xs text-gray-400">
+                    Modifica manualmente los textos traducidos para cada uno de los 11 idiomas soportados.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled={isTranslating}
+                  onClick={handleAutoTranslate}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-orange-500 text-white font-bold text-xs flex items-center gap-2 transition-all disabled:opacity-50"
+                >
+                  {isTranslating ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                  <span>{Object.keys(titles).length > 1 ? 'Re-traducir con IA' : 'Auto-traducir ahora'}</span>
+                </button>
+              </div>
+
+              {/* Selector de idioma pills */}
+              <div className="flex flex-wrap gap-2">
+                {LANGUAGES.filter(l => l.code !== 'es').map((langObj) => {
+                  const isSelected = selectedTransLang === langObj.code;
+                  const isFilled = !!titles[langObj.code];
+                  return (
+                    <button
+                      key={langObj.code}
+                      type="button"
+                      onClick={() => setSelectedTransLang(langObj.code)}
+                      className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                        isSelected
+                          ? 'bg-blue-600 border-blue-400 text-white shadow-lg'
+                          : isFilled
+                          ? 'bg-white/5 border-emerald-500/30 text-emerald-300 hover:bg-white/10'
+                          : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      <span>{langObj.flag}</span>
+                      <span>{langObj.name}</span>
+                      {isFilled && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Formulario de idioma seleccionado */}
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                <div className="flex items-center gap-2 text-sm font-bold text-white">
+                  <span>{currentLangObj.flag}</span>
+                  <span>Traducción en {currentLangObj.name} ({currentLangObj.code.toUpperCase()})</span>
+                </div>
+
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1 font-semibold">Título ({currentLangObj.code.toUpperCase()})</label>
+                  <input
+                    type="text"
+                    value={titles[selectedTransLang] || ''}
+                    onChange={(e) => setTitles({ ...titles, [selectedTransLang]: e.target.value })}
+                    placeholder={title || 'Título en este idioma'}
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1 font-semibold">Descripción ({currentLangObj.code.toUpperCase()})</label>
+                  <textarea
+                    rows={3}
+                    value={descriptions[selectedTransLang] || ''}
+                    onChange={(e) => setDescriptions({ ...descriptions, [selectedTransLang]: e.target.value })}
+                    placeholder={desc || 'Descripción en este idioma'}
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1 font-semibold">Texto Botón CTA ({currentLangObj.code.toUpperCase()})</label>
+                  <input
+                    type="text"
+                    value={ctas[selectedTransLang] || ''}
+                    onChange={(e) => setCtas({ ...ctas, [selectedTransLang]: e.target.value })}
+                    placeholder={cta || 'Explore, Visit, View, etc.'}
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: VISTA PREVIA EN VIVO */}
+          {previewTab === 'preview' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                  Previsualización de la tarjeta en la landing:
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400">Ver en idioma:</span>
+                  <select
+                    value={selectedTransLang}
+                    onChange={(e) => setSelectedTransLang(e.target.value as Language)}
+                    className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-white text-xs font-semibold focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="es" className="bg-[#111116] text-white">🇪🇸 Español (Original)</option>
+                    {LANGUAGES.filter(l => l.code !== 'es').map(l => (
+                      <option key={l.code} value={l.code} className="bg-[#111116] text-white">
+                        {l.flag} {l.name} ({l.code.toUpperCase()})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
+                <div className="rounded-3xl border overflow-hidden bg-[#0a0a0a] border-white/10">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 items-center">
+                    <div className={`order-2 ${isAlternate ? 'lg:order-2' : 'lg:order-1'} relative group`}>
+                      <div className="rounded-xl border border-white/10 shadow-xl overflow-hidden relative h-64 w-full bg-[#16161d]">
+                        <img
+                          src={filename ? `/${filename}` : fallback}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = fallback;
+                          }}
+                          alt={title}
+                          className="w-full h-full object-cover"
+                        />
+                        {badge && (
+                          <div className="absolute top-4 right-4 px-3 py-1 bg-brand-orange text-white text-[10px] font-bold uppercase rounded-full shadow-lg">
+                            {badge}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className={`order-1 ${isAlternate ? 'lg:order-1' : 'lg:order-2'} space-y-5`}>
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 rounded-xl bg-brand-blue/10 text-brand-blue">
+                          <SelectedIcon size={26} />
+                        </div>
+                        <h3 className="text-2xl font-bold font-display text-white">
+                          {(selectedTransLang === 'es' ? title : titles[selectedTransLang]) || title || 'Título del Proyecto'}
+                        </h3>
+                      </div>
+                      <p className="text-base text-gray-400 leading-relaxed">
+                        {(selectedTransLang === 'es' ? desc : descriptions[selectedTransLang]) || desc || 'Descripción del proyecto.'}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {tags.map((t) => (
+                          <span key={t} className="px-3 py-1 rounded-full text-xs font-medium border bg-white/5 border-white/10 text-gray-300">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="pt-2">
+                        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold bg-white text-black hover:bg-gray-200 text-sm">
+                          {(selectedTransLang === 'es' ? cta : ctas[selectedTransLang]) || cta || 'Explorar'} <ExternalLink size={16} />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
 
