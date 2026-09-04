@@ -52,9 +52,15 @@ import {
   Heart,
   MessageCircle,
   Send,
-  PenTool
+  PenTool,
+  Palette,
+  Layers,
+  Flame
 } from 'lucide-react';
 import { translations, LANGUAGES, Language } from './translations';
+import { ContentProvider, useContent } from './src/context/ContentContext';
+import { AdminLogin } from './src/admin/AdminLogin';
+import { AdminDashboard } from './src/admin/AdminDashboard';
 
 // --- Utils ---
 
@@ -83,6 +89,7 @@ const mergeDeep = (target: any, source: any) => {
 
 const useLanguage = () => {
   const [lang, setLang] = useState<Language>('es');
+  const { overrides } = useContent();
 
   useEffect(() => {
     const browserLang = navigator.language.split('-')[0] as Language;
@@ -99,8 +106,23 @@ const useLanguage = () => {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const currentT = translations[lang];
-  const t = lang === 'en' ? translations['en'] : { ...translations['en'], ...currentT };
+  const currentT = translations[lang] || translations['es'];
+  const baseT = lang === 'en' ? translations['en'] : { ...translations['en'], ...currentT };
+
+  // Aplicar overrides dinámicos del CMS si existen para la sección
+  const langOverrides = overrides[lang];
+  let t = baseT;
+  if (langOverrides) {
+    t = mergeDeep(baseT, {
+      hero: langOverrides.hero || {},
+      portfolio: langOverrides.portfolio_header ? {
+        badge: langOverrides.portfolio_header.badge,
+        title: langOverrides.portfolio_header.title,
+        subtitle: langOverrides.portfolio_header.subtitle
+      } : {},
+      contact: langOverrides.contact || {}
+    });
+  }
 
   return { lang, setLang, t };
 };
@@ -1175,72 +1197,77 @@ const PortfolioCard = ({ title, desc, icon: Icon, tags, cta, isDark, filename, f
   </div>
 );
 
-const Portfolio = ({ isDark, t }: { isDark: boolean; t: any }) => (
-  <section id="portfolio" className={`py-24 ${isDark ? 'bg-brand-surface' : 'bg-white'}`}>
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center max-w-3xl mx-auto mb-16 font-sans">
-        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 border ${isDark ? 'bg-white/5 border-white/10 text-brand-blue' : 'bg-blue-50 border-blue-200 text-brand-blue'
-          }`}>
-          <Code2 size={14} />
-          <span className="text-xs font-bold uppercase tracking-wider">{t.portfolio.badge}</span>
-        </div>
-        <h2 className={`text-3xl md:text-5xl font-display font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-          {t.portfolio.title}
-        </h2>
-        <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          {t.portfolio.subtitle}
-        </p>
-      </div>
+const ICON_LOOKUP: Record<string, any> = {
+  Music4,
+  Type,
+  Church,
+  Mic2,
+  Code2,
+  Monitor,
+  Smartphone,
+  Cpu,
+  Palette,
+  Sparkles,
+  Globe,
+  Video,
+  Zap,
+  Layers,
+  Flame,
+  CheckCircle2,
+  FileSignature
+};
 
-      <div className="flex flex-col gap-16">
-        <PortfolioCard
-          title={t.portfolio.armonix.title}
-          desc={t.portfolio.armonix.desc}
-          icon={Music4}
-          tags={['React', 'Web Audio API', 'Tone.js', 'UI Design']}
-          cta={t.portfolio.armonix.cta}
-          filename="armonix_landing.jpg"
-          fallback="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070&auto=format&fit=crop"
-          isDark={isDark}
-        />
-        <PortfolioCard
-          title={t.portfolio.palabra.title}
-          desc={t.portfolio.palabra.desc}
-          icon={Type}
-          tags={['Typography', 'Accessibility', 'Daily Content', 'Reading Mode']}
-          cta={t.portfolio.palabra.cta}
-          filename="lapalabradiaria_landing.jpg"
-          fallback="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop"
-          link="https://lapalabradiaria.com"
-          isDark={isDark}
-          isAlternate
-        />
-        <PortfolioCard
-          title={t.portfolio.emaus.title}
-          desc={t.portfolio.emaus.desc}
-          icon={Church}
-          tags={['SaaS', 'Management', 'Digital Signature', 'Security']}
-          cta={t.portfolio.emaus.cta}
-          filename="emaus_landing.jpg"
-          fallback="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop"
-          isDark={isDark}
-        />
-        <PortfolioCard
-          title={t.portfolio.verso.title}
-          desc={t.portfolio.verso.desc}
-          icon={Mic2}
-          tags={['Real-time', 'AI Music', 'Collab', 'Gemini API']}
-          cta={t.portfolio.verso.cta}
-          filename="verso_landing.jpg"
-          fallback="https://images.unsplash.com/photo-1514525253361-b83f859b73c0?q=80&w=2048&auto=format&fit=crop"
-          isDark={isDark}
-          isAlternate
-          badge="In Alpha"
-        />
+const Portfolio = ({ isDark, t, lang }: { isDark: boolean; t: any; lang: Language }) => {
+  const { portfolio } = useContent();
+  const activeItems = portfolio.filter(item => item.active);
+
+  return (
+    <section id="portfolio" className={`py-24 ${isDark ? 'bg-brand-surface' : 'bg-white'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-16 font-sans">
+          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 border ${isDark ? 'bg-white/5 border-white/10 text-brand-blue' : 'bg-blue-50 border-blue-200 text-brand-blue'
+            }`}>
+            <Code2 size={14} />
+            <span className="text-xs font-bold uppercase tracking-wider">{t.portfolio?.badge || 'Carril Software'}</span>
+          </div>
+          <h2 className={`text-3xl md:text-5xl font-display font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            {t.portfolio?.title || 'Ecosistema de Apps'}
+          </h2>
+          <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            {t.portfolio?.subtitle || 'Nuestras aplicaciones y soluciones digitales desarrolladas.'}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-16">
+          {activeItems.map((item, idx) => {
+            const IconComponent = ICON_LOOKUP[item.icon] || Code2;
+            const itemTitle = item.titles?.[lang] || item.title;
+            const itemDesc = item.descriptions?.[lang] || item.desc;
+            const itemCta = item.ctas?.[lang] || item.cta;
+            const isAlternate = item.isAlternate !== undefined ? item.isAlternate : (idx % 2 === 1);
+
+            return (
+              <PortfolioCard
+                key={item.id}
+                title={itemTitle}
+                desc={itemDesc}
+                icon={IconComponent}
+                tags={item.tags}
+                cta={itemCta}
+                filename={item.filename}
+                fallback={item.fallback}
+                link={item.link}
+                isDark={isDark}
+                isAlternate={isAlternate}
+                badge={item.badge}
+              />
+            );
+          })}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const Philosophy = ({ isDark, t }: { isDark: boolean; t: any }) => (
   <section id="philosophy" className="py-24 relative overflow-hidden font-sans">
@@ -1383,7 +1410,7 @@ const FooterCard = ({ title, label, icon: Icon, colorClass, link, isDark, connec
   </a>
 );
 
-const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
+const Footer = ({ isDark, t, onOpenAdmin }: { isDark: boolean; t: any; onOpenAdmin?: () => void }) => {
   const navItems = [
     { name: t.nav.services, href: '#services' },
     { name: t.nav.audiovisual, href: '#audiovisual' },
@@ -1454,9 +1481,21 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
           <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
             &copy; {new Date().getFullYear()} MelodIA lab. {t.footer.rights}
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className={`text-[10px] font-mono px-2.5 py-1 rounded border transition-colors ${
+                  isDark
+                    ? 'border-white/10 text-gray-500 hover:text-brand-orange hover:border-brand-orange/40 hover:bg-white/5'
+                    : 'border-gray-200 text-gray-400 hover:text-brand-orange hover:border-brand-orange/40 hover:bg-black/5'
+                }`}
+              >
+                Panel CMS
+              </button>
+            )}
             <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${isDark ? 'border-white/10 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
-              v2.8.0 — HYBRID ENGINE STABLE
+              v2.9.0 — CMS ENGINE
             </span>
           </div>
         </div>
@@ -1465,43 +1504,66 @@ const Footer = ({ isDark, t }: { isDark: boolean; t: any }) => {
   );
 };
 
-const App = () => {
+const AppMain = () => {
   const [isDark, setIsDark] = useState(true);
-  const [activeProject, setActiveProject] = useState<string | null>(null);
+  const [currentRoute, setCurrentRoute] = useState<'landing' | 'tierrita' | 'admin'>('landing');
   const { lang, setLang, t } = useLanguage();
+  const { isAuthenticated } = useContent();
 
   const toggleTheme = () => setIsDark(!isDark);
 
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname.toLowerCase().replace(/\/$/, "");
-      if (path === '/tierratierrita') {
-        setActiveProject('tierrita');
+      const hash = window.location.hash.toLowerCase();
+      if (path === '/admin' || path === '/admin/login' || hash === '#admin') {
+        setCurrentRoute('admin');
+      } else if (path === '/tierratierrita' || hash === '#tierrita') {
+        setCurrentRoute('tierrita');
       } else {
-        setActiveProject(null);
+        setCurrentRoute('landing');
       }
     };
     handleLocationChange();
     window.addEventListener('popstate', handleLocationChange);
-    return () => window.removeEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
 
-  const navigateToProject = (projectId: string | null) => {
-    if (projectId === 'tierrita') {
+  const navigateTo = (route: 'landing' | 'tierrita' | 'admin') => {
+    if (route === 'admin') {
+      window.history.pushState({}, '', '/admin');
+      setCurrentRoute('admin');
+    } else if (route === 'tierrita') {
       window.history.pushState({}, '', '/tierratierrita');
-      setActiveProject('tierrita');
+      setCurrentRoute('tierrita');
     } else {
       window.history.pushState({}, '', '/');
-      setActiveProject(null);
+      setCurrentRoute('landing');
     }
     window.scrollTo(0, 0);
   };
 
-  if (activeProject === 'tierrita') {
+  if (currentRoute === 'admin') {
+    if (isAuthenticated) {
+      return <AdminDashboard onGoToSite={() => navigateTo('landing')} />;
+    }
+    return (
+      <AdminLogin
+        onBackToSite={() => navigateTo('landing')}
+        onLoginSuccess={() => navigateTo('admin')}
+      />
+    );
+  }
+
+  if (currentRoute === 'tierrita') {
     return (
       <TierraTierritaDetailed
         t={t}
-        onBack={() => navigateToProject(null)}
+        onBack={() => navigateTo('landing')}
         isDark={isDark}
         toggleTheme={toggleTheme}
         lang={lang}
@@ -1516,15 +1578,23 @@ const App = () => {
       <main className="animate-in fade-in duration-700">
         <Hero isDark={isDark} t={t} lang={lang} />
         <Services isDark={isDark} t={t} />
-        <TierraTierritaTeaser isDark={isDark} t={t} onEnter={() => navigateToProject('tierrita')} />
-        <Portfolio isDark={isDark} t={t} />
+        <TierraTierritaTeaser isDark={isDark} t={t} onEnter={() => navigateTo('tierrita')} />
+        <Portfolio isDark={isDark} t={t} lang={lang} />
         <Philosophy isDark={isDark} t={t} />
         <Contact isDark={isDark} t={t} />
       </main>
-      <Footer isDark={isDark} t={t} />
+      <Footer isDark={isDark} t={t} onOpenAdmin={() => navigateTo('admin')} />
     </div>
   );
 };
 
+const App = () => {
+  return (
+    <ContentProvider>
+      <AppMain />
+    </ContentProvider>
+  );
+};
+
 export default App;
-// v2.8.0 - Full Global Localization: Corrected all app names (La Palabra Diaria) and missions (music ed, parish mgmt, band rehearsal) across 12 languages. Updated contact section to "Conversemos" globally.
+// v2.9.0 - CMS and Admin Panel Integration in Spanish. Dynamic Portfolio Management and Multilingual Support.
